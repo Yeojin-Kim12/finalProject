@@ -101,8 +101,8 @@ const TestYJ = () => {
           rank={1}></ItemList>
         <ItemList
           size="m"
-          imageUrl="https://placehold.co/320x180"
-          title="계양 어떤서원"
+          imageUrl="https://delivery183.org/dir1/0fdb98d7-9e0b-4a6d-b258-91282d038614:마이크 세팅.png"
+          title="이미지테스트 한글/특수문자"
           address="인천시 계양구 용종로"
           propertyType="OFFICETEL"
           salesType="PUBLIC_SALE"
