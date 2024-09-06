@@ -8,6 +8,7 @@ import TestHY from '@/pages/TestHY';
 import TestYJ from '@/pages/TestYJ';
 import TestMS from '@/pages/TestMS';
 import PropertyDetail from '@/pages/PropertyDetail';
+import Main from '@/pages/Main';
 
 export const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <main />,
+        element: <Main />,
       },
       {
         path: '/login',

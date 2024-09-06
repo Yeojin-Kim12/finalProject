@@ -7,7 +7,7 @@ const handlers = [
 
     return HttpResponse.json({
       buildingName: '잠실 푸르지오 ',
-      imageUrl: 'https://via.placeholder.com/150',
+      imageUrl: 'https://delivery183.org/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b%3Abyebyebyebyebye',
       salesType: 'LEASE_SALE',
       areas: [
         {

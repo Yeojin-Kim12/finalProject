@@ -54,7 +54,7 @@ const TestYJ = () => {
       <div className="flex gap-4 bg-slate-200 h-[500px] justify-center items-center">
         <ItemCard
           size="l"
-          imageUrl="https://placehold.co/320x180"
+          imageUrl="https://02bb0bfb4a8e793cf2e2affeb8070c90.r2.cloudflarestorage.com/cheongyak-bucket/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b:byebyebyebyebye"
           title="계양 학마을서원"
           address="인천시 계양구"
           propertyType="VILLA"
@@ -67,7 +67,7 @@ const TestYJ = () => {
           rank={1}></ItemCard>
         <ItemCard
           size="s"
-          imageUrl="https://placehold.co/320x180"
+          imageUrl="https://02bb0bfb4a8e793cf2e2affeb8070c90.r2.cloudflarestorage.com/cheongyak-bucket/전공 책.png"
           title="계양 어떤서원"
           address="인천시 계양구 용종로"
           propertyType="LIVING_ACCOMMODATION"
@@ -80,7 +80,7 @@ const TestYJ = () => {
           rank={1}></ItemCard>
         <ItemCard
           size="default"
-          imageUrl="https://placehold.co/320x180"
+          imageUrl="https://delivery183.org/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b%3Abyebyebyebyebye"
           title="계양 어떤서원 말줄임표확인용"
           address="인천시 계양구 용종로"
           status="모집중"></ItemCard>
@@ -88,7 +88,7 @@ const TestYJ = () => {
       <div className="bg-slate-200">
         <ItemList
           size="l"
-          imageUrl="https://placehold.co/320x180"
+          imageUrl="https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png"
           title="계양 어떤서원"
           address="인천시 계양구 용종로"
           propertyType="APARTMENT"

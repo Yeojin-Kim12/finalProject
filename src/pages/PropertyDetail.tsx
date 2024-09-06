@@ -109,6 +109,7 @@ const PropertyDetail = () => {
         <div
           className={`flex ${isMobile ? 'flex-col mb-9' : 'items-center mb-11'} w-full h-[576px] tablet:h-[384px] mobile:h-[723px] gap-6`}>
           <div className="w-[576px] tablet:w-[352px] mobile:w-[328px]">
+            {/* 이미지 크기 다시 지정하기 */}
             <img
               className="w-full h-full object-cover rounded-7"
               src={data?.imageUrl}
