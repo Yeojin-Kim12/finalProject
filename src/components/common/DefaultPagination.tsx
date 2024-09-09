@@ -69,7 +69,7 @@ const DefaultPagination = ({
               onClick={() => handlePageChange(page)}
               className={`text-label-lg mobile:text-label-sm-m font-normal w-10 mobile:w-8 h-10 mobile:h-8 ${
                 page === currentPage
-                  ? 'bg-primary-base text-primary-default text-label-lg mobile:text-label-sm-m font-bold'
+                  ? 'bg-primary-base text-primary-default text-label-lg mobile:text-label-sm-m font-bold shadow-none'
                   : ''
               } border-0 rounded-full cursor-pointer`}>
               {page}
