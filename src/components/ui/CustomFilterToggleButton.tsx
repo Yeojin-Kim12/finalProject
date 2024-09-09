@@ -21,13 +21,13 @@ const toggleVariants = cva(
   },
 );
 
-const Toggle = React.forwardRef<
+const CustomFilterToggleButton = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> & VariantProps<typeof toggleVariants>
 >(({ className, variant, ...props }, ref) => (
   <TogglePrimitive.Root ref={ref} className={cn(toggleVariants({ variant, className }))} {...props} />
 ));
 
-Toggle.displayName = TogglePrimitive.Root.displayName;
+CustomFilterToggleButton.displayName = TogglePrimitive.Root.displayName;
 
-export { Toggle, toggleVariants };
+export { CustomFilterToggleButton, toggleVariants };

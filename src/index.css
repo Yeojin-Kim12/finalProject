@@ -33,8 +33,9 @@
 
 @layer components {
   .input-base {
-    @apply w-full flex px-5 py-4 flex-col items-start rounded-4 text-label-lg mobile:text-label-lg-m bg-static-white placeholder:text-assistive-default hover:placeholder:text-static-default shadow-default focus:outline-none focus:ring-0 focus:border-transparent focus:shadow-focus;
+    @apply w-full flex px-5 py-4 flex-col items-start rounded-5 text-label-lg mobile:text-label-lg-m bg-static-white placeholder:text-assistive-default hover:placeholder:text-static-default shadow-default focus:outline-none focus:ring-0 focus:border-transparent focus:shadow-focus;
   }
+
   .gradient-overlay {
     background: linear-gradient(180deg, rgba(71, 71, 82, 0.1) 76.39%, rgba(50, 55, 62, 0.5) 100%);
   }

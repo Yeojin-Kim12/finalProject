@@ -1,15 +1,15 @@
 import { type ListItem } from '@/constants/keywordIconMap';
-import KeywordToggleItem from './KeywordToggleItem';
 import { useCallback, useRef } from 'react';
 import { useDraggable } from 'react-use-draggable-scroll';
+import CustomFilterToggleItem from './CustomFilterToggleItem';
 
-export interface KeywordToggleListProps {
+export interface CustomFilterToggleListProps {
   list: ListItem[];
   activeItems: string[];
   onToggle: (title: string) => void;
 }
 
-const KeywordToggleList = ({ list, onToggle, activeItems }: KeywordToggleListProps) => {
+const CustomFilterToggleList = ({ list, onToggle, activeItems }: CustomFilterToggleListProps) => {
   const ref = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
   const { events } = useDraggable(ref); //
   const handleToggle = useCallback(
@@ -25,7 +25,7 @@ const KeywordToggleList = ({ list, onToggle, activeItems }: KeywordToggleListPro
       ref={ref}>
       <div className="absolute w-full top-0 left-0 h-[1px] shadow-shadow"></div>
       {list.map((listItem) => (
-        <KeywordToggleItem
+        <CustomFilterToggleItem
           key={listItem.title}
           title={listItem.title}
           onIcon={listItem.onIcon}
@@ -38,4 +38,4 @@ const KeywordToggleList = ({ list, onToggle, activeItems }: KeywordToggleListPro
   );
 };
 
-export default KeywordToggleList;
+export default CustomFilterToggleList;

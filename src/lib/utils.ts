@@ -1,22 +1,44 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import propertyDataMap from '../constants/propertyDataMap';
+import { propertyDataMap } from '../constants/propertyDataMap';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+// 날짜 YYYY. MM. DD. 변환
+export function formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+
+  return `${year}. ${month}. ${day}.`;
+}
+// 날짜 YYYY. MM 변환
+export function getCurrentMonth() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  return `${year}. ${month}`;
+}
+// 주차 구하기
+export function getWeekOfMonth(date: Date): number {
+  const currentDate = date.getDate();
+  const firstDay = new Date(date.setDate(1)).getDay();
+
+  return Math.ceil((currentDate + firstDay) / 7);
 }
 
 // 금액 단위 변환
 export function formatAmount(amount: number): string {
   if (amount < 10000) {
-    return `${amount}만`;
+    return `${amount.toLocaleString()}만`;
   }
 
   const billion = Math.floor(amount / 10000);
   const thousand = amount % 10000;
 
   if (thousand > 0) {
-    return `${billion}억 ${thousand}만`;
+    return `${billion}억 ${thousand.toLocaleString()}만`;
   } else {
     return `${billion}억`;
   }

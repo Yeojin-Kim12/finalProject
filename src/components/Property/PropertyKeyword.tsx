@@ -23,7 +23,6 @@ import {
 } from '../ui/drawer';
 import useResponsive from '@/hooks/useResponsive';
 import { useState } from 'react';
-
 interface PropertyKeywordProps {
   type: 'infra' | 'benefit';
   data: { name: string; input: any }[];

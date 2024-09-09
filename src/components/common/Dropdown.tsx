@@ -8,7 +8,7 @@ interface DropdownProps {
   items: Array<{ value: string; label: string }>;
   defaultLabel: string;
   onSelect: (value: string) => void;
-  buttonWidth: string;
+  buttonWidth?: string;
 }
 
 export default function Dropdown({ items, defaultLabel, onSelect, buttonWidth }: DropdownProps) {
@@ -21,11 +21,11 @@ export default function Dropdown({ items, defaultLabel, onSelect, buttonWidth }:
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="assistive"
+          variant={`${open ? 'outline' : 'assistive'}`}
           size="lg"
           role="combobox"
           aria-expanded={open}
-          className={`font-pretendard font-normal text-label-lg !text-static-default justify-center ${buttonWidth}`}>
+          className={`font-normal text-label-lg !text-static-default justify-center ${buttonWidth}`}>
           {selectedItem ? selectedItem.label : defaultLabel}
           {open ? (
             <CaretUp className="ml-4 h-7 w-7 shrink-0 opacity-50" />

@@ -11,6 +11,7 @@ interface PropertyInputValidationProps {
   type?: string;
   className?: string;
   inputClassName?: string;
+  forwardExtra?: string;
   trailingExtra?: React.ReactNode;
   buttonTitle?: React.ReactNode;
   buttonClassName?: string;
@@ -21,6 +22,8 @@ interface PropertyInputValidationProps {
   errorMessage?: string;
   numberOnly?: boolean;
   optional?: boolean;
+  children?: React.ReactNode;
+  onBlur?: () => void;
 }
 
 const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInputValidationProps>(
@@ -32,6 +35,7 @@ const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInput
       type = 'text',
       className,
       inputClassName,
+      forwardExtra,
       trailingExtra,
       buttonTitle,
       buttonClassName,
@@ -42,6 +46,8 @@ const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInput
       errorMessage,
       numberOnly = false,
       optional,
+      children,
+      onBlur,
     },
     ref,
   ) => {
@@ -56,10 +62,8 @@ const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInput
             if (numberOnly) {
               e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '');
             }
-
             field.onChange(e);
           };
-
           return (
             <div className={`relative mb-4 ${className}`}>
               <div className="flex items-center gap-3">
@@ -68,8 +72,11 @@ const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInput
                 )}
                 {optional && <label className="text-accent-error text-detail-lg">선택</label>}
               </div>
-              <div className="flex">
+              <div className="flex items-center gap-4">
                 <div className="relative w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-5 text-label-lg text-assistive-default">
+                    {forwardExtra}
+                  </div>
                   <Input
                     {...field}
                     ref={ref}
@@ -77,11 +84,10 @@ const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInput
                     value={field.value === 0 ? '' : field.value}
                     placeholder={placeholder}
                     onChange={handleInputChange}
+                    onBlur={onBlur}
                     className={` ${
-                      fieldState.error || errorMessage
-                        ? 'shadow-[inset_0_0_0_2px_rgba(241,19,75,1)] focus:shadow-[inset_0_0_0_2px_rgba(241,19,75,1)]'
-                        : ''
-                    } ${inputClassName}`}
+                      fieldState.error || errorMessage ? 'shadow-error focus:shadow-error' : ''
+                    } ${forwardExtra && 'pl-[80px]'} ${trailingExtra && 'pr-[70px] text-end placeholder:text-start'} ${inputClassName}`}
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                     {trailingExtra && (
@@ -92,6 +98,7 @@ const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInput
                     )}
                   </div>
                 </div>
+                {children}
                 {buttonTitle && (
                   <Button
                     type={buttonType}

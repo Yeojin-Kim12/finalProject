@@ -9,6 +9,8 @@ import TestYJ from '@/pages/TestYJ';
 import TestMS from '@/pages/TestMS';
 import PropertyDetail from '@/pages/PropertyDetail';
 import Main from '@/pages/Main';
+import DashBoard from '@/pages/DashBoard';
+import PropertyKeywords from '@/components/PropertyAdd/PropertyKeywords';
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +49,8 @@ export const router = createBrowserRouter([
         path: '/property/:id',
         element: <PropertyDetail />,
       },
+      { path: '/dashboard', element: <DashBoard /> },
+      { path: '/keywordTest', element: <PropertyKeywords /> },
     ],
   },
 ]);

@@ -71,7 +71,7 @@ const GNB = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 desktop:h-[93px] tablet:h-[65px] mobile:h-[54px] pl-9 pr-8 bg-white border-b border-assistive-divider font-pretendard">
+      <header className="sticky top-0 z-50 desktop:h-[93px] tablet:h-[65px] mobile:h-[54px] pl-9 pr-8 bg-white border-b border-assistive-divider">
         <nav className="flex justify-between items-center w-full h-full">
           <div className="flex gap-8">
             <div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative">
@@ -170,7 +170,7 @@ const GNB = () => {
       {isMenuOpen && (
         <div
           ref={menuRef}
-          className="flex flex-col items-start bg-white w-full fixed z-50 shadow-lg text-links-base font-normal font-pretendard text-static-default">
+          className="flex flex-col items-start bg-white w-full fixed z-50 shadow-lg text-links-base font-normal text-static-default">
           <ul className="w-full">
             <li className="p-5 ">
               <Link to="/">홈</Link>

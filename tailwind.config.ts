@@ -183,6 +183,7 @@ module.exports = {
         default: 'inset 0 0 0 1px #b2b6be',
         focus: 'inset 0 0 0 2px #204AE5',
         error: 'inset 0 0 0 2px #F1134B',
+        assistive: 'inset 0 0 0 2px #778292',
         shadow: '0px 4px 4px 0px rgba(70, 69, 107, 0.10)',
       },
       keyframes: {

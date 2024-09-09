@@ -20,11 +20,18 @@ export type FileData = {
   fileUrl: string;
   fileType: string;
 };
-
+export type KeywordData = {
+  searchEnabled: boolean;
+  name: string;
+  type: 'BENEFIT' | 'INFRA';
+  input: { input1: string; input2: string; input3?: string }[] | string;
+  id?: string;
+};
 export type FormValues = {
   propertyHouseholdArea: string;
   areas: Area[];
   files: FileData[];
+  keywords: KeywordData[];
   discountSale: boolean;
   discountSystem: boolean;
   propertyAreaAddr: string;

@@ -9,8 +9,10 @@ import { propertyAddTypes } from '@/types/propertyAddTypes';
 import AdditionalInformation from '@/components/PropertyAdd/AdditionalInformation';
 import { Link } from 'react-router-dom';
 import PropertyComplete from '@/components/PropertyAdd/PropertyComplete';
+import PropertyKeywords from '@/components/PropertyAdd/PropertyKeywords';
 
-const steps = ['매물정보 입력', '추가사항 입력', '키워드 선택', '등록 완료'];
+// const steps = ['매물정보 입력', '추가사항 입력', '키워드 선택', '등록 완료'];
+const steps = ['매물정보 입력', '키워드 선택', '추가사항 입력', '등록 완료'];
 
 const PropertyAdd = () => {
   const methods = useForm({
@@ -23,17 +25,17 @@ const PropertyAdd = () => {
 
   const validationFields: Record<string, propertyAddTypes[]> = {
     step1: [
-      'propertyName',
-      'propertyConstructor',
-      'propertyCompanyName',
-      'propertyTotalNumber',
-      'propertyRecruitmentDate',
-      'areas',
-      'propertyAreaAddr',
-      'propertyModelhouseAddr',
+      // 'propertyName',
+      // 'propertyConstructor',
+      // 'propertyCompanyName',
+      // 'propertyTotalNumber',
+      // 'propertyRecruitmentDate',
+      // 'areas',
+      // 'propertyAreaAddr',
+      // 'propertyModelhouseAddr',
     ],
     step2: ['phoneNumber', 'homepage', 'contactChannel'],
-    step3: [],
+    step3: ['keywords', 'areas'],
     step4: [],
   };
 
@@ -73,18 +75,19 @@ const PropertyAdd = () => {
             <Button type="button" onClick={() => setStep(steps[0])}>
               이전
             </Button>
-            <Button type="button" onClick={() => handleNextStep(steps[1], steps[2])}>
+            <Button type="button" onClick={() => handleNextStep(steps[0], steps[2])}>
               다음
             </Button>
           </Step>
-
           <Step name="키워드 선택">
-            <Button type="button" onClick={() => setStep(steps[1])}>
+            <PropertyKeywords />
+            <Button type="button" onClick={() => setStep(steps[2])}>
               이전
             </Button>
-            <Button type="submit">등록하기</Button>
+            <Button type="submit" onClick={() => setStep(steps[3])}>
+              등록하기
+            </Button>
           </Step>
-
           <Step name="등록 완료">
             <PropertyComplete />
             <Button type="button" onClick={() => setStep(steps[2])}>

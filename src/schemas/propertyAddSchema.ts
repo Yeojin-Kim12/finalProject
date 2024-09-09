@@ -61,4 +61,15 @@ export const propertyAddSchema = z.object({
     ),
   homepage: z.string().optional(),
   contactChannel: z.string().optional(),
+  keywords: z.array(
+    z.object({
+      searchEnabled: z.boolean(),
+      name: z.string(),
+      type: z.string(),
+      input: z.union([
+        z.string().nonempty('입력해주세요'),
+        z.array(z.object({})).nonempty('입력추가해주세요.'),
+      ]),
+    }),
+  ),
 });

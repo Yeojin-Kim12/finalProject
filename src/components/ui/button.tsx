@@ -4,14 +4,13 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-const buttonVariants = cva('inline-flex items-center justify-center whitespace-nowrap font-bold', {
+const buttonVariants = cva(`inline-flex items-center justify-center whitespace-nowrap font-bold  `, {
   variants: {
     variant: {
       primary:
-        'bg-primary-default border border-primary-default !text-static-white active:bg-primary-alternative',
-      outline: 'bg-static-white border border-primary-default !text-primary-default active:bg-primary-base',
-      assistive:
-        'bg-static-white border border-assistive-default !text-static-default active:!text-assistive-default',
+        'bg-primary-default shadow-focus !text-static-white active:bg-primary-alternative disabled:bg-assistive-alternative disabled:shadow-none',
+      outline: 'bg-static-white shadow-focus !text-primary-default active:bg-primary-base',
+      assistive: 'bg-static-white shadow-default !text-static-default active:!text-assistive-default',
       disabled: 'bg-assistive-alternative !text-assistive-strong',
       ghost: 'hover:bg-accent hover:text-accent-foreground',
       link: 'text-primary underline-offset-4 hover:underline',
@@ -21,7 +20,7 @@ const buttonVariants = cva('inline-flex items-center justify-center whitespace-n
       lg: 'px-7 py-4 rounded-5 text-label-lg mobile:text-label-lg-m',
       md: 'px-7 py-4 rounded-5 text-label-base mobile:text-label-base-m',
       sm: 'px-7 py-4 rounded-4 text-label-sm mobile:text-label-sm-m',
-      xs: 'px-4 py-3 rounded-3 text-label-xs mobile:text-label-xs-m',
+      xs: 'px-4 py-3 rounded-4 text-label-xs mobile:text-label-xs-m',
       icon: 'h-9 w-9',
       default: 'h-9 px-4 py-2',
     },

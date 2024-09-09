@@ -13,5 +13,7 @@ export type propertyAddTypes =
   | 'buildingName'
   | 'phoneNumber'
   | 'homepage'
-  | 'contactChannel';
+  | 'contactChannel'
+  | 'keywords';
+
 // | 'propertySupplyInformation';
