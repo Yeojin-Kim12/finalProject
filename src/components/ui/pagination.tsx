@@ -34,20 +34,22 @@ type PaginationLinkProps = {
 const PaginationLink = ({
   className,
   isActive,
-  // @ts-ignore: Unreachable code error
   size = 'icon',
+  onClick,
+  disabled,
   ...props
-}: PaginationLinkProps) => (
+}: PaginationLinkProps & { disabled?: boolean }) => (
   <a
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       buttonVariants({
-        // @ts-ignore: Unreachable code error
         variant: isActive ? 'outline' : 'ghost',
         size,
       }),
+      disabled ? 'cursor-not-allowed opacity-50' : '',
       className,
     )}
+    onClick={!disabled ? onClick : undefined}
     {...props}
   />
 );
@@ -55,26 +57,22 @@ PaginationLink.displayName = 'PaginationLink';
 
 const PaginationPrevious = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
-    aria-label="Go to previous page"
-    // @ts-ignore: Unreachable code error
+    aria-label="이전 페이지로 이동"
     size="default"
     className={cn('gap-1 pl-2.5', className)}
     {...props}>
-    <ChevronLeft className="h-4 w-4" />
-    <span>Previous</span>
+    {/* <ChevronLeft className="h-4 w-4" /> */}
   </PaginationLink>
 );
 PaginationPrevious.displayName = 'PaginationPrevious';
 
 const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
-    aria-label="Go to next page"
-    // @ts-ignore: Unreachable code error
+    aria-label="다음 페이지로 이동"
     size="default"
     className={cn('gap-1 pr-2.5', className)}
     {...props}>
-    <span>Next</span>
-    <ChevronRight className="h-4 w-4" />
+    {/* <ChevronRight className="h-4 w-4" /> */}
   </PaginationLink>
 );
 PaginationNext.displayName = 'PaginationNext';

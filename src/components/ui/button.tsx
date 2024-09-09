@@ -13,6 +13,8 @@ const buttonVariants = cva('inline-flex items-center justify-center whitespace-n
       assistive:
         'bg-static-white border border-assistive-default !text-static-default active:!text-assistive-default',
       disabled: 'bg-assistive-alternative !text-assistive-strong',
+      ghost: 'hover:bg-accent hover:text-accent-foreground',
+      link: 'text-primary underline-offset-4 hover:underline',
     },
     size: {
       xl: 'px-8 py-5 rounded-5 text-label-lg mobile:text-label-lg-m',
@@ -20,6 +22,8 @@ const buttonVariants = cva('inline-flex items-center justify-center whitespace-n
       md: 'px-7 py-4 rounded-5 text-label-base mobile:text-label-base-m',
       sm: 'px-7 py-4 rounded-4 text-label-sm mobile:text-label-sm-m',
       xs: 'px-4 py-3 rounded-3 text-label-xs mobile:text-label-xs-m',
+      icon: 'h-9 w-9',
+      default: 'h-9 px-4 py-2',
     },
   },
   defaultVariants: {

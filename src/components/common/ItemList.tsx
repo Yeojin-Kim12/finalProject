@@ -35,7 +35,7 @@ const ItemList = ({
 
   const listSizeClass = {
     l: 'w-[1200px] min-w-[1200px] h-[193px] px-7 py-6',
-    m: 'w-[768px] min-w-[768px] h-[148px] px-7 py-6',
+    m: 'w-full min-w-[768px] h-[148px] px-7 py-6',
   };
   const labelSize = size === 'm' ? 's' : 'm';
 
