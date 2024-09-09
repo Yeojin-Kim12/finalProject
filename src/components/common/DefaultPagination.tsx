@@ -8,17 +8,17 @@ import {
 } from '@/components/ui/pagination';
 import useResponsive from '@/hooks/useResponsive';
 import { CaretDoubleLeft, CaretDoubleRight, CaretLeft, CaretRight } from '@phosphor-icons/react';
-import { useState } from 'react';
 
 const DefaultPagination = ({
   totalPages,
+  currentPage,
   onPageChange,
 }: {
   totalPages: number;
+  currentPage: number;
   onPageChange: (page: number) => void;
 }) => {
   const { isMobile } = useResponsive();
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const pageSize = isMobile ? 1 : 5; // 한 번에 표시할 페이지 수
 
   const startPage = Math.floor((currentPage - 1) / pageSize) * pageSize + 1;
@@ -26,7 +26,6 @@ const DefaultPagination = ({
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
       onPageChange(page);
     }
   };

@@ -202,7 +202,7 @@ const handlers = [
           },
         ],
       },
-      totalPages: 14, // 전체 페이지수
+      totalPages: 6, // 전체 페이지수
       pageSize: 5, // 한 페이지에 표시할 개수
       currentPage: 0, // 현재 페이지 번호
     });

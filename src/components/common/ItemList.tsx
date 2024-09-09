@@ -35,17 +35,17 @@ const ItemList = ({
 
   const listSizeClass = {
     l: 'w-[1200px] min-w-[1200px] h-[193px] px-7 py-6',
-    m: 'w-full min-w-[768px] h-[148px] px-7 py-6',
+    m: 'w-full h-[148px] px-7 py-6',
   };
   const labelSize = size === 'm' ? 's' : 'm';
 
   return (
     <div className={`${listSizeClass[size]} flex bg-white border-b border-assistive-divider`}>
-      <div className={`relative w-[272px] ${size === 'm' ? 'mr-6' : 'mr-7'}`}>
+      <div className={`relative ${size === 'm' ? 'mr-6' : 'mr-7'}`}>
         <img
           src={imageUrl}
           alt={title}
-          className={`w-[272px] h-full ${size === 'm' ? 'min-w-[192px]' : 'min-w-[272px]'} rounded-5 object-cover`}
+          className={`h-full ${size === 'm' ? 'min-w-[192px]' : 'min-w-[272px]'} rounded-5 object-cover`}
         />
         <div className={`${size === 'm' ? 'hidden' : 'block'} absolute inset-0 gradient-overlay rounded-5`} />
         {rank && (
@@ -59,8 +59,8 @@ const ItemList = ({
       </div>
 
       <div className={`flex items-center w-full ${size === 'm' ? 'gap-5' : 'gap-10'}`}>
-        <div className={`flex items-center ${size === 'm' ? 'gap-5' : 'gap-10'}`}>
-          <div className={`flex flex-col ${size === 'm' ? 'w-[222px]' : 'w-[364px]'}`}>
+        <div className={`flex items-center w-full ${size === 'm' ? 'gap-5' : 'gap-10'}`}>
+          <div className={`flex flex-col w-full ${size === 'm' ? 'min-w-[222px]' : 'w-[364px]'}`}>
             <h2
               className={`w-full ${size === 'm' ? 'text-title-xl' : 'text-title-2xl'} text-static-default font-bold overflow-hidden text-ellipsis whitespace-nowrap mb-3`}>
               {title}
@@ -78,7 +78,7 @@ const ItemList = ({
               <p>총 {totalNumber}세대</p>
             </div>
           </div>
-          <div className={`flex flex-col gap-4 items-center ${size === 'm' ? 'w-[222px]' : 'w-[364px]'}`}>
+          <div className={`flex flex-col w-full gap-4 items-center ${size === 'm' ? '' : 'w-[364px]'}`}>
             <div className="flex gap-2">
               {keywords?.map((kw, index) => (
                 <Label key={index} size={labelSize} variant="accent" keyword={getPropertyLabel(kw)}>

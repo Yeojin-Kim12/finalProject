@@ -33,7 +33,7 @@ const InputWithExtras = React.forwardRef<HTMLInputElement, InputWithExtrasProps>
     return (
       <div className="relative w-full">
         <Input ref={ref} className={cn('', className)} {...props} />
-        <div className="absolute top-1/2 transform -translate-y-1/2 right-9 mobile:right-7 flex items-center">
+        <div className="absolute top-1/2 transform -translate-y-1/2 right-7 desktop:right-9 flex items-center">
           {trailingExtra}
         </div>
       </div>

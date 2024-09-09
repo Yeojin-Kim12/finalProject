@@ -54,6 +54,7 @@ const RangeDatePicker = ({ fromLabel, toLabel, onChange, initialRange }: RangeDa
     <Popover onOpenChange={handleToggle}>
       <PopoverTrigger asChild>
         <Button
+          // @ts-ignore: Unreachable code error
           variant="default"
           size="sm"
           className={cn(
