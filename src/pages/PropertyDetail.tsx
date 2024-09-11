@@ -23,10 +23,18 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const steps = ['희망 상담 일자', '추가 사항'];
-const initialFormState = {
+
+interface CounselForm {
+  name: string;
+  phoneNumber: string;
+  preferredAt: string | undefined;
+  counselingMessage: string;
+}
+
+const initialFormState: CounselForm = {
   name: '',
   phoneNumber: '',
-  preferredAt: '',
+  preferredAt: undefined,
   counselingMessage: '',
 };
 
@@ -43,7 +51,9 @@ const PropertyDetail = () => {
   const { Funnel, Step, setStep } = useFunnel(steps[0]);
 
   const fetchSalesInformation = async (): Promise<SalesInformation> => {
-    const res = await axios.get<SalesInformation>(`/api/properties/${id}`);
+    const res = await axios.get<SalesInformation>(`/api/properties/${id}`, {
+      withCredentials: true,
+    });
     return res.data;
   };
   const { data } = useQuery<SalesInformation>({
@@ -74,13 +84,13 @@ const PropertyDetail = () => {
     const { name, value } = e.target;
     setCounselForm((prevForm) => ({
       ...prevForm,
-      [name]: value,
+      [name]: name === 'preferredAt' ? new Date(value) : value,
     }));
   };
 
   useEffect(() => {
     const { name, phoneNumber, preferredAt } = counselForm;
-    setisCounselFormValidation(name !== '' && isPhoneValidation(phoneNumber) && preferredAt !== '');
+    setisCounselFormValidation(name !== '' && isPhoneValidation(phoneNumber) && preferredAt !== undefined);
   }, [counselForm]);
 
   const handleCounselRegister = () => {
@@ -316,6 +326,7 @@ const PropertyDetail = () => {
           setStep={setStep}
           steps={steps}
           counselForm={counselForm}
+          setCounselForm={setCounselForm}
           handleInputChange={handleInputChange}
           isCounselFormValidation={isCounselFormValidation}
           handleCounselRegister={handleCounselRegister}
@@ -328,6 +339,7 @@ const PropertyDetail = () => {
           isOpen={isCounselRegister}
           handleClose={handleClose}
           counselForm={counselForm}
+          setCounselForm={setCounselForm}
           handleInputChange={handleInputChange}
           isCounselFormValidation={isCounselFormValidation}
           handleCounselRegister={handleCounselRegister}

@@ -4,11 +4,13 @@ import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle } from '.
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '../ui/dialog';
+import { Calendar } from '../ui/calendar';
+import SingleDatePicker from '../common/SingleDatePicker';
 
 interface CounselForm {
   name: string;
   phoneNumber: string;
-  preferredAt: string;
+  preferredAt: string | undefined;
   counselingMessage: string;
 }
 
@@ -16,6 +18,7 @@ interface CounselProps {
   isOpen: boolean;
   handleClose: (openState: boolean) => void;
   counselForm: CounselForm;
+  setCounselForm: React.Dispatch<React.SetStateAction<CounselForm>>;
   handleInputChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   isCounselFormValidation: boolean;
   handleCounselRegister: () => void;
@@ -39,6 +42,7 @@ export const CounselDrawer = ({
   steps,
   setStep,
   counselForm,
+  setCounselForm,
   handleInputChange,
   isCounselFormValidation,
   handleCounselRegister,
@@ -46,6 +50,24 @@ export const CounselDrawer = ({
   isInfoContent,
   isPhoneValidation,
 }: CounselDrawerProps) => {
+  const handleDateChange = (date: Date | undefined) => {
+    if (date) {
+      const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      const formattedDate = offsetDate.toISOString().split('T')[0];
+      console.log(formattedDate);
+
+      setCounselForm((prevForm) => ({
+        ...prevForm,
+        preferredAt: formattedDate,
+      }));
+    } else {
+      setCounselForm((prevForm) => ({
+        ...prevForm,
+        preferredAt: undefined,
+      }));
+    }
+  };
+
   return (
     <Drawer direction="right" open={isOpen} onOpenChange={handleClose}>
       <DrawerContent className="h-full fixed w-full left-0 top-0 z-50 mt-0 flex flex-col bg-static-white">
@@ -81,13 +103,11 @@ export const CounselDrawer = ({
                     </div>
                   )}
                 </div>
-                <div className="px-6 pt-3 pb-6">
-                  <Input
-                    type="text"
-                    name="preferredAt"
-                    value={counselForm.preferredAt}
-                    onChange={handleInputChange}
-                    className="w-[187px] px-5 py-4 text-label-lg border border-assistive-default rounded-5"
+                <div className="w-max px-6 pt-3 pb-6 m-auto shadow-[0_0_20px_0_rgba(70,69,107,0.10)] rounded-5">
+                  <Calendar
+                    mode="single"
+                    selectedDate={counselForm.preferredAt ? new Date(counselForm.preferredAt) : undefined}
+                    setDate={handleDateChange}
                   />
                 </div>
               </div>
@@ -97,7 +117,7 @@ export const CounselDrawer = ({
                   size="md"
                   disabled={counselForm.preferredAt ? false : true}
                   type="button"
-                  className="w-full"
+                  className="w-[296px] m-8"
                   onClick={() => setStep(steps[1])}>
                   다음
                 </Button>
@@ -174,6 +194,7 @@ export const CounselDialog = ({
   isOpen,
   handleClose,
   counselForm,
+  setCounselForm,
   handleInputChange,
   isCounselFormValidation,
   handleCounselRegister,
@@ -181,6 +202,24 @@ export const CounselDialog = ({
   isInfoContent,
   isPhoneValidation,
 }: CounselProps) => {
+  const handleDateChange = (date: Date | undefined) => {
+    if (date) {
+      const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      const formattedDate = offsetDate.toISOString().split('T')[0];
+      console.log(formattedDate);
+
+      setCounselForm((prevForm) => ({
+        ...prevForm,
+        preferredAt: formattedDate,
+      }));
+    } else {
+      setCounselForm((prevForm) => ({
+        ...prevForm,
+        preferredAt: undefined,
+      }));
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="block w-[520px] h-[830px] py-9 px-0">
@@ -238,13 +277,7 @@ export const CounselDialog = ({
                     </div>
                   )}
                 </div>
-                <Input
-                  type="text"
-                  name="preferredAt"
-                  value={counselForm.preferredAt}
-                  onChange={handleInputChange}
-                  className="w-[187px] px-5 py-4 text-label-lg border border-assistive-default rounded-5"
-                />
+                <SingleDatePicker defaultLabel="상담날짜 선택" onChange={handleDateChange} />
               </div>
             </div>
           </div>

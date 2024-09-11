@@ -1,9 +1,11 @@
 import { Heart } from '@phosphor-icons/react';
 import { Label } from '../ui/label';
 import { formatAmount, getPropertyLabel } from '@/lib/utils';
+import { Link, useNavigate } from 'react-router-dom';
 
 export interface ItemListProps {
   size: 'l' | 'm'; // 사이즈
+  id: number;
   title: string; // 제목
   imageUrl: string; // 이미지
   address: string; // 주소
@@ -19,6 +21,7 @@ export interface ItemListProps {
 
 const ItemList = ({
   size,
+  id,
   title,
   imageUrl,
   address,
@@ -41,7 +44,7 @@ const ItemList = ({
 
   return (
     <div className={`${listSizeClass[size]} flex bg-white border-b border-assistive-divider`}>
-      <div className={`relative ${size === 'm' ? 'mr-6' : 'mr-7'}`}>
+      <Link to={`/property/${id}`} className={`relative ${size === 'm' ? 'mr-6' : 'mr-7'} cursor-pointer`}>
         <img
           src={imageUrl}
           alt={title}
@@ -56,15 +59,16 @@ const ItemList = ({
             </span>
           </div>
         )}
-      </div>
+      </Link>
 
       <div className={`flex items-center w-full ${size === 'm' ? 'gap-5' : 'gap-10'}`}>
         <div className={`flex items-center w-full ${size === 'm' ? 'gap-5' : 'gap-10'}`}>
           <div className={`flex flex-col w-full ${size === 'm' ? 'min-w-[222px]' : 'w-[364px]'}`}>
-            <h2
-              className={`w-full ${size === 'm' ? 'text-title-xl' : 'text-title-2xl'} text-static-default font-bold overflow-hidden text-ellipsis whitespace-nowrap mb-3`}>
+            <Link
+              to={`/property/${id}`}
+              className={`w-full ${size === 'm' ? 'text-title-xl' : 'text-title-2xl'} text-static-default font-bold overflow-hidden text-ellipsis whitespace-nowrap mb-3 cursor-pointer`}>
               {title}
-            </h2>
+            </Link>
             <p
               className={`${size === 'm' ? 'text-detail-base' : 'text-detail-lg'} text-assistive-detail overflow-hidden text-ellipsis whitespace-nowrap mb-5`}>
               {address}

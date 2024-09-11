@@ -6,11 +6,12 @@ import Toast from '@/components/common/Toast';
 import SelectedMenu from '@/components/LandList/SelectedMenu';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SalesInformation } from '@/types/types';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const TestYJ = () => {
   const [isToast, setIsToast] = useState(false);
@@ -37,8 +38,21 @@ const TestYJ = () => {
 
   console.log(data);
 
+  const location = useLocation();
+
   return (
     <>
+      <Tabs defaultValue={location.state?.keyword || 'type'}>
+        <TabsList>
+          <TabsTrigger value="type">분양형태</TabsTrigger>
+          <TabsTrigger value="benefit">혜택</TabsTrigger>
+          <TabsTrigger value="infra">인프라</TabsTrigger>
+        </TabsList>
+        <TabsContent value="type">분양형태</TabsContent>
+        <TabsContent value="benefit">혜택</TabsContent>
+        <TabsContent value="infra">인프라</TabsContent>
+      </Tabs>
+
       <Link to={`/property/${1}`}>상세페이지</Link>
       <div className="flex justify-end">
         <Button variant="assistive" size="sm" onClick={showToast}>
@@ -53,6 +67,7 @@ const TestYJ = () => {
 
       <div className="flex gap-4 bg-slate-200 h-[500px] justify-center items-center">
         <ItemCard
+          id={1}
           size="l"
           imageUrl="https://02bb0bfb4a8e793cf2e2affeb8070c90.r2.cloudflarestorage.com/cheongyak-bucket/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b:byebyebyebyebye"
           title="계양 학마을서원"
@@ -67,6 +82,7 @@ const TestYJ = () => {
           rank={1}></ItemCard>
         <ItemCard
           size="s"
+          id={1}
           imageUrl="https://02bb0bfb4a8e793cf2e2affeb8070c90.r2.cloudflarestorage.com/cheongyak-bucket/전공 책.png"
           title="계양 어떤서원"
           address="인천시 계양구 용종로"
@@ -80,6 +96,7 @@ const TestYJ = () => {
           rank={1}></ItemCard>
         <ItemCard
           size="default"
+          id={1}
           imageUrl="https://delivery183.org/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b%3Abyebyebyebyebye"
           title="계양 어떤서원 말줄임표확인용"
           address="인천시 계양구 용종로"
@@ -88,6 +105,7 @@ const TestYJ = () => {
       <div className="bg-slate-200">
         <ItemList
           size="l"
+          id={1}
           imageUrl="https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png"
           title="계양 어떤서원"
           address="인천시 계양구 용종로"
@@ -101,6 +119,7 @@ const TestYJ = () => {
           rank={1}></ItemList>
         <ItemList
           size="m"
+          id={1}
           imageUrl="https://delivery183.org/dir1/0fdb98d7-9e0b-4a6d-b258-91282d038614:마이크 세팅.png"
           title="이미지테스트 한글/특수문자"
           address="인천시 계양구 용종로"

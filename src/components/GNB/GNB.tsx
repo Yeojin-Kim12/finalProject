@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CaretDown, CaretUp, List, MagnifyingGlass, X } from '@phosphor-icons/react';
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../hooks/useResponsive';
@@ -10,6 +10,8 @@ const GNB = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLnbMenuOpen, setIsLnbMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const menuRef = useRef<HTMLDivElement>(null); // tablet 이하 display - Menu 외부 감지
   const buttonGroupRef = useRef<HTMLDivElement>(null); // 햄버거 버튼, 검색 버튼 외부 처리 X
@@ -72,13 +74,25 @@ const GNB = () => {
   return (
     <>
       <header className="sticky top-0 z-50 desktop:h-[93px] tablet:h-[65px] mobile:h-[54px] pl-9 pr-8 bg-white border-b border-assistive-divider">
-        <nav className="flex justify-between items-center w-full h-full">
+        <nav className="flex justify-between items-center w-full h-full max-w-[1920px] mx-auto">
           <div className="flex gap-8">
             <div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative">
               <Link to="/">
-                <img src="/logo_size_l.png" alt="logo_l" className="hidden desktop:block" />
-                <img src="/logo_size_m.png" alt="logo_m" className="hidden tablet:block" />
-                <img src="/logo_size_s.png" alt="logo_s" className="hidden mobile:block" />
+                <img
+                  src="/public/images/logos/logo_size_l.png"
+                  alt="logo_l"
+                  className="hidden desktop:block"
+                />
+                <img
+                  src="/public/images/logos/logo_size_m.png"
+                  alt="logo_m"
+                  className="hidden tablet:block"
+                />
+                <img
+                  src="/public/images/logos/logo_size_s.png"
+                  alt="logo_s"
+                  className="hidden mobile:block"
+                />
               </Link>
             </div>
 
@@ -90,8 +104,8 @@ const GNB = () => {
                   홈
                 </Link>
                 <Link
-                  to="/"
-                  className={`w-[193px] px-5 py-8 text-center ${location.pathname === '/information' ? 'text-primary-default' : ''}`}>
+                  to="/property"
+                  className={`w-[193px] px-5 py-8 text-center ${location.pathname === '/property' ? 'text-primary-default' : ''}`}>
                   미분양정보
                 </Link>
                 <Link
@@ -104,12 +118,16 @@ const GNB = () => {
                   마이페이지
                   <div className="hidden absolute left-0 top-[93px] w-full bg-white shadow-lg text-assistive-detail group-hover:flex flex-col items-start font-normal z-40">
                     <ul className="w-full">
-                      <li className="px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold">
+                      <Link
+                        to="/"
+                        className="block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold">
                         관심 매물
-                      </li>
-                      <li className="px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold">
+                      </Link>
+                      <Link
+                        to="/"
+                        className="block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold">
                         상담신청 현황
-                      </li>
+                      </Link>
                     </ul>
                   </div>
                 </li>
@@ -124,13 +142,13 @@ const GNB = () => {
                 <MagnifyingGlass
                   size={32}
                   weight="bold"
-                  className={`hidden desktop:block text-assistive-strong cursor-pointer ${location.pathname === '/home' || location.pathname === '/login' || location.pathname === '/search' ? 'desktop:hidden' : 'block'}`}
+                  className={`hidden desktop:block text-assistive-strong cursor-pointer ${location.pathname === '/' || location.pathname === '/login' || location.pathname === '/search' ? 'desktop:hidden' : 'block'}`}
                   onClick={handleSearch}
                 />
                 <MagnifyingGlass
                   size={32}
                   weight="thin"
-                  className={`block desktop:hidden text-assistive-strong cursor-pointer ${location.pathname === '/home' || location.pathname === '/login' || location.pathname === '/search' ? 'desktop:hidden' : 'block'}`}
+                  className={`block desktop:hidden text-assistive-strong cursor-pointer ${location.pathname === '/' || location.pathname === '/login' || location.pathname === '/search' ? 'desktop:hidden' : 'block'}`}
                   onClick={handleSearch}
                 />
               </>
@@ -216,6 +234,15 @@ const GNB = () => {
               <InputWithExtras
                 type="text"
                 placeholder="아파트명, 지역명으로 검색하세요"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    navigate(`/search?search=${searchQuery}`);
+                    setIsSearchOpen(false);
+                    setSearchQuery('');
+                  }
+                }}
                 className="w-full px-9 py-7 mobile:px-7 mobile:py-4 border-2 border-primary-default rounded-10 focus:border-2 focus:border-primary-default focus:shadow-default"
                 trailingExtra={
                   <>
@@ -223,11 +250,21 @@ const GNB = () => {
                       size={32}
                       weight="bold"
                       className="block mobile:hidden text-assistive-strong cursor-pointer"
+                      onClick={() => {
+                        navigate(`/search?search=${searchQuery}`);
+                        setIsSearchOpen(false);
+                        setSearchQuery('');
+                      }}
                     />
                     <MagnifyingGlass
                       size={24}
                       weight="bold"
                       className="hidden mobile:block text-assistive-strong cursor-pointer"
+                      onClick={() => {
+                        navigate(`/search?search=${searchQuery}`);
+                        setIsSearchOpen(false);
+                        setSearchQuery('');
+                      }}
                     />
                   </>
                 }

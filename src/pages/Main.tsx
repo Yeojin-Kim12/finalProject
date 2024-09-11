@@ -8,10 +8,13 @@ import { CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
   const { isDesktop, isTablet, isMobile } = useResponsive();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   const fetchProperties = async (page: any) => {
     const res = await axios.get(`/api/common/home?page=${page}`);
@@ -34,18 +37,28 @@ const Main = () => {
             <InputWithExtras
               type="text"
               placeholder="어떤 미분양 매물을 찾으세요?"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  navigate(`/search?search=${searchQuery}`);
+                }
+              }}
               className={`w-full px-7 py-4 ${isDesktop ? 'px-9 py-7 text-label-lg' : 'text-label-base'} mobile:text-label-base-m border-2 border-primary-default rounded-10 focus:border-2 focus:border-primary-default focus:shadow-default`}
               trailingExtra={
                 <MagnifyingGlass
                   size={isDesktop ? 32 : 24}
                   weight="thin"
                   className="text-primary-default cursor-pointer"
+                  onClick={() => navigate(`/search?search=${searchQuery}`)}
                 />
               }
             />
           </div>
           <div className="flex gap-10 tablet:gap-6 mobile:gap-3">
-            <div className="flex mobile:block w-[531px] h-[260px] tablet:w-[328px] tablet:h-[146px] mobile:w-[160px] mobile:h-[167px] p-7 desktop:px-[58px] desktop:py-[52px] mobile:px-5 rounded-7 desktop:rounded-9 shadow-[0_0_20px_0] shadow-effect-shadow">
+            <div
+              className="flex mobile:block w-[531px] h-[260px] tablet:w-[328px] tablet:h-[146px] mobile:w-[160px] mobile:h-[167px] p-7 desktop:px-[58px] desktop:py-[52px] mobile:px-5 rounded-7 desktop:rounded-9 shadow-[0_0_20px_0] shadow-effect-shadow cursor-pointer"
+              onClick={() => navigate('/property', { state: { keyword: 'benefit' } })}>
               <div className="grow">
                 <div className="mb-3 desktop:mb-5 mobile:text-center">
                   <span className="text-body-lg tablet:text-body-sm mobile:text-body-sm-m font-bold text-accent-strong">
@@ -62,13 +75,15 @@ const Main = () => {
               </div>
               <div className="flex grow items-end justify-end mobile:justify-center">
                 <img
-                  src="/src/assets/image/benefitImage.png"
+                  src="/public/images/benefitImage.png"
                   alt="benefitImage"
                   className="w-[137px] h-[131px] tablet:w-[91px] tablet:h-[87px] mobile:w-[70px] mobile:h-[66px]"
                 />
               </div>
             </div>
-            <div className="flex mobile:block w-[531px] h-[260px] px-[58px] tablet:w-[328px] tablet:h-[146px] mobile:w-[160px] mobile:h-[167px] py-[37px] tablet:p-7 mobile:px-5 mobile:py-7 rounded-7 desktop:rounded-9 shadow-[0_0_20px_0] shadow-effect-shadow">
+            <div
+              className="flex mobile:block w-[531px] h-[260px] px-[58px] tablet:w-[328px] tablet:h-[146px] mobile:w-[160px] mobile:h-[167px] py-[37px] tablet:p-7 mobile:px-5 mobile:py-7 rounded-7 desktop:rounded-9 shadow-[0_0_20px_0] shadow-effect-shadow cursor-pointer"
+              onClick={() => navigate('/property', { state: { keyword: 'infra' } })}>
               <div className="grow">
                 <div className="mb-3 desktop:mb-5 mobile:text-center">
                   <span className="text-body-lg tablet:text-body-sm mobile:text-body-sm-m font-bold text-primary-default">
@@ -85,7 +100,7 @@ const Main = () => {
               </div>
               <div className="flex grow items-end justify-end mobile:justify-center">
                 <img
-                  src="/src/assets/image/infraImage.png"
+                  src="/public/images/infraImage.png"
                   alt="benefitImage"
                   className="w-[107px] h-[130px] tablet:w-[68px] tablet:h-[81px] mobile:w-[54px] mobile:h-[64px]"
                 />
@@ -102,6 +117,7 @@ const Main = () => {
               </p>
             </div>
             <div className="flex items-end justify-end mobile:justify-center">
+              {/* 로그인 - 매물등록, 비로그인 - 로그인화면 */}
               <Button
                 variant="assistive"
                 size={`${isMobile ? 'sm' : 'md'}`}
@@ -124,6 +140,7 @@ const Main = () => {
               <div className="flex flex-col gap-6 items-center">
                 {data?.content?.properties.map((property: any, index: any) => {
                   const commonProps = {
+                    id: property.id,
                     imageUrl: property.image_url,
                     title: property.property_name,
                     address: property.area_addr,
@@ -136,7 +153,6 @@ const Main = () => {
                     like: property.like,
                     rank: index + 1 + (currentPage - 1) * 5,
                   };
-
                   return isMobile ? (
                     <ItemCard key={property.id} size="s" {...commonProps} />
                   ) : (

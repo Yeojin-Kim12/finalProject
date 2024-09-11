@@ -1,9 +1,11 @@
 import { Heart } from '@phosphor-icons/react';
 import { Label } from '../ui/label';
 import { formatAmount, getPropertyLabel } from '@/lib/utils';
+import { Link, useNavigate } from 'react-router-dom';
 
 export interface ItemCardProps {
   size: 'l' | 's' | 'default'; // 사이즈
+  id: number;
   title: string; // 제목
   imageUrl: string; // 이미지
   address: string; // 주소
@@ -20,6 +22,7 @@ export interface ItemCardProps {
 
 const ItemCard = ({
   size,
+  id,
   title,
   imageUrl,
   address,
@@ -34,6 +37,7 @@ const ItemCard = ({
   status,
 }: ItemCardProps) => {
   const discountRate = Math.round(((price - discountPrice) / price) * 100); // 할인율 계산
+  const navigate = useNavigate();
 
   const cardSizeClass = {
     l: 'w-[352px] min-w-[352px] h-[426px] px-5 pt-6 pb-9',
@@ -44,7 +48,9 @@ const ItemCard = ({
   return (
     <div>
       {size === 'l' && (
-        <div className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 font-pretendard`}>
+        <Link
+          to={`/property/${id}`}
+          className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 font-pretendard cursor-pointer`}>
           <div className="relative mb-5">
             <img src={imageUrl} alt={title} className="w-full h-[180px] rounded-5 object-cover" />
             <div className="absolute inset-0 gradient-overlay rounded-5" />
@@ -103,11 +109,12 @@ const ItemCard = ({
               </div>
             </div>
           </div>
-        </div>
+        </Link>
       )}
       {size === 's' && (
-        <div
-          className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 font-pretendard border border-assistive-divider`}>
+        <Link
+          to={`/property/${id}`}
+          className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 font-pretendard border border-assistive-divider cursor-pointer`}>
           <div className="flex gap-4  px-4 pt-5 pb-4 border-b border-assistive-divider">
             <div className="w-[180px]">
               <div className="flex gap-2 mb-3">
@@ -180,7 +187,7 @@ const ItemCard = ({
               <p>총 {totalNumber}세대</p>
             </div>
           </div>
-        </div>
+        </Link>
       )}
       {size === 'default' && (
         <div className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 font-pretendard`}>
