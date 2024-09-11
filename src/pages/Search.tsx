@@ -101,6 +101,7 @@ const Search = () => {
               <div className="flex flex-col items-center">
                 <ItemCard
                   key={index}
+                  id={property.id}
                   size={isMobile ? 's' : 'l'}
                   imageUrl={property.image_url}
                   title={property.property_name}

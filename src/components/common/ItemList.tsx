@@ -1,7 +1,7 @@
 import { Heart } from '@phosphor-icons/react';
 import { Label } from '../ui/label';
 import { formatAmount, getPropertyLabel } from '@/lib/utils';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export interface ItemListProps {
   size: 'l' | 'm'; // 사이즈

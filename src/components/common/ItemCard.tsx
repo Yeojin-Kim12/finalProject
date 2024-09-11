@@ -1,7 +1,7 @@
 import { Heart } from '@phosphor-icons/react';
 import { Label } from '../ui/label';
 import { formatAmount, getPropertyLabel } from '@/lib/utils';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export interface ItemCardProps {
   size: 'l' | 's' | 'default'; // 사이즈
@@ -37,7 +37,6 @@ const ItemCard = ({
   status,
 }: ItemCardProps) => {
   const discountRate = Math.round(((price - discountPrice) / price) * 100); // 할인율 계산
-  const navigate = useNavigate();
 
   const cardSizeClass = {
     l: 'w-[352px] min-w-[352px] h-[426px] px-5 pt-6 pb-9',
