@@ -78,21 +78,9 @@ const GNB = () => {
           <div className="flex gap-8">
             <div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative">
               <Link to="/">
-                <img
-                  src="/public/images/logos/logo_size_l.png"
-                  alt="logo_l"
-                  className="hidden desktop:block"
-                />
-                <img
-                  src="/public/images/logos/logo_size_m.png"
-                  alt="logo_m"
-                  className="hidden tablet:block"
-                />
-                <img
-                  src="/public/images/logos/logo_size_s.png"
-                  alt="logo_s"
-                  className="hidden mobile:block"
-                />
+                <img src="/images/logos/logo_size_l.png" alt="logo_l" className="hidden desktop:block" />
+                <img src="/images/logos/logo_size_m.png" alt="logo_m" className="hidden tablet:block" />
+                <img src="/images/logos/logo_size_s.png" alt="logo_s" className="hidden mobile:block" />
               </Link>
             </div>
 

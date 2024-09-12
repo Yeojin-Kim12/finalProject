@@ -75,7 +75,7 @@ const Main = () => {
               </div>
               <div className="flex grow items-end justify-end mobile:justify-center">
                 <img
-                  src="/public/images/benefitImage.png"
+                  src="/images/benefitImage.png"
                   alt="benefitImage"
                   className="w-[137px] h-[131px] tablet:w-[91px] tablet:h-[87px] mobile:w-[70px] mobile:h-[66px]"
                 />
@@ -100,7 +100,7 @@ const Main = () => {
               </div>
               <div className="flex grow items-end justify-end mobile:justify-center">
                 <img
-                  src="/public/images/infraImage.png"
+                  src="/images/infraImage.png"
                   alt="benefitImage"
                   className="w-[107px] h-[130px] tablet:w-[68px] tablet:h-[81px] mobile:w-[54px] mobile:h-[64px]"
                 />
