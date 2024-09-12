@@ -1,14 +1,19 @@
 import { z } from 'zod';
 
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
 export const propertyAddSchema = z.object({
   propertyName: z.string().min(1, '매물명을 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
   propertyConstructor: z.string().min(1, '시공사를 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
   propertyCompanyName: z.string().min(1, '시행사를 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
   propertyTotalNumber: z.preprocess(
-    (val) => parseFloat(val as string),
+    (val) => {
+      const parsed = parseFloat(val as string);
+      return isNaN(parsed) ? 0 : parsed;
+    },
     z.number().min(1, '세대수를 입력해주세요').max(10000, '세대수는 10000이하이어야 합니다'),
   ),
-  propertyRecruitmentDate: z.string().min(1, '모집기간을 입력해주세요'),
   propertyAreaAddr: z.string().min(1, '대지위치를 입력해주세요'),
   propertyModelhouseAddr: z.string().min(1, '모델하우스 주소를 입력해주세요'),
   areas: z
@@ -46,15 +51,69 @@ export const propertyAddSchema = z.object({
         ),
     )
     .min(1, '세대면적을 입력해주세요'),
+  files: z
+    .array(
+      z.object({
+        name: z.string().optional(),
+        url: z.string().optional(),
+        type: z.string().optional(),
+      }),
+    )
+    .superRefine((files, ctx) => {
+      const hasPropertyImage = files.some((file) => file.type === 'PROPERTY_IMAGE');
+      const hasSupplyInformation = files.some((file) => file.type === 'SUPPLY_INFORMATION');
+
+      if (!hasPropertyImage) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: '이미지를 첨부해주세요',
+          path: [0],
+        });
+      }
+      if (!hasSupplyInformation) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: '파일을 첨부해주세요',
+          path: [1],
+        });
+      }
+    }),
   addrDo: z.string().optional(),
   addrGu: z.string().optional(),
   addrDong: z.string().optional(),
   buildingName: z.string().optional(),
   propertyType: z.string().optional(),
   salesType: z.string().optional(),
+  dateRange: z.object({
+    startDate: z
+      .string()
+      .min(1, '시작 날짜를 입력해주세요')
+      .refine(
+        (date) => {
+          const parsedDate = Date.parse(date);
+          return !isNaN(parsedDate) && parsedDate >= today.getTime();
+        },
+        {
+          message: '시작 날짜는 오늘 이후여야 합니다',
+        },
+      ),
+    endDate: z
+      .string()
+      .min(1, '종료 날짜를 입력해주세요')
+      .refine(
+        (date) => {
+          const parsedDate = Date.parse(date);
+          return !isNaN(parsedDate) && parsedDate >= today.getTime();
+        },
+        {
+          message: '종료 날짜는 오늘 이후여야 합니다',
+        },
+      ),
+  }),
+
   phoneNumber: z
     .string()
-    .min(1, '분양 문의 번호를 입력해주세요')
+    .min(0, '분양 문의 번호를 입력해주세요')
     .regex(
       /^(\d{3}-\d{4}-\d{4}|\d{4}-\d{4})$/,
       '분양 문의 번호는 010-0000-0000 또는 0000-0000 형식이어야 합니다',

@@ -1,6 +1,6 @@
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import PropertyInputValidation from '../common/PropertyInputValidation';
-import { Check, FilePlus, Plus, X } from '@phosphor-icons/react';
+import { Check, Plus, X } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
@@ -9,8 +9,9 @@ import { FormValues } from '@/types/types';
 import PropertyDateValidation from '../common/PropertyDateValidation';
 import { ToggleButton } from '../ui/ToggleButton';
 import { KeywordBadge } from '../ui/KeywordBadge';
+import { ImageUpload } from './ImageUpload';
+import { PdfUpload } from './PdfUpload';
 
-// 파일 첨부 내용 추가할 것, 코드분할
 export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
   const {
     control,
@@ -63,14 +64,6 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
     control,
     name: 'areas',
   });
-  // const {
-  //   fields: fileFields,
-  //   append: appendFile,
-  //   remove: removeFile,
-  // } = useFieldArray({
-  //   control,
-  //   name: 'files',
-  // });
 
   // 세대면적 추가
   const addArea = () => {
@@ -86,35 +79,15 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
     }
   };
 
-  // 파일 관련
-  // const addFile = (fileName: string) => {
-  //   if (fileName) {
-  //     appendFile({
-  //       fileName: fileName,
-  //       fileUrl: '',
-  //       fileType: '',
-  //     });
-  //   }
-  // };
-
   const handleNext = () => {
     onNext();
   };
 
   return (
-    <div className="flex flex-col w-[720px] h-full m-auto">
+    <div className="flex flex-col w-[720px] h-full mx-auto my-11">
       <div className="flex flex-col w-full gap-8">
-        <div className="">
-          <label className="inline-block my-5 text-static-default text-title-base font-bold">
-            대표이미지
-          </label>
-          <div className="flex flex-col items-center justify-center w-[464px] h-[261px] py-10 bg-assistive-base text-assistive-strong border border-assistive-default rounded-6 text-detail-base">
-            <FilePlus size={80} weight="light" className="mb-3" />
-            <p className="text-label-lg font-bold">대표 이미지 등록하기</p>
-            <p>10MB 이하의 jpg, jpeg, png 파일만 등록할 수 있어요.</p>
-            <p>사진 크기는 0000*000 픽셀로 노출됩니다</p>
-          </div>
-        </div>
+        <ImageUpload />
+
         <PropertyInputValidation name="propertyName" label="매물명" placeholder="매물명을 입력해주세요" />
         <div className="flex w-full gap-9">
           <PropertyInputValidation
@@ -138,11 +111,17 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
           trailingExtra="세대"
           numberOnly={true}
         />
-        {/* 캘린더 이후 추가예정 */}
-        <PropertyDateValidation name="dateRange" label="모집기간" />
+        <PropertyDateValidation
+          name="dateRange"
+          label="모집기간"
+          errorMessage={{
+            startDate: (errors.dateRange as any)?.startDate?.message || '',
+            endDate: (errors.dateRange as any)?.endDate?.message || '',
+          }}
+        />
       </div>
 
-      <div className="w-full h-[1px] my-10 bg-assistive-divider"></div>
+      <div className="w-full h-[1px] my-10 bg-assistive-divider" />
 
       <div className="flex flex-col w-full gap-8">
         <div>
@@ -191,17 +170,7 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
             </div>
           )}
         </div>
-        <PropertyInputValidation
-          name="propertySupplyInformation"
-          label="공급안내표"
-          placeholder="10MB 이하의 pdf 파일만 등록할 수 있어요"
-          className="w-full mb-[0px]"
-          buttonTitle="파일 첨부"
-          buttonSize="lg"
-          buttonVariant="outline"
-          buttonClassName="ml-4"
-          buttonType="button"
-        />
+        <PdfUpload />
       </div>
       <div className="w-full h-[1px] my-10 bg-assistive-divider"></div>
 

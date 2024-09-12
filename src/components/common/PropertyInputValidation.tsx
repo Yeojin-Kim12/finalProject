@@ -87,7 +87,7 @@ const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInput
                     onBlur={onBlur}
                     className={` ${
                       fieldState.error || errorMessage ? 'shadow-error focus:shadow-error' : ''
-                    } ${forwardExtra && 'pl-[80px]'} ${trailingExtra && 'pr-[70px] text-end placeholder:text-start'} ${inputClassName}`}
+                    } ${forwardExtra && 'pl-[80px]'} ${trailingExtra && 'pr-[80px] text-end placeholder:text-start'} ${inputClassName}`}
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                     {trailingExtra && (

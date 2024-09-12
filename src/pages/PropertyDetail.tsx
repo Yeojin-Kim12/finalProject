@@ -301,7 +301,6 @@ const PropertyDetail = () => {
           </div>
         </div>
       </div>
-      {/* 전화문의 */}
       {isMobile ? (
         <Drawer open={isPhoneDialog} onOpenChange={setIsPhoneDialog}>
           <DrawerContent className="w-full h-[352px] px-5 pt-9 rounded-t-6">
@@ -316,7 +315,6 @@ const PropertyDetail = () => {
           </DialogContent>
         </Dialog>
       )}
-      {/* 상담신청 */}
       {isMobile ? (
         <CounselDrawer
           isOpen={isCounselRegister}

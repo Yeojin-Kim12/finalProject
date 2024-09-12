@@ -10,7 +10,7 @@ interface PropertyDateValidationProps {
   className?: string;
   onButtonClick?: () => void;
 
-  errorMessage?: string;
+  errorMessage?: { startDate?: string; endDate?: string };
   numberOnly?: boolean;
   optional?: boolean;
 }
@@ -30,13 +30,23 @@ const PropertyDateValidation = ({
       control={control}
       render={({ field, fieldState }) => {
         const handleDateChange = (range: DateRange | undefined) => {
+          const adjustKST = (date: Date) => {
+            const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+            return offsetDate;
+          };
+
           if (range?.from) {
-            setValue(`${name}.startDate`, range.from);
+            const startDate = adjustKST(new Date(range.from));
+            setValue(`${name}.startDate`, startDate.toISOString().split('T')[0]);
           }
           if (range?.to) {
-            setValue(`${name}.endDate`, range.to);
+            const endDate = adjustKST(new Date(range.to));
+            setValue(`${name}.endDate`, endDate.toISOString().split('T')[0]);
           }
-          field.onChange(range);
+          field.onChange({
+            startDate: range?.from ? adjustKST(new Date(range.from)).toISOString().split('T')[0] : '',
+            endDate: range?.to ? adjustKST(new Date(range.to)).toISOString().split('T')[0] : '',
+          });
         };
         const initialDate = field.value;
 
@@ -50,6 +60,8 @@ const PropertyDateValidation = ({
               toLabel="모집마감일"
               onChange={handleDateChange}
               initialRange={initialDate}
+              fieldError={fieldState.error}
+              errorMessage={errorMessage}
             />
             {optional && <label className="text-accent-error text-detail-lg">선택</label>}
 
@@ -58,7 +70,7 @@ const PropertyDateValidation = ({
             </div>
             {(fieldState.error || errorMessage) && (
               <p className="absolute left-0 mt-1 text-sm text-accent-error">
-                {fieldState.error?.message || errorMessage}
+                {fieldState.error?.message || errorMessage?.startDate || errorMessage?.endDate}
               </p>
             )}
           </div>

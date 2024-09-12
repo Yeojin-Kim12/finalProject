@@ -3,7 +3,7 @@ export type propertyAddTypes =
   | 'propertyConstructor'
   | 'propertyCompanyName'
   | 'propertyTotalNumber'
-  | 'propertyRecruitmentDate'
+  | 'files'
   | 'areas'
   | 'propertyAreaAddr'
   | 'propertyModelhouseAddr'
@@ -14,6 +14,5 @@ export type propertyAddTypes =
   | 'phoneNumber'
   | 'homepage'
   | 'contactChannel'
+  | 'dateRange'
   | 'keywords';
-
-// | 'propertySupplyInformation';

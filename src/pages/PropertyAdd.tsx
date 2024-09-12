@@ -11,8 +11,8 @@ import { Link } from 'react-router-dom';
 import PropertyComplete from '@/components/PropertyAdd/PropertyComplete';
 import PropertyKeywords from '@/components/PropertyAdd/PropertyKeywords';
 
-// const steps = ['매물정보 입력', '추가사항 입력', '키워드 선택', '등록 완료'];
-const steps = ['매물정보 입력', '키워드 선택', '추가사항 입력', '등록 완료'];
+const steps = ['매물정보 입력', '추가사항 입력', '키워드 선택', '등록 완료'];
+// const steps = ['매물정보 입력', '키워드 선택', '추가사항 입력', '등록 완료'];
 
 const PropertyAdd = () => {
   const methods = useForm({
@@ -25,24 +25,26 @@ const PropertyAdd = () => {
 
   const validationFields: Record<string, propertyAddTypes[]> = {
     step1: [
-      // 'propertyName',
-      // 'propertyConstructor',
-      // 'propertyCompanyName',
-      // 'propertyTotalNumber',
-      // 'propertyRecruitmentDate',
-      // 'areas',
-      // 'propertyAreaAddr',
-      // 'propertyModelhouseAddr',
+      'propertyName',
+      'propertyConstructor',
+      'propertyCompanyName',
+      'propertyTotalNumber',
+      'areas',
+      'propertyAreaAddr',
+      'propertyModelhouseAddr',
+      'files',
+      'dateRange',
     ],
     step2: ['phoneNumber', 'homepage', 'contactChannel'],
-    step3: ['keywords', 'areas'],
+    step3: [
+      // 'keywords', 'areas'
+    ],
     step4: [],
   };
 
-  const handleNextStep = async (currentStep: string, nextStep: string) => {
-    const stepIndex = steps.indexOf(currentStep);
-    const fieldsToValidate = validationFields[`step${stepIndex + 1}` as keyof typeof validationFields] || [];
-
+  const handleNextStep = async (nextStep: string) => {
+    const stepIndex = steps.indexOf(nextStep);
+    const fieldsToValidate = validationFields[`step${stepIndex}` as keyof typeof validationFields];
     const isValid = await methods.trigger(fieldsToValidate);
 
     if (isValid) {
@@ -53,7 +55,7 @@ const PropertyAdd = () => {
   };
 
   const onSubmit = async (data: any) => {
-    const isValid = await methods.trigger(validationFields['step3']);
+    const isValid = await methods.trigger(validationFields['step2']);
     if (isValid) {
       console.log('Form Data:', data);
       setStep(steps[3]);
@@ -64,24 +66,30 @@ const PropertyAdd = () => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)} className="w-[1200px] m-auto" noValidate>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className="w-[1200px] m-auto">
         <Funnel>
           <Step name="매물정보 입력">
-            <PropertyInformation onNext={() => handleNextStep(steps[0], steps[1])} />
+            <PropertyInformation onNext={() => handleNextStep(steps[1])} />
           </Step>
 
           <Step name="추가사항 입력">
             <AdditionalInformation />
-            <Button type="button" onClick={() => setStep(steps[0])}>
-              이전
-            </Button>
-            <Button type="button" onClick={() => handleNextStep(steps[0], steps[2])}>
-              다음
-            </Button>
+            <div className="flex items-center justify-center w-full gap-5">
+              <Button
+                type="button"
+                variant="assistive"
+                className="w-[220px]"
+                onClick={() => setStep(steps[0])}>
+                이전
+              </Button>
+              <Button type="submit" className="w-[220px]" onClick={() => handleNextStep(steps[2])}>
+                다음
+              </Button>
+            </div>
           </Step>
           <Step name="키워드 선택">
             <PropertyKeywords />
-            <Button type="button" onClick={() => setStep(steps[2])}>
+            <Button type="button" onClick={() => setStep(steps[1])}>
               이전
             </Button>
             <Button type="submit" onClick={() => setStep(steps[3])}>

@@ -3,12 +3,12 @@ export const propertyAddValues = {
   propertyConstructor: '',
   propertyCompanyName: '',
   propertyTotalNumber: '',
-  propertyRecruitmentDate: '',
   dateRange: {
     startDate: '',
     endDate: '',
   },
   areas: [],
+  files: [],
   propertyAreaAddr: '',
   propertyModelhouseAddr: '',
   keywords: [],
@@ -19,5 +19,4 @@ export const propertyAddValues = {
   phoneNumber: '',
   homepage: '',
   contactChannel: '',
-  // propertySupplyInformation: '',
 };
