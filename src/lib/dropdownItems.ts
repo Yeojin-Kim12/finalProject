@@ -72,28 +72,6 @@ export const customerRating = [
     label: 'D',
   },
 ];
-export const operator = [
-  {
-    value: 'S',
-    label: 'S',
-  },
-  {
-    value: 'A',
-    label: 'A',
-  },
-  {
-    value: 'B',
-    label: 'B',
-  },
-  {
-    value: 'C',
-    label: 'C',
-  },
-  {
-    value: 'D',
-    label: 'D',
-  },
-];
 export const operatorId = [
   {
     value: 'a1-1',
@@ -114,5 +92,37 @@ export const operatorId = [
   {
     value: 'a1-5',
     label: 'a1-5',
+  },
+];
+export const operatorIdAll = [
+  {
+    value: 'a1-1',
+    label: 'a1-1',
+  },
+  {
+    value: 'a1-2',
+    label: 'a1-2',
+  },
+  {
+    value: 'a1-3',
+    label: 'a1-3',
+  },
+  {
+    value: 'a1-4',
+    label: 'a1-4',
+  },
+  {
+    value: 'a1-5',
+    label: 'a1-5',
+  },
+];
+export const consultingStatus = [
+  {
+    value: '상담대기',
+    label: '상담대기',
+  },
+  {
+    value: '상담완료',
+    label: '상담완료',
   },
 ];

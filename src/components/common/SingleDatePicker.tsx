@@ -31,7 +31,7 @@ const SingleDatePicker = ({ defaultLabel, onChange }: SingleDatePickerProps) => 
           variant="assistive"
           size="sm"
           className={cn(
-            'w-[187px] justify-between  font-normal pl-7 pr-5 py-4 text-label-lg',
+            'w-[187px] justify-between  font-normal pl-7 pr-5 py-4 text-label-lg rounded-5',
             isActive && 'shadow-focus',
           )}>
           {date ? formatDate(date) : <span>{defaultLabel}</span>}

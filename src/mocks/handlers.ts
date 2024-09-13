@@ -207,5 +207,64 @@ const handlers = [
       currentPage: 0, // 현재 페이지 번호
     });
   }),
+
+  http.get('/api/admin/properties/:propertyId/consultations/pending', (req) => {
+    const { propertyId, search, consultant, preferred_at, page, size } = req.params;
+    propertyId;
+    search;
+    consultant;
+    preferred_at;
+    size;
+
+    return HttpResponse.json({
+      totalPages: 3,
+      pageSize: 5,
+      currentPage: page,
+      contents: {
+        consultPendingSummaries: [
+          {
+            preferredAt: '2025-01-01',
+            createdAt: '2024-08-20',
+            consultant: 'a-10',
+            name: '2:37',
+            phoneNumber: '01012341899',
+            addConsultation: 'true',
+          },
+          {
+            preferredAt: '2025-01-01',
+            createdAt: '2024-08-20',
+            consultant: 'a-10',
+            name: '2:33',
+            phoneNumber: '01012341799',
+            addConsultation: 'false',
+          },
+          {
+            preferredAt: '2025-01-01',
+            createdAt: '2024-08-20',
+            consultant: 'a-10',
+            name: '12:56',
+            phoneNumber: '01012341699',
+            addConsultation: 'true',
+          },
+          {
+            preferredAt: '2025-01-01',
+            createdAt: '2024-08-20',
+            consultant: 'a-10',
+            name: '12:56',
+            phoneNumber: '01012341599',
+            addConsultation: 'true',
+          },
+          {
+            preferredAt: '2025-01-01',
+            createdAt: '2024-08-20',
+            consultant: 'a-10',
+            name: 'cc',
+            phoneNumber: '01012341499',
+            addConsultation: 'true',
+          },
+        ],
+      },
+    });
+  }),
 ];
 export default handlers;
