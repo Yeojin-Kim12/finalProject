@@ -9,7 +9,8 @@ const buttonVariants = cva(`inline-flex items-center justify-center whitespace-n
     variant: {
       primary:
         'bg-primary-default shadow-focus !text-static-white active:bg-primary-alternative disabled:bg-assistive-alternative disabled:shadow-none',
-      outline: 'bg-static-white shadow-focus !text-primary-default active:bg-primary-base',
+      outline:
+        'bg-static-white shadow-[inset_0_0_0_1px_#204AE5] !text-primary-default active:bg-primary-base',
       assistive: 'bg-static-white shadow-default !text-static-default active:!text-assistive-default',
       disabled: 'bg-assistive-alternative !text-assistive-strong',
       ghost: 'hover:bg-accent hover:text-accent-foreground',

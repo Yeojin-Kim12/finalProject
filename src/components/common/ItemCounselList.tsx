@@ -45,13 +45,13 @@ const ItemCounselList = ({
             <h2 className="w-full text-title-xl mobile:text-title-base-m mt-3 mb-4 mobile:mt-2 mobile:mb-2 text-static-default font-bold overflow-hidden text-ellipsis whitespace-nowrap">
               {title}
             </h2>
-            {status === '상담대기' ? (
+            {status === 'pending' ? (
               <Label size={isMobile ? 's' : 'm'} variant="secondary" className="mobile:text-[11px]">
-                {status}
+                상담대기
               </Label>
             ) : (
               <Label size={isMobile ? 's' : 'm'} variant="primary" className="mobile:text-[11px]">
-                {status}
+                상담완료
               </Label>
             )}
           </div>
@@ -59,10 +59,10 @@ const ItemCounselList = ({
             <span className="w-full text-detail-lg mobile:text-detail-sm-m text-assistive-detail overflow-hidden text-ellipsis whitespace-nowrap">
               {message}
             </span>
-            {/* 버튼 컴포넌트 이후 변경 - disabled 추가 */}
             <Button
               size={isMobile ? 'xs' : 'sm'}
-              variant={isInquiryOpen ? 'assistive' : 'outline'}
+              variant={isInquiryOpen ? 'disabled' : 'outline'}
+              disabled={isInquiryOpen ? true : false}
               onClick={handleInquiry}>
               문의내역 보기
             </Button>

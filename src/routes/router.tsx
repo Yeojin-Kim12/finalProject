@@ -15,6 +15,8 @@ import Search from '@/pages/Search';
 import PropertySearch from '@/pages/PropertySearch';
 import CustomerService from '@/pages/CustomerService/CustomerService';
 import PropertyManagement from '@/pages/PropertyManagement/PropertyManagement';
+import Favorite from '@/pages/Favorite';
+import CounselList from '@/pages/CounselList';
 
 export const router = createBrowserRouter([
   {
@@ -62,6 +64,8 @@ export const router = createBrowserRouter([
         path: '/property-management',
         element: <PropertyManagement />,
       },
+      { path: '/favorite', element: <Favorite /> },
+      { path: '/counsel-list', element: <CounselList /> },
     ],
   },
 ]);

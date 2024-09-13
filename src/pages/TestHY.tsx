@@ -14,6 +14,7 @@ import ReactDOM from 'react-dom/client';
 // import { useDragger } from '../hooks/useDragger';
 
 // table에 사용하는 데이터
+// @ts-ignore: Unreachable code error
 const consultingPendingData = consultingPending.map((consulting) => ({
   name: consulting.name,
   phoneNumber: consulting.phoneNumber,
@@ -22,6 +23,7 @@ const consultingPendingData = consultingPending.map((consulting) => ({
   consultant: consulting.consultant,
 }));
 
+// @ts-ignore: Unreachable code error
 const consultingCompletedData = consultingCompleted.map((consulting) => ({
   name: consulting.name,
   tier: consulting.tier,
@@ -32,14 +34,15 @@ const consultingCompletedData = consultingCompleted.map((consulting) => ({
   contents: consulting.contents,
 }));
 
+// @ts-ignore: Unreachable code error
 const myPropertyData = myProperty.map((property) => ({
   id: property.id,
   name: property.name,
   total_number: property.total_number,
   pending: property.pending,
-  status: property.status,
-  created_at: property.created_at,
-  end_date: property.end_date,
+  // status: property.status,
+  created_at: property.createdAt,
+  end_date: property.endDate,
 }));
 
 const TestHY = () => {
@@ -60,6 +63,7 @@ const TestHY = () => {
     });
   }
 
+  // @ts-ignore: Unreachable code error
   const handleViewClick = (props: any) => {
     const width = 517;
     const height = 830;

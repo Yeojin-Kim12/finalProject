@@ -2,6 +2,7 @@ import { Heart } from '@phosphor-icons/react';
 import { Label } from '../ui/label';
 import { formatAmount, getPropertyLabel } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import useLike from '@/hooks/useLike';
 
 export interface ItemListProps {
   size: 'l' | 'm'; // 사이즈
@@ -15,8 +16,9 @@ export interface ItemListProps {
   keywords?: string[]; // 키워드
   price?: number; // 가격
   discountPrice?: number; // 할인가격
-  like?: boolean; // 찜 -> 상태관리 해야함
+  like?: boolean; // 찜
   rank?: number; // 순위 -> 홈 화면에서만 사용
+  onLikeToggle?: () => void;
 }
 
 const ItemList = ({
@@ -33,8 +35,17 @@ const ItemList = ({
   discountPrice = 0,
   like,
   rank,
+  onLikeToggle,
 }: ItemListProps) => {
+  const { liked, toggleLike } = useLike(like || false, id);
   const discountRate = Math.round(((price - discountPrice) / price) * 100); // 할인율 계산
+
+  const handleLikeToggle = () => {
+    if (onLikeToggle) {
+      toggleLike();
+      onLikeToggle();
+    }
+  };
 
   const listSizeClass = {
     l: 'w-[1200px] min-w-[1200px] h-[193px] px-7 py-6',
@@ -107,8 +118,12 @@ const ItemList = ({
             </div>
           </div>
         </div>
-        <div>
-          {like ? (
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            handleLikeToggle();
+          }}>
+          {liked ? (
             <span className="text-accent-strong cursor-pointer">
               <Heart size={32} weight="fill" />
             </span>

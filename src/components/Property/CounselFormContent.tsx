@@ -54,7 +54,6 @@ export const CounselDrawer = ({
     if (date) {
       const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
       const formattedDate = offsetDate.toISOString().split('T')[0];
-      console.log(formattedDate);
 
       setCounselForm((prevForm) => ({
         ...prevForm,
@@ -206,7 +205,6 @@ export const CounselDialog = ({
     if (date) {
       const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
       const formattedDate = offsetDate.toISOString().split('T')[0];
-      console.log(formattedDate);
 
       setCounselForm((prevForm) => ({
         ...prevForm,

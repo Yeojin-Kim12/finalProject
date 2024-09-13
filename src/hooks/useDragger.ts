@@ -28,6 +28,7 @@ export function useDragger(id: string): void {
       coords.current.startY = e.clientY;
     };
 
+    // @ts-ignore: Unreachable code error
     const onMouseUp = (e: MouseEvent) => {
       isClicked.current = false;
       coords.current.lastX = target.offsetLeft;

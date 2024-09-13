@@ -15,14 +15,15 @@ const Search = () => {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [inputValue, setInputValue] = useState(searchQuery);
   const navigate = useNavigate();
-  const size = isMobile ? 6 : 9;
+  const size = isDesktop ? 9 : 6;
 
+  // 검색 홈 api 사용하면됨 신청현황의 search로 사용, 똑같이 없으면 보내지 X
   const fetchSearch = async (page: number, size: number, search: string) => {
-    const res = await axios.get(`/api/common/home`, {
+    const res = await axios.get(`/api/common/properties`, {
       params: {
         page: page,
         size: size,
-        search: search,
+        ...(search !== '' && { search: search }),
       },
     });
     return res.data;
@@ -74,19 +75,15 @@ const Search = () => {
           있어요
         </p>
         {data?.content?.properties.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-[412px] mobile:h-[317px]">
-            <div className="flex items-center justify-center w-[120px] h-[120px] tablet:w-[100px] tablet:h-[100px] mobile:w-[64px] mobile:h-[64px] bg-primary-base rounded-10 mb-11">
-              <MagnifyingGlass
-                size={isDesktop ? 80 : isMobile ? 42 : 64}
-                weight="thin"
-                className="text-primary-strong"
-              />
+          <div className="flex flex-col items-center justify-center h-[676px] tablet:h-[600px] mobile:h-[400px]">
+            <div className="flex items-center justify-center w-[120px] h-[120px] mobile:w-[96px] mobile:h-[96px] bg-primary-base rounded-10 mb-9">
+              <MagnifyingGlass size={isMobile ? 48 : 80} weight="thin" className="text-primary-strong" />
             </div>
             <div className="text-center">
-              <p className="text-title-2xl mobile:text-title-xl-m font-bold mb-4">
+              <p className="text-title-2x mobile:text-title-lg-m font-bold mb-4">
                 찾으시는 미분양 매물이 없어요
               </p>
-              <p className="text-body-lg mobile:text-body-base-m">
+              <p className="text-body-lg  mobile:text-body-sm-m">
                 다양한 미분양 매물은{' '}
                 <span className="text-primary-default cursor-pointer" onClick={() => navigate('/')}>
                   미분양 정보
@@ -96,29 +93,35 @@ const Search = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-3 tablet:grid-cols-2 mobile:grid-cols-1 gap-6 mt-6">
-            {data?.content?.properties.map((property: any, index: any) => (
-              <div className="flex flex-col items-center">
-                <ItemCard
-                  key={index}
-                  id={property.id}
-                  size={isMobile ? 's' : 'l'}
-                  imageUrl={property.image_url}
-                  title={property.property_name}
-                  address={property.area_addr}
-                  propertyType={property.property_type}
-                  salesType={property.sales_type}
-                  totalNumber={property.total_number}
-                  keywords={property.keywords}
-                  price={property.price}
-                  discountPrice={property.discount_price}
-                  like={property.like}
-                />
-              </div>
-            ))}
+          <div className="flex flex-col gap-11 mobile:gap-9">
+            <div className="grid grid-cols-3 tablet:grid-cols-2 mobile:grid-cols-1 gap-6 mobile:gap-4 mt-6">
+              {data?.content?.properties.map((property: any, index: any) => (
+                <div className="flex flex-col items-center">
+                  <ItemCard
+                    key={index}
+                    id={property.id}
+                    size={isMobile ? 's' : 'l'}
+                    imageUrl={property.image_url}
+                    title={property.property_name}
+                    address={property.area_addr}
+                    propertyType={property.property_type}
+                    salesType={property.sales_type}
+                    totalNumber={property.total_number}
+                    keywords={property.keywords}
+                    price={property.price}
+                    discountPrice={property.discount_price}
+                    like={property.like}
+                  />
+                </div>
+              ))}
+            </div>
+            <DefaultPagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
           </div>
         )}
-        <DefaultPagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />
       </div>
     </div>
   );

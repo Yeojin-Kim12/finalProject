@@ -2,6 +2,7 @@ import { Heart } from '@phosphor-icons/react';
 import { Label } from '../ui/label';
 import { formatAmount, getPropertyLabel } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import useLike from '@/hooks/useLike';
 
 export interface ItemCardProps {
   size: 'l' | 's' | 'default'; // 사이즈
@@ -18,6 +19,7 @@ export interface ItemCardProps {
   like?: boolean; // 찜 -> 상태관리 해야함
   rank?: number; // 순위 -> 홈 화면에서만 사용
   status?: string; // 모집상태 -> 매물 관리에서만 사용 -> string형태 주는지, boolean 형태로 주는지, date를 줘서 날짜 확인해야 하는지?
+  onLikeToggle?: () => void;
 }
 
 const ItemCard = ({
@@ -35,8 +37,17 @@ const ItemCard = ({
   like,
   rank,
   status,
+  onLikeToggle,
 }: ItemCardProps) => {
+  const { liked, toggleLike } = useLike(like || false, id);
   const discountRate = Math.round(((price - discountPrice) / price) * 100); // 할인율 계산
+
+  const handleLikeToggle = () => {
+    if (onLikeToggle) {
+      toggleLike();
+      onLikeToggle();
+    }
+  };
 
   const cardSizeClass = {
     l: 'w-[352px] min-w-[352px] h-[426px] px-5 pt-6 pb-9',
@@ -61,8 +72,13 @@ const ItemCard = ({
                 </div>
               )}
             </div>
-            <div className="absolute top-[10px] right-[10px] cursor-pointer">
-              {like ? (
+            <div
+              className="absolute top-[10px] right-[10px] cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                handleLikeToggle();
+              }}>
+              {liked ? (
                 <span className="text-accent-strong">
                   <Heart size={32} weight="fill" />
                 </span>
@@ -164,8 +180,13 @@ const ItemCard = ({
                   </>
                 )}
               </div>
-              <div className="absolute top-2 right-2 cursor-pointer">
-                {like ? (
+              <div
+                className="absolute top-2 right-2 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLikeToggle();
+                }}>
+                {liked ? (
                   <span className="text-accent-strong">
                     <Heart size={20} weight="fill" />
                   </span>

@@ -126,6 +126,73 @@ const handlers = [
       ],
     });
   }),
+  http.get('/api/member/my-consultations/pending', () => {
+    return HttpResponse.json({
+      count: 21, // 총 상담 신청수
+      totalPages: 3,
+      pageSize: 5,
+      currentPage: 1,
+      consultations: [
+        // 한 페이지당 5개 리턴할 예정
+        {
+          imageUrl:
+            'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png', // 대표 사진 url
+          id: 13, // 매물id
+          name: '잠실 푸르지오', // 매물명
+          consultationCreatedAt: '2024-07-20', // 상담 신청 날짜
+          message: '상담 신청합니다!', // 신청 내용
+          memberName: '길보미', // 고객명
+          phoneNumber: '01000001234', // 연락처
+          preferredAt: '2024-08-10', // 희망 상담 날짜
+        },
+        {
+          imageUrl:
+            'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png', // 대표 사진 url
+          id: 13, // 매물id
+          name: '잠실 푸르지오', // 매물명
+          consultationCreatedAt: '2024-07-20', // 상담 신청 날짜
+          message: '상담 신청합니다!', // 신청 내용
+          memberName: '길보미', // 고객명
+          phoneNumber: '01000001234', // 연락처
+          preferredAt: '2024-08-10', // 희망 상담 날짜
+        },
+        {
+          imageUrl:
+            'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png', // 대표 사진 url
+          id: 13, // 매물id
+          name: '잠실 푸르지오', // 매물명
+          consultationCreatedAt: '2024-07-20', // 상담 신청 날짜
+          message: '상담 신청합니다!', // 신청 내용
+          memberName: '길보미', // 고객명
+          phoneNumber: '01000001234', // 연락처
+          preferredAt: '2024-08-10', // 희망 상담 날짜
+        },
+        {
+          imageUrl:
+            'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png', // 대표 사진 url
+          id: 13, // 매물id
+          name: '잠실 푸르지오', // 매물명
+          consultationCreatedAt: '2024-07-20', // 상담 신청 날짜
+          message: '상담 신청합니다!', // 신청 내용
+          memberName: '길보미', // 고객명
+          phoneNumber: '01000001234', // 연락처
+          preferredAt: '2024-08-10', // 희망 상담 날짜
+        },
+        {
+          imageUrl:
+            'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png', // 대표 사진 url
+          id: 13, // 매물id
+          name: '잠실 푸르지오', // 매물명
+          consultationCreatedAt: '2024-07-20', // 상담 신청 날짜
+          message: '상담 신청합니다!', // 신청 내용
+          memberName: '길보미', // 고객명
+          phoneNumber: '01000001234', // 연락처
+          preferredAt: '2024-08-10', // 희망 상담 날짜
+        },
+      ],
+    });
+  }),
+
   http.get('/api/common/home?page={page}', () => {
     return HttpResponse.json({
       HomeImagesUrl: [
@@ -267,4 +334,5 @@ const handlers = [
     });
   }),
 ];
+
 export default handlers;

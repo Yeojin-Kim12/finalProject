@@ -73,7 +73,7 @@ const GNB = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 desktop:h-[93px] tablet:h-[65px] mobile:h-[54px] pl-9 pr-8 bg-white border-b border-assistive-divider">
+      <header className="sticky top-0 z-50 desktop:h-[93px] tablet:h-[65px] mobile:h-[54px] pl-9 pr-8 tablet:px-7 mobile:px-5 bg-white border-b border-assistive-divider">
         <nav className="flex justify-between items-center w-full h-full max-w-[1920px] mx-auto">
           <div className="flex gap-8">
             <div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative">
@@ -101,24 +101,25 @@ const GNB = () => {
                   className={`w-[193px] px-5 py-8 text-center ${location.pathname === '/service' ? 'text-primary-default' : ''}`}>
                   서비스 소개
                 </Link>
-                <li
-                  className={`w-[193px] px-5 py-8 text-center cursor-pointer relative group ${location.pathname === '/mypage' ? 'text-primary-default' : ''}`}>
-                  마이페이지
+                <Link
+                  to="/favorite"
+                  className={`block w-[193px] px-5 py-8 text-center cursor-pointer relative group ${location.pathname === '/favorite' || location.pathname === '/counsel-list' ? 'text-primary-default' : ''}`}>
+                  <p>마이페이지</p>
                   <div className="hidden absolute left-0 top-[93px] w-full bg-white shadow-lg text-assistive-detail group-hover:flex flex-col items-start font-normal z-40">
                     <ul className="w-full">
                       <Link
-                        to="/"
-                        className="block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold">
+                        to="/favorite"
+                        className={`block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold ${location.pathname === '/favorite' ? 'text-primary-default font-bold' : ''}`}>
                         관심 매물
                       </Link>
                       <Link
-                        to="/"
-                        className="block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold">
+                        to="/counsel-list"
+                        className={`block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold ${location.pathname === '/counsel-list' ? 'text-primary-default font-bold' : ''}`}>
                         상담신청 현황
                       </Link>
                     </ul>
                   </div>
-                </li>
+                </Link>
               </ul>
             </div>
           </div>
@@ -203,8 +204,24 @@ const GNB = () => {
             {isLnbMenuOpen && (
               <div className="flex flex-col items-start bg-white w-full fixed z-50 shadow-lg text-links-sm text-assistive-detail">
                 <ul className="w-full">
-                  <li className="px-7 py-5 cursor-pointer">관심 매물</li>
-                  <li className="px-7 py-5 cursor-pointer">상담신청 현황</li>
+                  <Link
+                    to="/favorite"
+                    className="block px-7 py-5 cursor-pointer"
+                    onClick={() => {
+                      setIsLnbMenuOpen(false);
+                      setIsMenuOpen(false);
+                    }}>
+                    관심 매물
+                  </Link>
+                  <Link
+                    to="/counsel-list"
+                    className="block px-7 py-5 cursor-pointer"
+                    onClick={() => {
+                      setIsLnbMenuOpen(false);
+                      setIsMenuOpen(false);
+                    }}>
+                    상담신청 현황
+                  </Link>
                 </ul>
               </div>
             )}

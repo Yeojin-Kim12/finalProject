@@ -14,9 +14,9 @@ const Breadcrumb = ({ links }: BreadcrmbProps) => {
   const getPath = (link: string) => {
     switch (link) {
       case '마이페이지':
-        return '/mypage';
+        return '/favorite';
       case '미분양 정보':
-        return '/landList';
+        return '/property';
       default:
         return '';
     }

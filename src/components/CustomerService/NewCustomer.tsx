@@ -67,6 +67,36 @@ export default function NewCustomer({
     console.log(customerData);
   };
 
+  const mutation = useMutation({
+    mutationFn: async (newCustomer: CustomerData) => {
+      const response = await axios.post('/api/admin/properties/{propertyId}/consultations', newCustomer, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status !== 200 && response.status !== 201) {
+        throw new Error('에러가 발생했습니다 ');
+      }
+      return response.data;
+    },
+  });
+
+  const handleSubmit = () => {
+    const customerData = {
+      name,
+      phoneNumber,
+      status: selectedConsultingStatus === '상담대기' ? 'pending' : 'complete',
+      consultant: selectedConsultant,
+      consultingMessage,
+      preferredAt,
+      tier: selectedRating || '',
+      medium: 'phone',
+    };
+    onAddCustomer(customerData);
+    mutation.mutate(customerData);
+    console.log(customerData);
+  };
+
   return (
     <main className="flex flex-col z-50 items-center py-9 max-w-[518px] h-[830px]">
       <DialogClose asChild>

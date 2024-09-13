@@ -121,3 +121,11 @@ export function formatPhoneNumber(phoneNumber: string | undefined): string | und
     return phoneNumber;
   }
 }
+
+// 전화번호 하이픈 제거
+export function removePhoneNumberHyphens(phoneNumber: string | undefined): string {
+  if (!phoneNumber) {
+    return '';
+  }
+  return phoneNumber.replace(/\D/g, '');
+}
