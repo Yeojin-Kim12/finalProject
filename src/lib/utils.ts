@@ -129,3 +129,10 @@ export function removePhoneNumberHyphens(phoneNumber: string | undefined): strin
   }
   return phoneNumber.replace(/\D/g, '');
 }
+
+// preview URL 변환 함수
+export function getUsableImageUrl(url: string): string {
+  const regex = /(PROPERTY_IMAGE\/[^?]+)/;
+  const imagePath = url.match(regex);
+  return imagePath ? `https://delivery183.org/${imagePath[0]}` : '';
+}

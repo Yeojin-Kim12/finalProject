@@ -1,5 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
+const allPosts = new Map();
+
 const handlers = [
   http.get('/api/properties/:id', (req) => {
     const { id } = req.params;
@@ -204,67 +206,67 @@ const handlers = [
         properties: [
           {
             id: 13,
-            image_url: 'https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png',
-            property_name: '계양 어떤서원',
-            area_addr: '인천시 계양구 용종로',
-            property_type: 'APARTMENT',
-            sales_type: 'PRIVATE_SALE',
-            total_number: 100,
+            imageUrl: 'https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png',
+            propertyName: '계양 어떤서원',
+            areaAddr: '인천시 계양구 용종로',
+            propertyType: 'APARTMENT',
+            salesType: 'PRIVATE_SALE',
+            totalNumber: 100,
             keywords: ['DISCOUNT_SALE', 'SUBWAY', 'SHOPPING'],
             price: 29800,
-            discount_price: 29800,
+            discountPrice: 29800,
             like: true,
           },
           {
             id: 14,
-            image_url: 'https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png',
-            property_name: '송도 해오름마을',
-            area_addr: '인천시 연수구 해돋이로',
-            property_type: 'APARTMENT',
-            sales_type: 'PUBLIC_SALE',
-            total_number: 200,
+            imageUrl: 'https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png',
+            propertyName: '송도 해오름마을',
+            areaAddr: '인천시 연수구 해돋이로',
+            propertyType: 'APARTMENT',
+            salesType: 'PUBLIC_SALE',
+            totalNumber: 200,
             keywords: ['DISCOUNT_SALE', 'SUBWAY', 'LIBRARY'],
             price: 38500,
-            discount_price: 37000,
+            discountPrice: 37000,
             like: false,
           },
           {
             id: 15,
-            image_url: 'https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png',
-            property_name: '부평 e편한세상',
-            area_addr: '인천시 부평구 부평대로',
-            property_type: 'OFFICETEL',
-            sales_type: 'LEASE_SALE',
-            total_number: 150,
+            imageUrl: 'https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png',
+            propertyName: '부평 e편한세상',
+            areaAddr: '인천시 부평구 부평대로',
+            propertyType: 'OFFICETEL',
+            salesType: 'LEASE_SALE',
+            totalNumber: 150,
             keywords: ['BALANCE_DEFERRAL', 'HOSPITAL', 'PUBLIC_FACILITIES'],
             price: 32000,
-            discount_price: 31000,
+            discountPrice: 31000,
             like: true,
           },
           {
             id: 16,
-            image_url: 'https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png',
-            property_name: '청라 더샵 레이크파크',
-            area_addr: '인천시 서구 청라대로',
-            property_type: 'OFFICETEL',
-            sales_type: 'PRIVATE_SALE',
-            total_number: 250,
+            imageUrl: 'https://delivery183.org/%EC%A0%84%EA%B3%B5%20%EC%B1%85.png',
+            propertyName: '청라 더샵 레이크파크',
+            areaAddr: '인천시 서구 청라대로',
+            propertyType: 'OFFICETEL',
+            salesType: 'PRIVATE_SALE',
+            totalNumber: 250,
             keywords: ['PARK', 'BALANCE_DEFERRAL', 'GOVERNMENT'],
             price: 45000,
-            discount_price: 43000,
+            discountPrice: 43000,
             like: true,
           },
           {
             id: 17,
-            image_url: 'https://delivery183.org/dir1/0fdb98d7-9e0b-4a6d-b258-91282d038614:마이크 세팅.png',
-            property_name: '인천시티빌',
-            area_addr: '인천시 미추홀구 경원대로',
-            property_type: 'VILLA',
-            sales_type: 'PRIVATE_SALE',
-            total_number: 120,
+            imageUrl: 'https://delivery183.org/dir1/0fdb98d7-9e0b-4a6d-b258-91282d038614:마이크 세팅.png',
+            propertyName: '인천시티빌',
+            areaAddr: '인천시 미추홀구 경원대로',
+            propertyType: 'VILLA',
+            salesType: 'PRIVATE_SALE',
+            totalNumber: 120,
             keywords: ['SUPPORT_PAYMENT', 'SCHOOL', 'OPTION_PAYMENT'],
             price: 22000,
-            discount_price: 21000,
+            discountPrice: 21000,
             like: false,
           },
         ],
@@ -332,6 +334,12 @@ const handlers = [
         ],
       },
     });
+  }),
+  http.post('/api/admin/properties', async ({ request }) => {
+    const newPost = await request.json();
+    console.log('MSW에서 POST된 데이터:', newPost);
+    allPosts.set(1, newPost);
+    return HttpResponse.json(newPost, { status: 200 });
   }),
 ];
 

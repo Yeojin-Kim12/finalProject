@@ -4,18 +4,18 @@ const today = new Date();
 today.setHours(0, 0, 0, 0);
 
 export const propertyAddSchema = z.object({
-  propertyName: z.string().min(1, '매물명을 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
-  propertyConstructor: z.string().min(1, '시공사를 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
-  propertyCompanyName: z.string().min(1, '시행사를 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
-  propertyTotalNumber: z.preprocess(
+  name: z.string().min(1, '매물명을 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
+  constructorName: z.string().min(1, '시공사를 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
+  companyName: z.string().min(1, '시행사를 입력해주세요').max(20, '최대 20자까지 입력 가능합니다'),
+  totalNumber: z.preprocess(
     (val) => {
       const parsed = parseFloat(val as string);
       return isNaN(parsed) ? 0 : parsed;
     },
     z.number().min(1, '세대수를 입력해주세요').max(10000, '세대수는 10000이하이어야 합니다'),
   ),
-  propertyAreaAddr: z.string().min(1, '대지위치를 입력해주세요'),
-  propertyModelhouseAddr: z.string().min(1, '모델하우스 주소를 입력해주세요'),
+  areaAddr: z.string().min(1, '대지위치를 입력해주세요'),
+  modelhouseAddr: z.string().min(1, '모델하우스 주소를 입력해주세요'),
   areas: z
     .array(
       z

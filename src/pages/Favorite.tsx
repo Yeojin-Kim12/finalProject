@@ -24,6 +24,7 @@ const Favorite = () => {
         page: page,
         size: size,
       },
+      withCredentials: true,
     });
     return res.data;
   };

@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import { FilePlus } from '@phosphor-icons/react';
 import { Tag } from '../ui/tag';
 import { useFileUpload } from '@/hooks/useFileUpload';
+import { getUsableImageUrl } from '@/lib/utils';
 
 export const ImageUpload = () => {
   const {
     control,
     setError,
+    getValues,
     formState: { errors },
   } = useFormContext();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -21,6 +23,14 @@ export const ImageUpload = () => {
     name: 'files',
   });
   const { uploadToServer } = useFileUpload();
+
+  useEffect(() => {
+    const existingFile = getValues('files')?.find((file: any) => file.type === 'PROPERTY_IMAGE');
+    if (existingFile) {
+      setImageSrc(getUsableImageUrl(existingFile.url));
+      setImageName(existingFile.name);
+    }
+  }, []);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

@@ -141,15 +141,15 @@ const Main = () => {
                 {data?.content?.properties.map((property: any, index: any) => {
                   const commonProps = {
                     id: property.id,
-                    imageUrl: property.image_url,
-                    title: property.property_name,
-                    address: property.area_addr,
-                    propertyType: property.property_type,
-                    salesType: property.sales_type,
-                    totalNumber: property.total_number,
+                    imageUrl: property.imageUrl,
+                    title: property.propertyName,
+                    address: property.areaAddr,
+                    propertyType: property.propertyType,
+                    salesType: property.salesType,
+                    totalNumber: property.totalNumber,
                     keywords: property.keywords,
                     price: property.price,
-                    discountPrice: property.discount_price,
+                    discountPrice: property.discountPrice,
                     like: property.like,
                     rank: index + 1 + (currentPage - 1) * 5,
                   };

@@ -8,6 +8,7 @@ const AdditionalInformation = () => {
   const {
     control,
     setValue,
+    getValues,
     setError,
     formState: { errors },
   } = useFormContext<FormValues>();
@@ -16,6 +17,13 @@ const AdditionalInformation = () => {
 
   const [pdfName, setPdfName] = useState<string | null>(null); // PDF 파일명
   const { uploadToServer } = useFileUpload();
+
+  useEffect(() => {
+    const existingFile = getValues('files')?.find((file: any) => file.type === 'MARKETING');
+    if (existingFile) {
+      setPdfName(existingFile.name);
+    }
+  }, []);
 
   const handlePdfFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     handleRemovePdf();

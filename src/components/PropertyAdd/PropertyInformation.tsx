@@ -28,19 +28,19 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
   const postcodeUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
   const postcodeOpen = useDaumPostcodePopup(postcodeUrl);
 
-  const handlePostcodeComplete = (data: any, inputType: 'propertyAreaAddr' | 'propertyModelhouseAddr') => {
-    if (inputType === 'propertyAreaAddr') {
-      setValue('propertyAreaAddr', data.address);
+  const handlePostcodeComplete = (data: any, inputType: 'areaAddr' | 'modelhouseAddr') => {
+    if (inputType === 'areaAddr') {
+      setValue('areaAddr', data.address);
       setValue('addrDo', data.sido);
       setValue('addrGu', data.sigungu);
       setValue('addrDong', data.bname);
       setValue('buildingName', data.buildingName);
-    } else if (inputType === 'propertyModelhouseAddr') {
-      setValue('propertyModelhouseAddr', data.address);
+    } else if (inputType === 'modelhouseAddr') {
+      setValue('modelhouseAddr', data.address);
     }
   };
 
-  const handlePostcodeClick = (inputType: 'propertyAreaAddr' | 'propertyModelhouseAddr') => {
+  const handlePostcodeClick = (inputType: 'areaAddr' | 'modelhouseAddr') => {
     postcodeOpen({
       onComplete: (data) => handlePostcodeComplete(data, inputType),
     });
@@ -88,23 +88,23 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
       <div className="flex flex-col w-full gap-8">
         <ImageUpload />
 
-        <PropertyInputValidation name="propertyName" label="매물명" placeholder="매물명을 입력해주세요" />
+        <PropertyInputValidation name="name" label="매물명" placeholder="매물명을 입력해주세요" />
         <div className="flex w-full gap-9">
           <PropertyInputValidation
-            name="propertyConstructor"
+            name="constructorName"
             label="시공사"
             placeholder="ex) 대방건설(주)"
             className="w-full"
           />
           <PropertyInputValidation
-            name="propertyCompanyName"
+            name="companyName"
             label="시행사"
             placeholder="ex) 삼익건설개발(주)"
             className="w-full"
           />
         </div>
         <PropertyInputValidation
-          name="propertyTotalNumber"
+          name="totalNumber"
           label="세대수"
           forwardExtra="총"
           className="w-[340px]"
@@ -225,7 +225,7 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
           </div>
         </div>
         <PropertyInputValidation
-          name="propertyAreaAddr"
+          name="areaAddr"
           label="대지위치"
           placeholder="주소를 입력해주세요"
           className="w-full mb-[0px]"
@@ -234,10 +234,10 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
           buttonVariant="outline"
           buttonClassName="ml-4"
           buttonType="button"
-          onButtonClick={() => handlePostcodeClick('propertyAreaAddr')}
+          onButtonClick={() => handlePostcodeClick('areaAddr')}
         />
         <PropertyInputValidation
-          name="propertyModelhouseAddr"
+          name="modelhouseAddr"
           label="모델하우스 주소"
           placeholder="주소를 입력해주세요"
           className="w-full mb-[0px]"
@@ -246,7 +246,7 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
           buttonVariant="outline"
           buttonClassName="ml-4"
           buttonType="button"
-          onButtonClick={() => handlePostcodeClick('propertyModelhouseAddr')}
+          onButtonClick={() => handlePostcodeClick('modelhouseAddr')}
         />
       </div>
 

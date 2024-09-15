@@ -10,9 +10,17 @@ import AdditionalInformation from '@/components/PropertyAdd/AdditionalInformatio
 import { Link } from 'react-router-dom';
 import PropertyComplete from '@/components/PropertyAdd/PropertyComplete';
 import PropertyKeywords from '@/components/PropertyAdd/PropertyKeywords';
+import axios from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { formatPropertyData } from '@/utils/formatPropertyData';
 
 const steps = ['매물정보 입력', '추가사항 입력', '키워드 선택', '등록 완료'];
 // const steps = ['매물정보 입력', '키워드 선택', '추가사항 입력', '등록 완료'];
+
+const postProperty = async (property: any) => {
+  const response = await axios.post('/api/admin/properties', property);
+  return response.data.property;
+};
 
 const PropertyAdd = () => {
   const methods = useForm({
@@ -25,13 +33,13 @@ const PropertyAdd = () => {
 
   const validationFields: Record<string, propertyAddTypes[]> = {
     step1: [
-      'propertyName',
-      'propertyConstructor',
-      'propertyCompanyName',
-      'propertyTotalNumber',
+      'name',
+      'constructorName',
+      'companyName',
+      'totalNumber',
       'areas',
-      'propertyAreaAddr',
-      'propertyModelhouseAddr',
+      'areaAddr',
+      'modelhouseAddr',
       'files',
       'dateRange',
     ],
@@ -54,11 +62,31 @@ const PropertyAdd = () => {
     }
   };
 
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: postProperty,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+    onError: (error) => {
+      console.log('Post 에러 발생:', error);
+    },
+  });
+
   const onSubmit = async (data: any) => {
-    const isValid = await methods.trigger(validationFields['step2']);
+    const isValid = await methods.trigger(validationFields['step3']);
+
     if (isValid) {
-      console.log('Form Data:', data);
-      setStep(steps[3]);
+      const formattedData = formatPropertyData(data);
+
+      mutate(formattedData, {
+        onSuccess: () => {
+          setStep(steps[3]);
+        },
+        onError: (error) => {
+          console.log('실패:', error);
+        },
+      });
     } else {
       console.log('Validation failed');
     }
@@ -92,9 +120,7 @@ const PropertyAdd = () => {
             <Button type="button" onClick={() => setStep(steps[1])}>
               이전
             </Button>
-            <Button type="submit" onClick={() => setStep(steps[3])}>
-              등록하기
-            </Button>
+            <Button type="submit">등록하기</Button>
           </Step>
           <Step name="등록 완료">
             <PropertyComplete />

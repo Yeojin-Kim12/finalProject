@@ -8,6 +8,7 @@ export const PdfUpload = () => {
     control,
     setValue,
     setError,
+    getValues,
     formState: { errors },
   } = useFormContext();
   const {
@@ -20,6 +21,13 @@ export const PdfUpload = () => {
   });
   const [pdfName, setPdfName] = useState<string | null>(null); // PDF 파일명
   const { uploadToServer } = useFileUpload();
+
+  useEffect(() => {
+    const existingFile = getValues('files')?.find((file: any) => file.type === 'SUPPLY_INFORMATION');
+    if (existingFile) {
+      setPdfName(existingFile.name);
+    }
+  }, []);
 
   // pdf 파일
   const handlePdfFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

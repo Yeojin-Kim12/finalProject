@@ -28,23 +28,23 @@ export type KeywordData = {
   id?: string;
 };
 export type FormValues = {
-  propertyHouseholdArea: string;
-  areas: Area[];
-  files: FileData[];
-  keywords: KeywordData[];
-  dateRange: {};
+  propertyHouseholdArea: string; // 세대면적
+  areas: Area[]; // 면적 및 가격
+  files: FileData[]; // 파일
+  keywords: KeywordData[]; // 키워드
+  dateRange: {}; // 날짜
   discountSale: boolean;
   discountSystem: boolean;
-  propertyAreaAddr: string;
-  addrDo: string;
-  addrGu: string;
-  addrDong: string;
-  buildingName: string;
-  propertyModelhouseAddr: string;
-  propertyType: string;
-  salesType: string;
-  propertySupplyInformation: string; // 보내지 않음
-  marketting: string; // 보내지 않음
+  areaAddr: string; // 대지위치
+  addrDo: string; // 도/시
+  addrGu: string; // 시/군/구
+  addrDong: string; // 동
+  buildingName: string; // 건물 이름
+  modelhouseAddr: string; // 모델하우스 주소
+  propertyType: string; // 분양유형
+  salesType: string; //분양형태
+  propertySupplyInformation: string; // 공급안내표
+  marketting: string; // 마케팅
 };
 
 export type SalesInformation = {
