@@ -100,7 +100,7 @@ const TestYJ = () => {
           imageUrl="https://delivery183.org/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b%3Abyebyebyebyebye"
           title="계양 어떤서원 말줄임표확인용"
           address="인천시 계양구 용종로"
-          status="모집중"></ItemCard>
+          status={true}></ItemCard>
       </div>
       <div className="bg-slate-200">
         <ItemList

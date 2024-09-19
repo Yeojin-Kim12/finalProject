@@ -1,6 +1,5 @@
-import { useDaumPostcodePopup } from 'react-daum-postcode';
 import SignUpInputValidation from '../common/SignUpInputValidation';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
@@ -9,13 +8,7 @@ const SignUpMemberStep2 = () => {
   const [isVerifyEmail, setIsVerifyEmail] = React.useState<boolean>(false);
   const [isSendCode, setIsSendCode] = React.useState<boolean>(false);
   const [isVerifyCode, setIsVerifyCode] = React.useState<boolean>(false);
-  const {
-    control,
-    getValues,
-    setValue,
-    setError,
-    formState: { errors },
-  } = useFormContext();
+  const { getValues, setValue, setError } = useFormContext();
 
   //이메일 중복확인 전송
   const handleVerifyEmail = async (isValid: boolean) => {

@@ -1,6 +1,7 @@
 import DefaultPagination from '@/components/common/DefaultPagination';
-import { InputWithExtras } from '@/components/common/InputWithExtras';
+
 import ItemCard from '@/components/common/ItemCard';
+import SearchBar from '@/components/common/SearchBar';
 import useResponsive from '@/hooks/useResponsive';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
@@ -47,7 +48,7 @@ const Search = () => {
         검색 결과
       </h1>
       <div className="w-[976px] tablet:w-[677px] mobile:w-[328px] m-auto">
-        <InputWithExtras
+        <SearchBar
           type="text"
           placeholder="어떤 미분양 매물을 찾으세요?"
           value={inputValue}

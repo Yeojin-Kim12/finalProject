@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Stepper from '@/components/Stepper';
 import useScrollToTopOnClick from '@/hooks/useScrollToTopOnClick';

@@ -1,5 +1,4 @@
 import { http, HttpResponse } from 'msw';
-import { allProperties } from './allProperties';
 
 const allPosts = new Map();
 

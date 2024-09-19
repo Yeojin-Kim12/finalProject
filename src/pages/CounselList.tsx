@@ -1,7 +1,7 @@
 import Breadcrumb from '@/components/common/Breadcrumb';
 import DefaultPagination from '@/components/common/DefaultPagination';
-import { InputWithExtras } from '@/components/common/InputWithExtras';
 import ItemCounselList from '@/components/common/ItemCounselList';
+import SearchBar from '@/components/common/SearchBar';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import useResponsive from '@/hooks/useResponsive';
@@ -111,7 +111,7 @@ const CounselList = () => {
       </h1>
 
       <div className="w-[976px] tablet:w-[677px] mobile:w-[328px] mx-auto my-11 mobile:my-9">
-        <InputWithExtras
+        <SearchBar
           type="text"
           placeholder="상담 신청한 아파트명, 지역명으로 검색하세요"
           value={inputValue}

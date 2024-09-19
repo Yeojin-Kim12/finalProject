@@ -4,7 +4,7 @@ import { CaretDown, CaretUp, List, MagnifyingGlass, X } from '@phosphor-icons/re
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../hooks/useResponsive';
 import { Button } from '../ui/button';
-import { InputWithExtras } from '../common/InputWithExtras';
+import SearchBar from '../common/SearchBar';
 
 const GNB = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -236,7 +236,7 @@ const GNB = () => {
             ref={searchRef}
             className="flex items-center justify-center w-full h-60 px-9 tablet:h-52 mobile:h-44 desktop:px-0 bg-white">
             <div className="w-[1200px] h-[80px] mobile:h-[52px]">
-              <InputWithExtras
+              <SearchBar
                 type="text"
                 placeholder="아파트명, 지역명으로 검색하세요"
                 value={searchQuery}
