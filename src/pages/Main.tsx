@@ -26,6 +26,8 @@ const Main = () => {
       },
       withCredentials: true,
     });
+    console.log(res.data);
+
     return res.data;
   };
 
@@ -63,7 +65,9 @@ const Main = () => {
         {isLoading ? (
           <SkeletonSwiper />
         ) : (
-          data?.homeImagesUrl.length > 0 && <BannerSwiper data={data?.homeImagesUrl} />
+          data?.contents[0]?.homeImagesUrl.length > 0 && (
+            <BannerSwiper data={data?.contents[0]?.homeImagesUrl} />
+          )
         )}
       </div>
       <div className="max-w-[1200px] h-full m-auto tablet:mx-7 mobile:mx-5">
