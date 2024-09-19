@@ -6,7 +6,7 @@ import { EyeClosed, Eye } from '@phosphor-icons/react';
 interface PwInputWithValidationProps extends InputWithValidationProps {}
 
 const PwInputWithValidation = React.forwardRef<HTMLInputElement, PwInputWithValidationProps>(
-  ({ className, validationSchema, errorMessage, ...props }, ref) => {
+  ({ className, ...props }, ref) => {
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
 
     const togglePasswordVisibility = () => {
@@ -18,9 +18,7 @@ const PwInputWithValidation = React.forwardRef<HTMLInputElement, PwInputWithVali
         <InputWithValidation
           ref={ref}
           type={isPasswordVisible ? 'text' : 'password'}
-          validationSchema={validationSchema}
           className={cn('', className)}
-          errorMessage={errorMessage}
           {...props}>
           <div className="cursor-pointer" onClick={togglePasswordVisibility}>
             {isPasswordVisible ? (

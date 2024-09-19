@@ -9,10 +9,8 @@ import './index.css';
 
 const queryClient = new QueryClient();
 async function deferRender() {
-  if (process.env.NODE_ENV === 'development') {
-    const { worker } = await import('./mocks/browser.ts');
-    await worker.start();
-  }
+  const { worker } = await import('./mocks/browser.ts');
+  return worker.start();
 }
 deferRender().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(

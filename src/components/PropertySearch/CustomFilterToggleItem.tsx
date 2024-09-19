@@ -1,6 +1,6 @@
 import React from 'react';
-import { CustomFilterToggleButton } from './ui/CustomFilterToggleButton';
 import { getPropertyLabel } from '@/lib/utils';
+import { CustomFilterToggleButton } from '../ui/CustomFilterToggleButton';
 
 export interface CustomFilterToggleItemProps {
   title: string;

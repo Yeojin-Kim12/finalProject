@@ -127,12 +127,12 @@ export default function Login() {
               로그인
             </Button>
             <div className="flex mt-[60px] gap-4">
-              <Link to="/signup-terms" className="w-1/2">
+              <Link to="/member-signup" className="w-1/2">
                 <Button variant="assistive" className="w-full mobile:px-7 mobile:py-4">
                   고객으로 가입하기
                 </Button>
               </Link>
-              <Link to="/signup-terms" className="w-1/2">
+              <Link to="/admin-signup" className="w-1/2">
                 <Button variant="assistive" className="w-full mobile:px-7 mobile:py-4">
                   담당자로 가입하기
                 </Button>

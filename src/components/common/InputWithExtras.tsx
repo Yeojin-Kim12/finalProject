@@ -2,24 +2,22 @@ import React from 'react';
 import { Input, InputProps } from '../ui/input';
 import { InputWithValidation } from './InputWithValidation';
 import { cn } from '@/lib/utils';
-import { z } from 'zod';
 
 // 아이콘 or 텍스트가 뒤에 오는 InputText
 export interface InputWithExtrasProps extends InputProps {
-  validationSchema?: z.ZodSchema<any>; // 유효성 검사를 위한 스키마 - 선택
+  trigger?: () => Promise<boolean>;
   success?: string;
   errorMessage?: string;
   trailingExtra: React.ReactNode; // 아이콘 or 텍스트
 }
 
 const InputWithExtras = React.forwardRef<HTMLInputElement, InputWithExtrasProps>(
-  ({ validationSchema, success, errorMessage, trailingExtra, className, ...props }, ref) => {
+  ({ trigger, success, errorMessage, trailingExtra, className, ...props }, ref) => {
     // 유효성 검사가 필요한 경우
-    if (validationSchema) {
+    if (trigger) {
       return (
         <InputWithValidation
           ref={ref}
-          validationSchema={validationSchema}
           success={success || ''}
           errorMessage={errorMessage || ''}
           className={className}

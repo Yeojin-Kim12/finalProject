@@ -1,13 +1,15 @@
+import SkeletonSwiper from '@/components/Main/SkeletonSwiper';
 import DefaultPagination from '@/components/common/DefaultPagination';
 import { InputWithExtras } from '@/components/common/InputWithExtras';
 import ItemCard from '@/components/common/ItemCard';
 import ItemList from '@/components/common/ItemList';
 import { Button } from '@/components/ui/button';
+import BannerSwiper from '@/components/Main/BannerSwiper';
 import useResponsive from '@/hooks/useResponsive';
 import { CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
@@ -21,7 +23,7 @@ const Main = () => {
     return res.data;
   };
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['properties', currentPage],
     queryFn: () => fetchProperties({ page: currentPage }),
   });
@@ -30,7 +32,13 @@ const Main = () => {
 
   return (
     <div className="py-12 mobile:py-9">
-      <div>{/* swiper */}</div>
+      <div className="mb-9">
+        {isLoading ? (
+          <SkeletonSwiper />
+        ) : (
+          data?.homeImagesUrl.length > 0 && <BannerSwiper data={data?.homeImagesUrl} />
+        )}
+      </div>
       <div className="max-w-[1200px] h-full m-auto tablet:mx-7 mobile:mx-5">
         <div className="flex flex-col items-center gap-9 desktop:gap-11 mb-9 tablet:mb-11">
           <div className="w-[976px] tablet:w-[677px] mobile:w-[328px]">

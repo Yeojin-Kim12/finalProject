@@ -1,22 +1,26 @@
 import { createBrowserRouter } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import Layout from '../components/Layout';
-import Login from '@/pages/LoginSignup/Login';
-import SignupCompleted from '@/pages/LoginSignup/SignupCompleted';
-import PropertyAdd from '@/pages/PropertyAdd';
-
-import TestHY from '@/pages/TestHY';
-import TestYJ from '@/pages/TestYJ';
-import TestMS from '@/pages/TestMS';
-import PropertyDetail from '@/pages/PropertyDetail';
-import Main from '@/pages/Main';
-import DashBoard from '@/pages/DashBoard';
-import PropertyKeywords from '@/components/PropertyAdd/PropertyKeywords';
-import Search from '@/pages/Search';
-import PropertySearch from '@/pages/PropertySearch';
-import CustomerService from '@/pages/CustomerService/CustomerService';
-import PropertyManagement from '@/pages/PropertyManagement/PropertyManagement';
-import Favorite from '@/pages/Favorite';
-import CounselList from '@/pages/CounselList';
+import Footer from '@/components/common/Footer';
+import FAB from '@/components/common/FAB';
+const TestMS = lazy(() => import('@/pages/TestMS'));
+const TestHY = lazy(() => import('@/pages/TestHY'));
+const TestYJ = lazy(() => import('@/pages/TestYJ'));
+const PropertyKeywords = lazy(() => import('@/components/PropertyAdd/PropertyKeywords'));
+const CustomerService = lazy(() => import('@/pages/CustomerService/CustomerService'));
+const PropertyManagement = lazy(() => import('@/pages/PropertyManagement/PropertyManagement'));
+const Favorite = lazy(() => import('@/pages/Favorite'));
+const CounselList = lazy(() => import('@/pages/CounselList'));
+const Login = lazy(() => import('@/pages/LoginSignup/Login'));
+const PropertyAdd = lazy(() => import('@/pages/PropertyAdd'));
+const PropertyDetail = lazy(() => import('@/pages/PropertyDetail'));
+const Main = lazy(() => import('@/pages/Main'));
+const DashBoard = lazy(() => import('@/pages/DashBoard'));
+const Search = lazy(() => import('@/pages/Search'));
+const PropertySearch = lazy(() => import('@/pages/PropertySearch'));
+const SignUpAdmin = lazy(() => import('@/pages/SignUp/SignUpAdmin'));
+const SignUpCompleted = lazy(() => import('@/components/SignUp/SignUpCompleted'));
+const SignUpMember = lazy(() => import('@/pages/SignUp/SignUpMember'));
 
 export const router = createBrowserRouter([
   {
@@ -25,47 +29,174 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Main />,
-      },
-      {
-        path: '/login',
-        element: <Login />,
-      },
-      {
-        path: '/signup-completed',
-        element: <SignupCompleted />,
+        element: (
+          <Suspense fallback={''}>
+            <Main />
+            <Footer />
+          </Suspense>
+        ),
       },
       {
         path: '/test-ms',
-        element: <TestMS />,
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <TestMS />
+            <Footer />
+          </Suspense>
+        ),
       },
       {
         path: '/test-hy',
-        element: <TestHY />,
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <TestHY />
+            <Footer />
+          </Suspense>
+        ),
       },
       {
         path: '/test-yj',
-        element: <TestYJ />,
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <TestYJ />
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/login',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <Login />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/admin-signup',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <SignUpAdmin />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/member-signup',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <SignUpMember />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/signup-completed',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <SignUpCompleted />
+          </Suspense>
+        ),
       },
       {
         path: '/property-add',
-        element: <PropertyAdd />,
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <PropertyAdd />
+          </Suspense>
+        ),
       },
       {
         path: '/property/:id',
-        element: <PropertyDetail />,
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <PropertyDetail />
+            <Footer />
+            <FAB />
+          </Suspense>
+        ),
       },
-      { path: '/dashboard', element: <DashBoard /> },
-      { path: '/keywordTest', element: <PropertyKeywords /> },
-      { path: '/search', element: <Search /> },
-      { path: '/property', element: <PropertySearch /> },
-      { path: '/customer-service', element: <CustomerService /> },
+      {
+        path: '/dashboard',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <DashBoard />
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/search',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <Search />
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/property',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <PropertySearch />
+            <Footer />
+          </Suspense>
+        ),
+      },
+
+      {
+        path: '/keywordTest',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <PropertyKeywords />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/search',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <Search />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/property',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <PropertySearch />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/customer-service',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <CustomerService />
+          </Suspense>
+        ),
+      },
       {
         path: '/property-management',
-        element: <PropertyManagement />,
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <PropertyManagement />
+          </Suspense>
+        ),
       },
-      { path: '/favorite', element: <Favorite /> },
-      { path: '/counsel-list', element: <CounselList /> },
+      {
+        path: '/favorite',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <Favorite />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/counsel-list',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <CounselList />
+          </Suspense>
+        ),
+      },
     ],
   },
 ]);

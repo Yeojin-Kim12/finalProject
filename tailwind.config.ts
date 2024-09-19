@@ -14,6 +14,9 @@ module.exports = {
       tablet: { min: '768px', max: '1279.9px' }, // Tablet: 768px ~ 1279px
       desktop: { min: '1280px' }, // Desktop: 1280px ~ 1920px
     },
+    fontFamily: {
+      pretendard: ['Pretendard'],
+    },
     extend: {
       colors: {
         static: {
@@ -84,11 +87,11 @@ module.exports = {
         'heading-base-m': '32px',
 
         'heading-sm': '32px',
-        'heading-sm-m': '20px',
+        'heading-sm-m': '25px',
 
         // Title styles
         'title-2xl': '32px',
-        'title-2xl-m': '23px',
+        'title-2xl-m': '25px',
 
         'title-xl': '25px',
         'title-xl-m': '21px',
@@ -181,10 +184,16 @@ module.exports = {
       },
       boxShadow: {
         default: 'inset 0 0 0 1px #b2b6be',
+        default2: 'inset 0 0 0 2px #b2b6be',
         focus: 'inset 0 0 0 2px #204AE5',
         error: 'inset 0 0 0 2px #F1134B',
         assistive: 'inset 0 0 0 2px #778292',
         shadow: '0px 4px 4px 0px rgba(70, 69, 107, 0.10)',
+        banner: '0px 0px 20px 0px rgba(70, 69, 107, 0.15)',
+      },
+      dropShadow: {
+        shadow: '0 8px 10px rgba(70, 69, 107, 0.10)',
+        fab: '0 0 15px rgba(70, 69, 107, 0.10)',
       },
       keyframes: {
         'accordion-down': {

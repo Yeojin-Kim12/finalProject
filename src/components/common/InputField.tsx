@@ -1,26 +1,64 @@
 import * as React from 'react';
-import { InputWithValidation, InputWithValidationProps } from './InputWithValidation';
+import { InputWithValidation } from './InputWithValidation';
 import { PwInputWithValidation } from './PasswordInputWithValidation';
+import { useFormContext } from 'react-hook-form';
+import { type InputProps } from '../ui/input';
 
-export interface InputFieldProps extends InputWithValidationProps {
-  label: string;
+export interface InputFieldProps extends InputProps {
+  label?: string;
+  id: string;
+  success: string;
 }
 
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ type, label, className, ...props }, ref) => {
+  ({ type, label, className, id, ...props }, ref) => {
+    const { register, getValues, trigger } = useFormContext();
+    const { ref: registerRef, ...rest } = register(id, { required: true });
     return (
-      <div className="flex flex-col mb-10">
+      <div className="flex flex-col">
         <label className="my-5 text-title-base font-bold mobile:text-title-base-m">{label}</label>
         {type === 'password' ? (
-          <PwInputWithValidation ref={ref} className={className} {...props} />
+          <PwInputWithValidation
+            className={className}
+            id={id}
+            recordValue={getValues(id) || ''}
+            trigger={() => trigger(id)}
+            {...register(id, { required: true })}
+            ref={(instance) => {
+              registerRef(instance);
+              if (typeof ref === 'function') {
+                ref(instance);
+              } else if (ref) {
+                (ref as React.MutableRefObject<HTMLInputElement | null>).current = instance;
+              }
+            }}
+            {...rest}
+            {...props}
+          />
         ) : (
-          <InputWithValidation ref={ref} className={className} {...props} />
+          <InputWithValidation
+            className={className}
+            id={id}
+            recordValue={getValues(id) || ''}
+            trigger={() => trigger(id)}
+            {...register(id, { required: true })}
+            ref={(instance) => {
+              registerRef(instance);
+              if (typeof ref === 'function') {
+                ref(instance);
+              } else if (ref) {
+                (ref as React.MutableRefObject<HTMLInputElement | null>).current = instance;
+              }
+            }}
+            {...rest}
+            {...props}
+          />
         )}
       </div>
     );
   },
 );
 
-InputField.displayName = 'InputValidWithLabel';
+InputField.displayName = 'InputField';
 
 export { InputField };

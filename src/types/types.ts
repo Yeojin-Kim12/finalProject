@@ -134,3 +134,29 @@ export interface ConsultPendingSummary {
   phoneNumber: string;
   addConsultation: string; // Or boolean, depending on your actual data
 }
+export type SignUpAdmin = {
+  name: string;
+  email: string;
+  emailVerificationCode: string;
+  password: string;
+  confirmPassword: string;
+  phoneNumber: number;
+  companyName: string;
+  address: string;
+  addressDetail: string;
+  registrationFile: FileData;
+  housingFile: FileData;
+};
+export type SignUpMember = {
+  name: string;
+  email: string;
+  emailVerificationCode: string;
+  password: string;
+  confirmPassword: string;
+  phoneNumber: number;
+  companyName: string;
+  address: string;
+  addressDetail: string;
+  registrationFile: FileData;
+  housingFile: FileData;
+};

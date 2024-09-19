@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const toggleVariants = cva(
-  'relative w-full flex justify-between p-6 rounded-5 shadow-default font-bold text-label-lg',
+  'relative w-full flex justify-between p-6 rounded-5 shadow-default font-bold text-label-lg mobile:rounded-4',
   {
     variants: {
       variant: {
@@ -13,6 +13,7 @@ const toggleVariants = cva(
         assistive: 'bg-assistive-base  shadow-assistive !text-assistive-strong ',
         primary: 'bg-primary-base shadow-focus !text-primary-default ',
         accent: ' bg-accent-base shadow-error !text-accent-strong ',
+        strong: 'bg-primary-strong !text-static-white',
       },
     },
     defaultVariants: {

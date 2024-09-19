@@ -3,7 +3,6 @@ import PropertyInputValidation from '../common/PropertyInputValidation';
 import { Check, Plus, X } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Label } from '../ui/label';
-import { Button } from '../ui/button';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { FormValues } from '@/types/types';
 import PropertyDateValidation from '../common/PropertyDateValidation';
@@ -12,7 +11,7 @@ import { KeywordBadge } from '../ui/KeywordBadge';
 import { ImageUpload } from './ImageUpload';
 import { PdfUpload } from './PdfUpload';
 
-export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
+export const PropertyInformation = () => {
   const {
     control,
     getValues,
@@ -77,10 +76,6 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
       });
       setValue('propertyHouseholdArea', '');
     }
-  };
-
-  const handleNext = () => {
-    onNext();
   };
 
   return (
@@ -249,10 +244,6 @@ export const PropertyInformation = ({ onNext }: { onNext: () => void }) => {
           onButtonClick={() => handlePostcodeClick('modelhouseAddr')}
         />
       </div>
-
-      <Button type="button" onClick={handleNext} className="mt-11">
-        다음
-      </Button>
     </div>
   );
 };

@@ -18,7 +18,7 @@ export interface ItemCardProps {
   discountPrice?: number; // 할인가격
   like?: boolean; // 찜 -> 상태관리 해야함
   rank?: number; // 순위 -> 홈 화면에서만 사용
-  status?: string; // 모집상태 -> 매물 관리에서만 사용 -> string형태 주는지, boolean 형태로 주는지, date를 줘서 날짜 확인해야 하는지?
+  status?: boolean; // 모집상태 -> 매물 관리에서만 사용 -> string형태 주는지, boolean 형태로 주는지, date를 줘서 날짜 확인해야 하는지?
   onLikeToggle?: () => void;
 }
 
@@ -60,7 +60,7 @@ const ItemCard = ({
       {size === 'l' && (
         <Link
           to={`/property/${id}`}
-          className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 font-pretendard cursor-pointer`}>
+          className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5  cursor-pointer`}>
           <div className="relative mb-5">
             <img src={imageUrl} alt={title} className="w-full h-[180px] rounded-5 object-cover" />
             <div className="absolute inset-0 gradient-overlay rounded-5" />
@@ -129,7 +129,7 @@ const ItemCard = ({
       {size === 's' && (
         <Link
           to={`/property/${id}`}
-          className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 font-pretendard border border-assistive-divider cursor-pointer`}>
+          className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5  border border-assistive-divider cursor-pointer`}>
           <div className="flex gap-4  px-4 pt-5 pb-4 border-b border-assistive-divider">
             <div className="w-[180px]">
               <div className="flex gap-2 mb-3">
@@ -210,13 +210,13 @@ const ItemCard = ({
         </Link>
       )}
       {size === 'default' && (
-        <div className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 font-pretendard`}>
+        <div className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5 `}>
           <div className="relative mb-5">
             <img src={imageUrl} alt={title} className="w-full h-[153px] rounded-5 object-cover" />
             <div className="absolute top-0 left-0">
               {/* 모집중 or 모집완료 - 이후 변경 */}
               <Label size="m" className="absolute top-3 left-3">
-                {status}
+                {status ? '모집중' : '모집완료'}
               </Label>
             </div>
           </div>

@@ -1,48 +1,65 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { CheckCircle, WarningCircle } from '@phosphor-icons/react';
-import { z, ZodError } from 'zod';
-import { Input, InputProps } from '../ui/input';
+import { Input } from '../ui/input';
+import { type InputFieldProps } from './InputField';
 
-export interface InputWithValidationProps extends InputProps {
-  validationSchema: z.ZodSchema<any>;
+export interface InputWithValidationProps extends InputFieldProps {
+  trigger?: () => Promise<boolean>;
   errorMessage?: string;
   success: string;
   children?: React.ReactNode;
+  recordValue: string;
 }
 
 const InputWithValidation = React.forwardRef<HTMLInputElement, InputWithValidationProps>(
-  ({ className, validationSchema, success, children, ...props }, ref) => {
-    const [value, setValue] = React.useState('');
+  ({ className, onChange, success, children, trigger, recordValue, ...props }, ref) => {
+    const [value, setValue] = React.useState<string>(recordValue);
     const [isValid, setIsValid] = React.useState<boolean | null>(null);
     const [isMessage, setIsMessage] = React.useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.target.value);
-      e.preventDefault();
-
+    const validateValue = async () => {
       try {
-        validationSchema.parse(e.target.value);
-        setIsValid(true);
-        setIsMessage(success);
-      } catch (error) {
-        if (error instanceof ZodError) {
-          setIsValid(false);
-          setIsMessage(error.errors[0].message);
-        } else {
-          console.error(error);
+        if (trigger) {
+          const result = await trigger();
+          if (result) {
+            setIsMessage(success);
+            setIsValid(true);
+          } else {
+            setIsMessage('');
+            setIsValid(false);
+          }
         }
+      } catch (error) {
+        console.error('Validation trigger failed:', error);
+        setIsMessage('Validation failed');
+        setIsValid(false);
       }
     };
 
+    React.useEffect(() => {
+      if (value) {
+        validateValue();
+      }
+    }, []);
+
+    const handleValueChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      setValue(newValue);
+
+      await validateValue();
+    };
+
     return (
-      <div className="relative flex-grow">
+      <div className="relative">
         <Input
           ref={ref}
           value={value}
-          onChange={handleChange}
+          onChange={(e) => {
+            onChange && onChange(e);
+            handleValueChange(e);
+          }}
           className={cn(
-            '',
             {
               'focus:shadow-focus': value && isValid === true,
               'shadow-focus': value && isValid === true,

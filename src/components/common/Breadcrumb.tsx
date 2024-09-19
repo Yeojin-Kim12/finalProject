@@ -23,7 +23,7 @@ const Breadcrumb = ({ links }: BreadcrmbProps) => {
   };
 
   return (
-    <div className="sticky top-[93px] bg-white flex items-center w-full px-6 py-7 text-links-base text-assistive-strong z-30">
+    <div className="sticky top-[93px] bg-white flex items-center w-full px-6 py-7 text-links-base text-assistive-strong z-30 tablet:top-[65px] mobile:hidden">
       <Link to="/">홈</Link>
       {links.map((link, index) => {
         const isLast = index === links.length - 1;

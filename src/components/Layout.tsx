@@ -5,7 +5,7 @@ function Layout() {
   return (
     <>
       <GNB />
-      <main>
+      <main className="relative">
         <Outlet />
       </main>
     </>
