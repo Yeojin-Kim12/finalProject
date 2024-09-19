@@ -21,8 +21,8 @@ const SignUpMember = () => {
     mode: 'onChange',
     criteriaMode: 'all',
     defaultValues: {
-      agree1: false,
-      agree2: false,
+      agree1: 'false',
+      agree2: 'false',
       name: '',
       email: '',
       isVerifyEmail: false,
@@ -82,7 +82,7 @@ const SignUpMember = () => {
       );
       console.log(res);
       if (typeof res.data === 'string') {
-        navigate('/signup-completed', { state: { name: data.name } });
+        navigate('/signup-completed', { state: { name: data.name, type: 'member' } });
       } else {
         console.error(res.data.result.resultMessage);
       }

@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { FieldValues, UseFormGetValues, UseFormRegister } from 'react-hook-form';
-
 interface RadioButtonProps {
   id: string;
-  register: UseFormRegister<FieldValues>;
-  getValues: UseFormGetValues<FieldValues>;
-  required?: boolean;
+  value: string;
+  onChange: (value: string) => void;
 }
-const RadioButton = ({ id, register, getValues, required }: RadioButtonProps) => {
-  const isGetValue = getValues(id);
-  const [isChecked, setIsChecked] = useState(isGetValue === 'true');
+
+const RadioButton = ({ id, value, onChange }: RadioButtonProps) => {
+  const isChecked = value === 'true'; // 'true' 문자열로 비교
+
+  const handleChange = () => {
+    onChange('true'); // 선택된 값이 'true'로 설정되면 onChange 호출
+  };
 
   return (
     <div className="flex space-x-4">
@@ -17,11 +17,10 @@ const RadioButton = ({ id, register, getValues, required }: RadioButtonProps) =>
         <input
           id={id}
           type="radio"
-          className="absolute w-8 h-8 mobile:w-7 mobile:h-7 opacity-0 cursor-pointer "
+          className="absolute w-8 h-8 mobile:w-7 mobile:h-7 opacity-0 cursor-pointer"
           value="true"
           checked={isChecked}
-          {...register(id, { required: required })}
-          onChange={() => setIsChecked(!isChecked)}
+          onChange={handleChange}
         />
         <div
           className={`w-8 h-8 mobile:w-7 mobile:h-7 rounded-10 shadow-2 flex items-center justify-center

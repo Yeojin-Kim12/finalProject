@@ -2,31 +2,31 @@ import { z } from 'zod';
 
 // name
 const NAME_REGEX = /^[A-Za-z가-힣]+$/;
-const NAME_REGEX_ERROR = '한글과 영어만 가능합니다.';
+const NAME_REGEX_ERROR = '한글과 영어만 가능합니다';
 
 // password
 const MIN_PASSWORD_LENGTH = 10;
-const MIN_PASSWORD_LENGTH_ERROR = '최소 10자 이상이어야 합니다.';
+const MIN_PASSWORD_LENGTH_ERROR = '최소 10자 이상이어야 합니다';
 const MAX_PASSWORD_LENGTH = 20;
-const MAX_PASSWORD_LENGTH_ERROR = '최대 20자입니다.';
+const MAX_PASSWORD_LENGTH_ERROR = '최대 20자입니다';
 const PASSWORD_REGEX = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*?[#?!@$%^&*-]).+$/;
-const PASSWORD_REGEX_ERROR = '비밀번호는 영문+숫자+특수문자를 조합하여 10자 이상으로 입력해주세요.';
-const PASSWORD_REQUIRED_ERROR = '비밀번호를 입력해주세요.';
+const PASSWORD_REGEX_ERROR = '비밀번호는 영문+숫자+특수문자를 조합하여 10자 이상으로 입력해주세요';
+const PASSWORD_REQUIRED_ERROR = '비밀번호를 입력해주세요';
 
 const PHONE_NUMBER_LENGTH = 11;
-const PHONE_NUMBER_ERROR = '11자를 입력하세요.';
+const PHONE_NUMBER_ERROR = '휴대폰번호 숫자 11자를 입력하세요';
 const PHONE_NUMBER_REGEX = /^\d+$/;
-const PHONE_NUMBER_REGEX_ERROR = '숫자만 가능합니다.';
+const PHONE_NUMBER_REGEX_ERROR = '숫자만 가능합니다';
 
 const VERIFICATION_CODE_LENGTH = 4;
-const VERIFICATION_CODE_LENGTH_ERROR = '인증코드는 4자리입니다.';
+const VERIFICATION_CODE_LENGTH_ERROR = '인증코드는 4자리입니다';
 
 const SignUpMemberSchema = z
   .object({
     name: z.string().regex(NAME_REGEX, NAME_REGEX_ERROR),
-    email: z.string().email({ message: '유효한 이메일 주소가 아닙니다.' }).toLowerCase(),
+    email: z.string().email({ message: '유효한 이메일 주소가 아닙니다' }).toLowerCase(),
     isVerifyEmail: z.boolean().refine((val) => val === true, {
-      message: '이메일 인증이 필요합니다.',
+      message: '이메일 인증이 필요합니다',
     }),
     password: z
       .string({

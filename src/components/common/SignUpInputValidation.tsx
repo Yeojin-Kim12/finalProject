@@ -118,7 +118,10 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
 
             if (onButtonClick) onButtonClick(isValid);
           };
-
+          React.useEffect(() => {
+            setIsMessage(fieldState.error?.message);
+            fieldState.error?.type === 'success';
+          }, [fieldState.error]);
           return (
             <div className={`relative mb-4 ${className}`}>
               <div className="flex items-center gap-3">
@@ -141,7 +144,7 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
                     className={` 
                       ${
                         field.value && isValid !== null
-                          ? isValid
+                          ? isValid && !fieldState.error?.type?.includes('Error')
                             ? 'shadow-focus'
                             : 'shadow-error focus:shadow-error'
                           : ''
@@ -164,7 +167,7 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
                     {field.value ? (
                       <div className="pointer-events-none">
                         {isValid !== null ? (
-                          isValid ? (
+                          isValid && !fieldState.error?.type?.includes('Error') ? (
                             <CheckCircle size={24} className="text-primary-default" />
                           ) : (
                             <WarningCircle size={24} className="text-accent-error" />
@@ -194,16 +197,17 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
                     <Button
                       type={buttonType}
                       size={buttonSize}
-                      variant={buttonVariant}
+                      variant={disabled ? 'disabled' : buttonVariant}
                       className={buttonClassName}
-                      onClick={handleButtonClick}>
+                      onClick={handleButtonClick}
+                      disabled>
                       {buttonTitle}
                     </Button>
                   ))}
               </div>
               {isValid !== null && (
                 <p
-                  className={`absolute left-0 mt-3 text-sm ${isValid ? 'text-primary-default' : 'text-accent-error'}`}>
+                  className={`absolute left-0 mt-3 text-sm ${isValid && !fieldState.error?.type?.includes('Error') ? 'text-primary-default' : 'text-accent-error'}`}>
                   {isMessage}
                 </p>
               )}

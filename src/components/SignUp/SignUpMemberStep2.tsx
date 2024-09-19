@@ -26,11 +26,12 @@ const SignUpMemberStep2 = () => {
     console.log(res);
     if (typeof res.data === 'string') {
       setValue('isVerifyEmail', true);
+      setError('email', { type: 'emailSuccess', message: res.data });
       setIsVerifyEmail(true);
     } else {
       const errorMessage = res.data.result.resultMessage;
       console.log(errorMessage);
-      setError('email', { type: 'codeError', message: errorMessage });
+      setError('email', { type: 'emailError', message: errorMessage });
     }
   };
 
@@ -50,10 +51,13 @@ const SignUpMemberStep2 = () => {
     console.log(res);
     if (typeof res.data === 'string') {
       setValue('isSendCode', true);
+      setError('phoneNumber', { type: 'phoneNumberSuccess', message: res.data });
       setIsSendCode(true);
     } else {
       setValue('isSendCode', false);
       setIsSendCode(false);
+      const errorMessage = res.data.result.resultMessage;
+      setError('phoneNumber', { type: 'phoneNumberError', message: errorMessage });
     }
   };
 
@@ -75,6 +79,7 @@ const SignUpMemberStep2 = () => {
     console.log(res);
     if (typeof res.data === 'string') {
       setValue('isVerifyCode', true);
+      setError('certificationCode', { type: 'codeSuccess', message: res.data });
       setIsVerifyCode(true);
     } else {
       const errorMessage = res.data.result.resultMessage;
@@ -139,6 +144,7 @@ const SignUpMemberStep2 = () => {
             buttonType="button"
             buttonSize="lg"
             onButtonClick={handleConfirmPhoneCode}
+            disabled={isVerifyCode}
             numberOnly
           />
         )}

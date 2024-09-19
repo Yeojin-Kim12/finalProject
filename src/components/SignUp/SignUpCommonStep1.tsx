@@ -1,34 +1,43 @@
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import TextAreaWithRadio from '../common/TextAreaWithRadio';
-// import { useEffect } from 'react';
 
 const SignUpCommonStep1 = () => {
-  const {
-    register,
-    formState: { errors },
-    getValues,
-  } = useFormContext();
+  const { control, trigger } = useFormContext();
 
   return (
     <>
       <article className="flex flex-col gap-10 mobile:gap-6">
-        <TextAreaWithRadio
-          id="agree1"
-          label="이용약관"
-          register={register}
-          text="이용약관 작성"
-          errorMessage={(errors.agree1 as any)?.message}
-          getValues={getValues}
-          required
+        <Controller
+          name="agree1"
+          control={control}
+          rules={{ required: '동의해주세요' }}
+          render={({ field, fieldState }) => (
+            <TextAreaWithRadio
+              id="agree1"
+              label="이용약관"
+              text="이용약관 작성"
+              errorMessage={fieldState.error?.message}
+              value={field.value}
+              onChange={field.onChange}
+              trigger={trigger} // trigger 함수 전달
+            />
+          )}
         />
-        <TextAreaWithRadio
-          id="agree2"
-          label="개인정보 처리방침"
-          register={register}
-          text="개인정보 처리방치 작성"
-          errorMessage={(errors.agree2 as any)?.message}
-          getValues={getValues}
-          required
+        <Controller
+          name="agree2"
+          control={control}
+          rules={{ required: '동의해주세요' }}
+          render={({ field, fieldState }) => (
+            <TextAreaWithRadio
+              id="agree2"
+              label="개인정보 처리방침"
+              text="개인정보 처리방침 작성"
+              errorMessage={fieldState.error?.message}
+              value={field.value}
+              onChange={field.onChange}
+              trigger={trigger} // trigger 함수 전달
+            />
+          )}
         />
       </article>
     </>
