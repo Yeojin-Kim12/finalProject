@@ -137,7 +137,7 @@ export function ConsultingPending<TData, TValue>({ columns, data }: DataTablePro
           <SingleDatePicker defaultLabel="상담날짜 선택" onChange={setDate} />
           <DropdownWithReset
             items={operatorIdAll}
-            defaultLabel={'상담사' || selectedConsultant}
+            defaultLabel={selectedConsultant || '상담사'}
             value={selectedConsultant}
             onSelect={handleSelect}
             buttonWidth="w-[122px]"

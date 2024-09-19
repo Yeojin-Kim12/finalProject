@@ -117,14 +117,14 @@ export function ConsultingCompleted<TData, TValue>({ columns, data }: DataTableP
           <SingleDatePicker defaultLabel="상담날짜 선택" onChange={setDate} />
           <DropdownWithReset
             items={customerRating}
-            defaultLabel={'고객등급' || selectedRating}
+            defaultLabel={selectedRating || '고객등급'}
             value={selectedRating}
             buttonWidth="w-[138px]"
             onSelect={(value) => handleSelect('tier', value, '고객등급')}
           />
           <DropdownWithReset
             items={operatorIdAll}
-            defaultLabel={'상담사' || selectedConsultant}
+            defaultLabel={selectedConsultant || '상담사'}
             value={selectedConsultant}
             buttonWidth="w-[122px]"
             onSelect={(value) => handleSelect('consultant', value, '상담사')}
