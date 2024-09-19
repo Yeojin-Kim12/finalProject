@@ -5,12 +5,17 @@ import { useLocation } from 'react-router-dom';
 import useResponsive from '../../hooks/useResponsive';
 import { Button } from '../ui/button';
 import SearchBar from '../common/SearchBar';
+import axios from 'axios';
+import { BASE_URL } from '@/lib/constants';
+import { loginState } from '@/recoilstate/login/atoms';
+import { useRecoilState } from 'recoil';
 
 const GNB = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLnbMenuOpen, setIsLnbMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loginData, setLoginData] = useRecoilState(loginState);
   const navigate = useNavigate();
 
   const menuRef = useRef<HTMLDivElement>(null); // tablet 이하 display - Menu 외부 감지
@@ -18,7 +23,7 @@ const GNB = () => {
   const searchRef = useRef<HTMLDivElement>(null); // Search 모달 외부 감지
 
   const location = useLocation();
-  const { isDesktop } = useResponsive();
+  const { isDesktop, isMobile } = useResponsive();
 
   const handleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -38,6 +43,77 @@ const GNB = () => {
     setIsMenuOpen(false);
     setIsLnbMenuOpen(false);
   };
+
+  useEffect(() => {
+    if (loginData.isLoggedIn === null) {
+      fetchGnb();
+    }
+  }, [loginData.isLoggedIn]);
+
+  const fetchGnb = async () => {
+    try {
+      const adminRes = await axios.get(`${BASE_URL}/api/admin/my-information`, {
+        withCredentials: true,
+      });
+      setLoginData({
+        isLoggedIn: true,
+        userInfo: {
+          name: adminRes.data.name,
+          role: adminRes.data.role,
+        },
+      });
+      return adminRes.data;
+    } catch (adminError) {
+      try {
+        const memberRes = await axios.get(`${BASE_URL}/api/member/my-information`, {
+          withCredentials: true,
+        });
+        setLoginData({
+          isLoggedIn: true,
+          userInfo: {
+            name: memberRes.data.name,
+            role: memberRes.data.role,
+          },
+        });
+        return memberRes.data;
+      } catch (memberError) {
+        setLoginData({
+          isLoggedIn: false,
+          userInfo: null,
+        });
+        return null;
+      }
+    }
+  };
+
+  // const { data } = useQuery({
+  //   queryKey: ['gnb'],
+  //   queryFn: () => fetchGnb(),
+  //   staleTime: 600000,
+  //   gcTime: 900000,
+  //   refetchOnWindowFocus: false,
+  //   enabled: isLoggedIn === null ? false : isLoggedIn,
+  // });
+
+  const handleLogout = async () => {
+    try {
+      await axios.get(`${BASE_URL}/api/auth/logout`, { withCredentials: true });
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+
+  const adminLinks = [
+    { to: '/dashboard', label: '대시보드' },
+    { to: '/customer-service', label: '고객 관리' },
+    { to: '/property-management', label: '매물 관리' },
+  ];
+
+  const userLinks = [
+    { to: '/favorite', label: '관심 매물' },
+    { to: '/counsel-list', label: '상담신청 현황' },
+  ];
 
   useEffect(() => {
     // 외부감지
@@ -98,28 +174,46 @@ const GNB = () => {
                 </Link>
                 <Link
                   to="/service-overview"
-                  className={`w-[193px] px-5 py-8 text-center ${location.pathname === '/service' ? 'text-primary-default' : ''}`}>
+                  className={`w-[193px] px-5 py-8 text-center ${location.pathname === '/service-overview' ? 'text-primary-default' : ''}`}>
                   서비스 소개
                 </Link>
-                <Link
-                  to="/favorite"
-                  className={`block w-[193px] px-5 py-8 text-center cursor-pointer relative group ${location.pathname === '/favorite' || location.pathname === '/counsel-list' ? 'text-primary-default' : ''}`}>
-                  <p>마이페이지</p>
-                  <div className="hidden absolute left-0 top-[93px] w-full bg-white shadow-lg text-assistive-detail group-hover:flex flex-col items-start font-normal z-40">
-                    <ul className="w-full">
-                      <Link
-                        to="/favorite"
-                        className={`block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold ${location.pathname === '/favorite' ? 'text-primary-default font-bold' : ''}`}>
-                        관심 매물
-                      </Link>
-                      <Link
-                        to="/counsel-list"
-                        className={`block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold ${location.pathname === '/counsel-list' ? 'text-primary-default font-bold' : ''}`}>
-                        상담신청 현황
-                      </Link>
-                    </ul>
-                  </div>
-                </Link>
+                {loginData.isLoggedIn && (
+                  <Link
+                    to="/favorite"
+                    className={`block w-[193px] px-5 py-8 text-center cursor-pointer relative group ${location.pathname === '/favorite' || location.pathname === '/counsel-list' || location.pathname === '/dashboard' || location.pathname === '/customer-service' || location.pathname === '/property-management' ? 'text-primary-default' : ''}`}>
+                    <p>마이페이지</p>
+                    <div className="hidden absolute left-0 top-[93px] w-full bg-white shadow-lg text-assistive-detail group-hover:flex flex-col items-start font-normal z-40">
+                      <ul className="w-full">
+                        {loginData.userInfo?.role === 'ADMIN'
+                          ? adminLinks.map((link) => (
+                              <Link
+                                key={link.to}
+                                to={link.to}
+                                className={`block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold ${
+                                  location.pathname === link.to ? 'text-primary-default font-bold' : ''
+                                }`}>
+                                {link.label}
+                              </Link>
+                            ))
+                          : userLinks.map((link) => (
+                              <Link
+                                key={link.to}
+                                to={link.to}
+                                className={`block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold ${
+                                  location.pathname === link.to ? 'text-primary-default font-bold' : ''
+                                }`}>
+                                {link.label}
+                              </Link>
+                            ))}
+                        <li
+                          className="block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold"
+                          onClick={handleLogout}>
+                          로그아웃
+                        </li>
+                      </ul>
+                    </div>
+                  </Link>
+                )}
               </ul>
             </div>
           </div>
@@ -127,42 +221,33 @@ const GNB = () => {
           <div className="flex items-center justify-between gap-6" ref={buttonGroupRef}>
             {!isSearchOpen ? (
               <>
-                {/* location 수정하기 */}
                 <MagnifyingGlass
                   size={32}
-                  weight="bold"
-                  className={`hidden desktop:block text-assistive-strong cursor-pointer ${location.pathname === '/' || location.pathname === '/login' || location.pathname === '/search' ? 'desktop:hidden' : 'block'}`}
-                  onClick={handleSearch}
-                />
-                <MagnifyingGlass
-                  size={32}
-                  weight="thin"
-                  className={`block desktop:hidden text-assistive-strong cursor-pointer ${location.pathname === '/' || location.pathname === '/login' || location.pathname === '/search' ? 'desktop:hidden' : 'block'}`}
+                  weight={isDesktop ? 'bold' : 'thin'}
+                  className={`block text-assistive-strong cursor-pointer ${location.pathname === '/' || location.pathname === '/login' || location.pathname === '/search' ? 'desktop:hidden' : 'block'}`}
                   onClick={handleSearch}
                 />
               </>
             ) : (
-              <>
-                <X
-                  size={32}
-                  weight="bold"
-                  className="hidden desktop:block text-assistive-strong cursor-pointer"
-                  onClick={handleSearch}
-                />
-                <X
-                  size={32}
-                  weight="thin"
-                  className="block desktop:hidden text-assistive-strong cursor-pointer"
-                  onClick={handleSearch}
-                />
-              </>
+              <X
+                size={32}
+                weight={isDesktop ? 'bold' : 'thin'}
+                className="hidden desktop:block text-assistive-strong cursor-pointer"
+                onClick={handleSearch}
+              />
             )}
-            {/* 로그인 시 내용 변경 이후 추가 */}
-            <Link to="/login">
-              <Button variant="assistive" size="md" className="hidden desktop:block">
-                로그인/회원가입
-              </Button>
-            </Link>
+            {loginData.isLoggedIn && loginData.userInfo ? (
+              <p className="text-detail-xl text-assistive-detail hidden desktop:block">
+                <span className="text-primary-default font-bold">{loginData.userInfo.name}</span>님 반갑습니다
+              </p>
+            ) : (
+              <Link to="/login">
+                <Button variant="assistive" size="md" className="hidden desktop:block">
+                  로그인/회원가입
+                </Button>
+              </Link>
+            )}
+
             <List
               size={32}
               weight="thin"
@@ -179,49 +264,88 @@ const GNB = () => {
           ref={menuRef}
           className="flex flex-col items-start bg-white w-full fixed z-50 shadow-lg text-links-base font-normal text-static-default">
           <ul className="w-full">
-            <li className="p-5 ">
-              <Link to="/">홈</Link>
-            </li>
-            <li className="p-5 ">
-              <Link to="/">미분양 정보</Link>
-            </li>
-            <li className="p-5 ">
-              <Link to="/service-overview">서비스 소개</Link>
-            </li>
-            {/* 마이페이지 리스트 - 어드민이 로그인 시 내용 변경 이후 추가 */}
             <li
-              className={`p-5 flex justify-between cursor-pointer ${
-                isLnbMenuOpen ? 'bg-primary-default text-white' : ''
-              }`}
-              onClick={handleLnbMenu}>
-              마이페이지
-              {isLnbMenuOpen ? (
-                <CaretDown size={24} weight="thin" className="text-white" />
-              ) : (
-                <CaretUp size={24} weight="thin" className="text-static-default" />
-              )}
+              onClick={() => {
+                setIsLnbMenuOpen(false);
+                setIsMenuOpen(false);
+              }}>
+              <Link to="/" className="block p-5">
+                홈
+              </Link>
             </li>
+            <li
+              onClick={() => {
+                setIsLnbMenuOpen(false);
+                setIsMenuOpen(false);
+              }}>
+              <Link to="/property" className="block p-5">
+                미분양 정보
+              </Link>
+            </li>
+            <li
+              onClick={() => {
+                setIsLnbMenuOpen(false);
+                setIsMenuOpen(false);
+              }}>
+              <Link to="/service-overview" className="block p-5">
+                서비스 소개
+              </Link>
+            </li>
+            {loginData.isLoggedIn ? (
+              <li
+                className={`p-5 flex justify-between cursor-pointer ${
+                  isLnbMenuOpen ? 'bg-primary-default text-white' : ''
+                }`}
+                onClick={handleLnbMenu}>
+                마이페이지
+                {isLnbMenuOpen ? (
+                  <CaretDown size={24} weight="thin" className="text-white" />
+                ) : (
+                  <CaretUp size={24} weight="thin" className="text-static-default" />
+                )}
+              </li>
+            ) : (
+              <li
+                onClick={() => {
+                  setIsLnbMenuOpen(false);
+                  setIsMenuOpen(false);
+                }}>
+                <Link to="/login" className="block p-5">
+                  로그인/회원가입
+                </Link>
+              </li>
+            )}
             {isLnbMenuOpen && (
               <div className="flex flex-col items-start bg-white w-full fixed z-50 shadow-lg text-links-sm text-assistive-detail">
                 <ul className="w-full">
-                  <Link
-                    to="/favorite"
-                    className="block px-7 py-5 cursor-pointer"
-                    onClick={() => {
-                      setIsLnbMenuOpen(false);
-                      setIsMenuOpen(false);
-                    }}>
-                    관심 매물
-                  </Link>
-                  <Link
-                    to="/counsel-list"
-                    className="block px-7 py-5 cursor-pointer"
-                    onClick={() => {
-                      setIsLnbMenuOpen(false);
-                      setIsMenuOpen(false);
-                    }}>
-                    상담신청 현황
-                  </Link>
+                  {loginData.userInfo?.role === 'ADMIN'
+                    ? adminLinks.map((link) => (
+                        <Link
+                          key={link.to}
+                          to={link.to}
+                          className="block px-7 py-5 cursor-pointer"
+                          onClick={() => {
+                            setIsLnbMenuOpen(false);
+                            setIsMenuOpen(false);
+                          }}>
+                          {link.label}
+                        </Link>
+                      ))
+                    : userLinks.map((link) => (
+                        <Link
+                          key={link.to}
+                          to={link.to}
+                          className="block px-7 py-5 cursor-pointer"
+                          onClick={() => {
+                            setIsLnbMenuOpen(false);
+                            setIsMenuOpen(false);
+                          }}>
+                          {link.label}
+                        </Link>
+                      ))}
+                  <li className="block px-7 py-5 cursor-pointer" onClick={handleLogout}>
+                    로그아웃
+                  </li>
                 </ul>
               </div>
             )}
@@ -250,28 +374,16 @@ const GNB = () => {
                 }}
                 className="w-full px-9 py-7 mobile:px-7 mobile:py-4 border-2 border-primary-default rounded-10 focus:border-2 focus:border-primary-default focus:shadow-default"
                 trailingExtra={
-                  <>
-                    <MagnifyingGlass
-                      size={32}
-                      weight="bold"
-                      className="block mobile:hidden text-assistive-strong cursor-pointer"
-                      onClick={() => {
-                        navigate(`/search?search=${searchQuery}`);
-                        setIsSearchOpen(false);
-                        setSearchQuery('');
-                      }}
-                    />
-                    <MagnifyingGlass
-                      size={24}
-                      weight="bold"
-                      className="hidden mobile:block text-assistive-strong cursor-pointer"
-                      onClick={() => {
-                        navigate(`/search?search=${searchQuery}`);
-                        setIsSearchOpen(false);
-                        setSearchQuery('');
-                      }}
-                    />
-                  </>
+                  <MagnifyingGlass
+                    size={isMobile ? 24 : 32}
+                    weight="bold"
+                    className="block text-primary-default cursor-pointer"
+                    onClick={() => {
+                      navigate(`/search?search=${searchQuery}`);
+                      setIsSearchOpen(false);
+                      setSearchQuery('');
+                    }}
+                  />
                 }
               />
             </div>

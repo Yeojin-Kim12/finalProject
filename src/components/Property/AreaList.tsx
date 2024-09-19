@@ -31,15 +31,20 @@ const AreaList = ({ area, lowestPriceArea, isPrevIndex, isLastIndex, index }: Ar
             <Label size={isDesktop ? 'm' : 's'} variant="accent">
               최저가
             </Label>
-            <p className="mt-5 line-through text-detail-xl tablet:text-detail-base mobile:text-detail-base-m text-assistive-default">
-              {formatAmount(area.price)}
-            </p>
+            {(area.discountPrice !== area.price || area.discountPercent !== 0) && (
+              <p className="mt-5 line-through text-detail-xl tablet:text-detail-base mobile:text-detail-base-m text-assistive-default">
+                {formatAmount(area.price)}
+              </p>
+            )}
             <div className="flex">
-              <span className="text-accent-strong text-title-xl tablet:text-title-base mobile:text-title-base-m font-bold mr-3">
-                {area.discountPercent}%
-              </span>
+              {area.discountPercent !== 0 && (
+                <span className="text-accent-strong text-title-xl tablet:text-title-base mobile:text-title-base-m font-bold mr-3">
+                  {area.discountPercent}%
+                </span>
+              )}
+
               <span className="text-static-default text-title-xl tablet:text-title-base mobile:text-title-base-m  font-bold">
-                {formatAmount(area.discountPrice)}~
+                {formatAmount(area.discountPrice !== null ? area.discountPrice : area.price)}
               </span>
             </div>
           </div>
@@ -58,13 +63,17 @@ const AreaList = ({ area, lowestPriceArea, isPrevIndex, isLastIndex, index }: Ar
             </div>
             <div
               className={`${isDesktop ? 'flex items-center justify-end' : 'flex flex-col items-end'} w-full`}>
-              <span className="line-through text-detail-xl tablet:text-detail-base mobile:text-detail-base-m text-assistive-default mr-5">
-                {formatAmount(area.price)}
-              </span>
-              <div className="flex">
-                <span className="text-accent-strong text-title-xl tablet:text-title-base mobile:text-title-base-m font-bold mr-3">
-                  {area.discountPercent}%
+              {(area.discountPrice !== area.price || area.discountPercent !== 0) && (
+                <span className="line-through text-detail-xl tablet:text-detail-base mobile:text-detail-base-m text-assistive-default mr-5">
+                  {formatAmount(area.price)}
                 </span>
+              )}
+              <div className="flex">
+                {area.discountPercent !== 0 && (
+                  <span className="text-accent-strong text-title-xl tablet:text-title-base mobile:text-title-base-m font-bold mr-3">
+                    {area.discountPercent}%
+                  </span>
+                )}
                 <span className="text-static-default text-title-xl tablet:text-title-base mobile:text-title-base-m font-bold">
                   {formatAmount(area.discountPrice)}~
                 </span>

@@ -15,7 +15,7 @@ export interface ItemCardProps {
   totalNumber?: number; // 세대수
   keywords?: string[]; // 키워드
   price?: number; // 가격
-  discountPrice?: number; // 할인가격
+  discountPrice?: number | null; // 할인가격
   like?: boolean; // 찜 -> 상태관리 해야함
   rank?: number; // 순위 -> 홈 화면에서만 사용
   status?: boolean; // 모집상태 -> 매물 관리에서만 사용 -> string형태 주는지, boolean 형태로 주는지, date를 줘서 날짜 확인해야 하는지?
@@ -33,14 +33,15 @@ const ItemCard = ({
   totalNumber,
   keywords,
   price = 0,
-  discountPrice = 0,
+  discountPrice = null,
   like,
   rank,
   status,
   onLikeToggle,
 }: ItemCardProps) => {
   const { liked, toggleLike } = useLike(like || false, id);
-  const discountRate = Math.round(((price - discountPrice) / price) * 100); // 할인율 계산
+  const discountRate =
+    discountPrice !== null && discountPrice !== 0 ? Math.round(((price - discountPrice) / price) * 100) : 0; // 할인율 계산
 
   const handleLikeToggle = () => {
     if (onLikeToggle) {
@@ -116,11 +117,18 @@ const ItemCard = ({
             </div>
 
             <div className="flex flex-col">
-              <span className="line-through text-assistive-default text-detail-xl">
-                {formatAmount(price)}
-              </span>
-              <div>
-                <span className="text-accent-strong text-title-xl font-bold mr-2">{discountRate}%</span>
+              {discountPrice !== null && discountPrice !== 0 && (
+                <span className="line-through text-assistive-default text-detail-xl">
+                  {formatAmount(price)}
+                </span>
+              )}
+              <div className={`${!discountPrice && 'mt-7'}`}>
+                {discountRate > 0 && (
+                  <span className="text-accent-strong text-title-xl font-bold mr-2">{discountRate}%</span>
+                )}
+                <span className="text-static-default text-title-xl font-bold mr-2">
+                  {formatAmount(discountPrice || price)}
+                </span>
               </div>
             </div>
           </div>
@@ -154,15 +162,19 @@ const ItemCard = ({
                   </p>
                 </div>
                 <div className="flex flex-col">
-                  <span className="h-[13px] line-through text-assistive-default text-detail-sm-m">
-                    {formatAmount(price)}
-                  </span>
-                  <div className="h-6">
-                    <span className="text-accent-strong text-title-base-m font-bold mr-2">
-                      {discountRate}%
+                  {discountPrice !== null && (
+                    <span className="h-[13px] line-through text-assistive-default text-detail-sm-m">
+                      {formatAmount(price)}
                     </span>
+                  )}
+                  <div className={`h-6 ${!discountPrice && 'mt-5'}`}>
+                    {discountRate > 0 && (
+                      <span className="text-accent-strong text-title-base-m font-bold mr-2">
+                        {discountRate}%
+                      </span>
+                    )}
                     <span className="text-static-default text-title-base-m font-bold">
-                      {formatAmount(discountPrice)}
+                      {formatAmount(discountPrice || price)}
                     </span>
                   </div>
                 </div>

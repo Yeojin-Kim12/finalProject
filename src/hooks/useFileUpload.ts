@@ -1,3 +1,4 @@
+import { BASE_URL } from '@/lib/constants';
 import axios, { AxiosError } from 'axios';
 
 export const useFileUpload = () => {
@@ -11,10 +12,11 @@ export const useFileUpload = () => {
 
     try {
       // URL 받기
-      const res = await axios.post('https://entj.site/api/common/presigned-url', fileData, {
+      const res = await axios.post(`${BASE_URL}/api/common/presigned-url`, fileData, {
         headers: {
           'Content-Type': 'application/json',
         },
+        withCredentials: true,
       });
 
       const presignedUrls: string[] = res.data;

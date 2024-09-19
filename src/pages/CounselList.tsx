@@ -5,6 +5,7 @@ import SearchBar from '@/components/common/SearchBar';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import useResponsive from '@/hooks/useResponsive';
+import { BASE_URL } from '@/lib/constants';
 import { formatPhoneNumber } from '@/lib/utils';
 import { MagnifyingGlass, PencilSimpleLine } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
@@ -20,13 +21,15 @@ const CounselList = () => {
   const [inputValue, setInputValue] = useState('');
 
   const fetchCounsel = async (page: number, search: string) => {
-    const res = await axios.get(`/api/member/my-consultations/${waitingStatus}`, {
+    const res = await axios.get(`${BASE_URL}/api/member/my-consultations/${waitingStatus}`, {
       params: {
         page: page,
         size: 5,
         ...(search !== '' && { search: search }),
       },
+      withCredentials: true,
     });
+
     return res.data;
   };
 
@@ -44,9 +47,14 @@ const CounselList = () => {
     return (
       <div>
         <p className="text-detail-lg mobile:text-detail-base-m text-assistive-strong my-4">
-          총 <span className="text-primary-default">{data?.count}</span>건의 검색 결과가 있어요
+          총{' '}
+          <span className="text-primary-default">
+            {data?.contents[0]?.totalCount !== undefined ? data.contents[0].totalCount : 0}
+          </span>
+          건의 검색 결과가 있어요
         </p>
-        {data?.content?.properties.length === 0 ? (
+        {Array.isArray(data?.contents[0]?.myConsultations) &&
+        data.contents[0].myConsultations.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[676px] tablet:h-[600px] mobile:h-[400px]">
             <div className="flex items-center justify-center w-[120px] h-[120px] mobile:w-[96px] mobile:h-[96px] bg-primary-base rounded-10 mb-9">
               <PencilSimpleLine size={isMobile ? 48 : 80} weight="light" className="text-primary-strong" />
@@ -77,7 +85,7 @@ const CounselList = () => {
         ) : (
           <div className="flex flex-col gap-11 mobile:gap-9">
             <div className="mt-6">
-              {data?.consultations?.map((counsel: any, index: any) => (
+              {data?.contents[0]?.myConsultations.map((counsel: any, index: any) => (
                 <ItemCounselList
                   key={index}
                   imageUrl={counsel.imageUrl}

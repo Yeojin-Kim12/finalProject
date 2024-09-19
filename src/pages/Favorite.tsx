@@ -26,12 +26,14 @@ const Favorite = () => {
       },
       withCredentials: true,
     });
+    console.log(res.data);
+
     return res.data;
   };
 
   const { data, refetch } = useQuery({
     queryKey: ['favorites', currentPage, size, recruitmentStatus],
-    queryFn: () => fetchFavorites(currentPage, size),
+    queryFn: () => fetchFavorites(currentPage - 1, size),
   });
   const totalPages = data?.totalPages || 1;
 
@@ -39,9 +41,13 @@ const Favorite = () => {
     return (
       <div>
         <p className="text-detail-lg mobile:text-detail-base-m text-assistive-strong my-4">
-          총 <span className="text-primary-default">{data?.favorateNumber}</span>건의 검색 결과가 있어요
+          총{' '}
+          <span className="text-primary-default">
+            {data?.favoriteNumber !== undefined ? data?.favoriteNumber : 0}
+          </span>
+          건의 검색 결과가 있어요
         </p>
-        {data?.content?.properties.length === 0 ? (
+        {Array.isArray(data?.properties) && data?.properties.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[676px] tablet:h-[600px] mobile:h-[400px]">
             <div className="flex items-center justify-center w-[120px] h-[120px] mobile:w-[96px] mobile:h-[96px] bg-primary-base rounded-10 mb-9">
               <Heart size={isMobile ? 48 : 80} weight="fill" className="text-primary-strong" />
@@ -63,7 +69,7 @@ const Favorite = () => {
         ) : (
           <div className="flex flex-col gap-11 mobile:gap-9">
             <div className="grid grid-cols-3 tablet:grid-cols-2 mobile:grid-cols-1 gap-6 mobile:gap-4 mt-6">
-              {data?.content?.properties.map((property: any, index: any) => (
+              {data?.properties.map((property: any, index: any) => (
                 <div className="flex flex-col items-center">
                   <ItemCard
                     key={index}

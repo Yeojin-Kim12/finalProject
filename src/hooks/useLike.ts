@@ -7,7 +7,13 @@ const useLike = (initialLikeStatus: boolean, propertyId: number) => {
 
   const toggleLike = async () => {
     try {
-      await axios.post(`/${BASE_URL}api/member/properties/${propertyId}/like`);
+      await axios.post(
+        `${BASE_URL}/api/member/properties/${propertyId}/like`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
       setLiked(!liked);
     } catch (err) {
       console.error('좋아요 API 에러: ', err);
@@ -17,6 +23,7 @@ const useLike = (initialLikeStatus: boolean, propertyId: number) => {
   return {
     liked,
     toggleLike,
+    setLiked,
   };
 };
 

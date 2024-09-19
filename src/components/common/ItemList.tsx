@@ -38,7 +38,7 @@ const ItemList = ({
   onLikeToggle,
 }: ItemListProps) => {
   const { liked, toggleLike } = useLike(like || false, id);
-  const discountRate = Math.round(((price - discountPrice) / price) * 100); // 할인율 계산
+  const discountRate = discountPrice !== null ? Math.round(((price - discountPrice) / price) * 100) : 0; // 할인율 계산
 
   const handleLikeToggle = () => {
     if (onLikeToggle) {
@@ -102,18 +102,22 @@ const ItemList = ({
               ))}
             </div>
 
-            <span
-              className={`line-through text-assistive-detail ${size === 'm' ? 'text-detail-lg' : 'text-detail-xl'}`}>
-              {formatAmount(price)}
-            </span>
-            <div className="h-[30px]">
+            {discountPrice !== null && (
               <span
-                className={`text-accent-strong ${size === 'm' ? 'text-title-lg' : 'text-title-xl'} font-bold mr-2`}>
-                {discountRate}%
+                className={`line-through text-assistive-detail ${size === 'm' ? 'text-detail-lg' : 'text-detail-xl'}`}>
+                {formatAmount(price)}
               </span>
+            )}
+            <div className="h-[30px]">
+              {discountRate > 0 && (
+                <span
+                  className={`text-accent-strong ${size === 'm' ? 'text-title-lg' : 'text-title-xl'} font-bold mr-2`}>
+                  {discountRate}%
+                </span>
+              )}
               <span
                 className={`text-static-default ${size === 'm' ? 'text-title-lg' : 'text-title-xl'} font-bold`}>
-                {formatAmount(discountPrice)}
+                {formatAmount(discountPrice | price)}
               </span>
             </div>
           </div>

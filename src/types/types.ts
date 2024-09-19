@@ -11,8 +11,8 @@ export type FormFields = z.infer<typeof loginSchema>;
 export type Area = {
   squareMeter: number;
   price: number;
-  discountPercent: number;
-  discountPrice: number;
+  discountPercent: number | null;
+  discountPrice: number | null;
 };
 
 export type FileData = {
@@ -48,17 +48,21 @@ export type FormValues = {
 };
 
 export type SalesInformation = {
-  buildingName: string; // 매물명
+  name: string; // 매물명
   imageUrl: string; // 이미지 url
-  salesType: string; //할인 분양 (DISCOUNT_SALE)
-  propertyType: string;
+  salesType: string; // 할인 분양 (DISCOUNT_SALE)
+  propertyType: string; // 분양유형
   areas: {
     squareMeter: number; // 면적
     price: number; // 가격
-    discountPrice: number; // 할인된 가격
-    discountPercent: number; // 퍼센트
+    discountPrice: number | null; // 할인된 가격
+    discountPercent: number | null; // 퍼센트
   }[];
   areaAddr: string; // 대지 위치
+  addrDo: string; // 도/시
+  addrGu: string; // 구
+  addrDong: string; // 동
+  buildingName: string; // 건물이름
   totalNumber: number; // 세대수
   modelhouseAddr: string; //모델하우스
   startDate: string; // 모집 날짜
@@ -69,11 +73,24 @@ export type SalesInformation = {
   homepage: string; // 홈페이지 링크
   phoneNumber: string; // 문의 번호
   likes: boolean; // 좋아요
-  files: {
+  propertyImage: {
+    // 이미지
     name: string;
     url: string;
-    type: string; // property_image(이미지), supply_information(공급안내표), marketing(마케팅)
-  }[];
+    type: string;
+  };
+  supplyInformation: {
+    // 공급안내표
+    name: string;
+    url: string;
+    type: string;
+  };
+  marketing: {
+    // 마케팅
+    name: string;
+    url: string;
+    type: string;
+  };
   infra: {
     name: string; // ex) SUBWAY
     type: string; // infra 고정

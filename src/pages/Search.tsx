@@ -3,6 +3,7 @@ import DefaultPagination from '@/components/common/DefaultPagination';
 import ItemCard from '@/components/common/ItemCard';
 import SearchBar from '@/components/common/SearchBar';
 import useResponsive from '@/hooks/useResponsive';
+import { BASE_URL } from '@/lib/constants';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -18,15 +19,17 @@ const Search = () => {
   const navigate = useNavigate();
   const size = isDesktop ? 9 : 6;
 
-  // 검색 홈 api 사용하면됨 신청현황의 search로 사용, 똑같이 없으면 보내지 X
   const fetchSearch = async (page: number, size: number, search: string) => {
-    const res = await axios.get(`/api/common/properties`, {
+    const res = await axios.get(`${BASE_URL}/api/common/properties`, {
       params: {
         page: page,
         size: size,
         ...(search !== '' && { search: search }),
       },
+      withCredentials: true,
     });
+    console.log(res.data);
+
     return res.data;
   };
 
@@ -39,7 +42,6 @@ const Search = () => {
   const handleSearch = () => {
     setSearchQuery(inputValue);
     setSearchParams({ search: inputValue });
-    // setCurrentPage(1);
   };
 
   return (

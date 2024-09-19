@@ -10,7 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 interface MarketingViewerProps {
-  marketingFiles: { name: string; url: string; type: string }[];
+  marketingFiles: { name: string; url: string; type: string };
 }
 
 const MarketingViewer = ({ marketingFiles }: MarketingViewerProps) => {
@@ -27,34 +27,30 @@ const MarketingViewer = ({ marketingFiles }: MarketingViewerProps) => {
       <p className="text-title-2xl tablet:text-title-lg mobile:text-title-lg-m font-bold mb-3 mobile:mb-8">
         상세정보
       </p>
-      {marketingFiles?.map((file, index) => (
-        <div key={index}>
-          <div className="relative">
-            <Document
-              file={file.url}
-              onLoadError={console.error}
-              onLoadSuccess={({ numPages }) => setNumPages(numPages)} // 전체 페이지 수
-            >
-              <div
-                className={`${isExpanded ? 'max-h-full' : isDesktop ? 'max-h-[300px]' : isTablet ? 'max-h-[194px]' : 'max-h-[88px]'} overflow-hidden`}>
-                {numPages &&
-                  Array.from({ length: numPages }, (_, i) => (
-                    <Page
-                      key={i + 1}
-                      pageNumber={i + 1}
-                      width={isDesktop ? 1200 : isTablet ? 720 : 328}
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                    />
-                  ))}
-              </div>
-            </Document>
-            {!isExpanded && (
-              <div className="absolute top-0 left-0 w-full h-full white-gradient-overlay"></div>
-            )}
-          </div>
+      <div>
+        <div className="relative">
+          <Document
+            file={marketingFiles.url}
+            onLoadError={console.error}
+            onLoadSuccess={({ numPages }) => setNumPages(numPages)} // 전체 페이지 수
+          >
+            <div
+              className={`${isExpanded ? 'max-h-full' : isDesktop ? 'max-h-[300px]' : isTablet ? 'max-h-[194px]' : 'max-h-[88px]'} overflow-hidden`}>
+              {numPages &&
+                Array.from({ length: numPages }, (_, i) => (
+                  <Page
+                    key={i + 1}
+                    pageNumber={i + 1}
+                    width={isDesktop ? 1200 : isTablet ? 720 : 328}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                  />
+                ))}
+            </div>
+          </Document>
+          {!isExpanded && <div className="absolute top-0 left-0 w-full h-full white-gradient-overlay"></div>}
         </div>
-      ))}
+      </div>
       <Button variant="assistive" size={isDesktop ? 'xl' : 'sm'} onClick={toggleExpansion} className="w-full">
         {isExpanded ? '상세정보 닫기' : '상세정보 더보기'}
         {isExpanded ? (

@@ -29,7 +29,11 @@ export function getWeekOfMonth(date: Date): number {
 }
 
 // 금액 단위 변환
-export function formatAmount(amount: number): string {
+export function formatAmount(amount: number | null | undefined): string {
+  if (amount === null || amount === undefined) {
+    return 'N/A';
+  }
+
   if (amount < 10000) {
     return `${amount.toLocaleString()}만`;
   }
@@ -57,13 +61,16 @@ export interface InfraItemProps {
   input: InfraInput[];
 }
 export function formatInfraText(item: InfraItemProps): string {
-  return item.input
-    .map((inputItem) => {
-      const timeInMinutes = `${parseInt(inputItem.input3.replace('m', ''), 10)}분`;
-
-      return `${inputItem.input1} ${inputItem.input2} ${timeInMinutes}`;
-    })
-    .join(', ');
+  if (Array.isArray(item.input)) {
+    return item.input
+      .map((inputItem) => {
+        const timeInMinutes = `${parseInt(inputItem.input3.replace('m', ''), 10)}분`;
+        return `${inputItem.input1} ${inputItem.input2} ${timeInMinutes}`;
+      })
+      .join(', ');
+  } else {
+    return '';
+  }
 }
 
 // 혜택 input 변환

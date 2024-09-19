@@ -5,22 +5,26 @@ import { CounselDialog, CounselDrawer } from '@/components/Property/CounselFormC
 import MarketingViewer from '@/components/Property/MarketingViewer';
 import PhoneDialog from '@/components/Property/PhoneDialog';
 import PropertyKeyword from '@/components/Property/PropertyKeyword';
+import PropertyTopContent from '@/components/Property/PropertyTopContent';
 import TabsNavigation from '@/components/Property/TabsNavigation';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
-import { Label } from '@/components/ui/label';
 import { useFunnel } from '@/hooks/useFunnel';
+import useLike from '@/hooks/useLike';
 import useResponsive from '@/hooks/useResponsive';
-import { formatAmount, getPropertyLabel, removePhoneNumberHyphens } from '@/lib/utils';
+import { BASE_URL } from '@/lib/constants';
+import { removePhoneNumberHyphens } from '@/lib/utils';
+import { loginState } from '@/recoilstate/login/atoms';
 import { Area, SalesInformation } from '@/types/types';
 import { getPropertyInfo } from '@/utils/getPropertyInfo';
-import { ArrowLineDown, Heart } from '@phosphor-icons/react';
-import { useQuery } from '@tanstack/react-query';
+import { ArrowLineDown } from '@phosphor-icons/react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 
 const steps = ['희망 상담 일자', '추가 사항'];
 
@@ -50,29 +54,88 @@ const PropertyDetail = () => {
   const [isToast, setIsToast] = useState(false);
   const { Funnel, Step, setStep } = useFunnel(steps[0]);
 
+  const [loginData] = useRecoilState(loginState);
+
   const fetchSalesInformation = async (): Promise<SalesInformation> => {
-    const res = await axios.get<SalesInformation>(`/api/properties/${id}`, {
-      withCredentials: true,
-    });
+    const url =
+      loginData.userInfo?.role === 'MEMBER'
+        ? `${BASE_URL}/api/member/properties/${id}`
+        : `${BASE_URL}/api/common/properties/${id}`;
+
+    const res = await axios.get<SalesInformation>(url, { withCredentials: true });
     return res.data;
   };
+
   const { data } = useQuery<SalesInformation>({
     queryKey: ['salesInformation', id],
     queryFn: fetchSalesInformation,
+    staleTime: 600000,
+    gcTime: 900000,
+    refetchOnWindowFocus: false,
+    enabled: loginData.isLoggedIn !== null,
   });
+
+  const postCounsel = async (formData: CounselForm) => {
+    const url =
+      loginData.userInfo?.role === 'MEMBER'
+        ? `${BASE_URL}/api/member/properties/${id}/consultation`
+        : `${BASE_URL}/api/common/properties/${id}/consultation`;
+
+    const res = await axios.post(url, formData, { withCredentials: true });
+    return res.data;
+  };
+
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: postCounsel,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['counsel'] });
+    },
+    onError: (error) => {
+      console.error('Post 에러 발생:', error);
+    },
+  });
+
+  const { liked, toggleLike, setLiked } = useLike(data?.likes || false, Number(id));
+  useEffect(() => {
+    if (data?.likes !== undefined) {
+      setLiked(data.likes);
+    }
+  }, [data?.likes]);
 
   // 최저가
   useEffect(() => {
     if (data?.areas) {
-      const lowestPrice = Math.min(...data?.areas.map((area) => area.discountPrice));
-      const lowestPriceAreaIndex = data?.areas.findIndex((area) => area.discountPrice === lowestPrice);
-      setLowestPriceArea(data?.areas[lowestPriceAreaIndex]);
+      const validAreas = data.areas.map((area) => {
+        let discountPrice = area.discountPrice;
+        let discountPercent = area.discountPercent;
+
+        if (discountPrice === null && discountPercent !== null) {
+          discountPrice = parseFloat((area.price * ((100 - discountPercent) / 100)).toFixed(1));
+        } else if (discountPercent === null && discountPrice !== null) {
+          discountPercent = Math.floor(parseFloat(((1 - discountPrice / area.price) * 100).toFixed(1)));
+        } else if (discountPrice === null && discountPercent === null) {
+          discountPrice = area.price;
+          discountPercent = 0;
+        }
+        return {
+          ...area,
+          discountPrice,
+          discountPercent,
+        };
+      });
+
+      // 최저가 계산
+      const lowestPrice = Math.min(
+        ...validAreas.map((area) => area.discountPrice).filter((price): price is number => price !== null),
+      );
+      const lowestPriceAreaIndex = validAreas.findIndex((area) => area.discountPrice === lowestPrice);
+
+      setLowestPriceArea(validAreas[lowestPriceAreaIndex]);
     }
   }, [data]);
 
   const propertyInfo = getPropertyInfo(data);
-  const supplyInformationFile = data?.files?.find((file) => file.type === 'supply_information');
-  const marketingFiles = data?.files?.filter((file) => file.type === 'marketing');
 
   // 핸드폰 유효성검사
   const isPhoneValidation = (phoneNumber: string) => {
@@ -99,11 +162,15 @@ const PropertyDetail = () => {
       ...counselForm,
       phoneNumber: phoneNumber,
     };
-
-    // 상담신청 api
-    console.log('상담 등록:', updatedCounselForm);
-    handleClose(false);
-    showToast();
+    mutate(updatedCounselForm, {
+      onSuccess: () => {
+        handleClose(false);
+        showToast();
+      },
+      onError: (error) => {
+        console.log('실패:', error);
+      },
+    });
   };
 
   const handleClose = (isCounselRegister: boolean) => {
@@ -120,121 +187,28 @@ const PropertyDetail = () => {
 
   return (
     <div className={`w-[1200px] tablet:w-[720px] mobile:w-[328px] h-full m-auto text-static-default`}>
-      {isDesktop && <Breadcrumb links={['미분양 정보', data?.buildingName || '']} />}
+      {isDesktop && <Breadcrumb links={['미분양 정보', data?.name || '']} />}
       <div>
-        <div
-          className={`flex ${isMobile ? 'flex-col mb-9' : 'items-center mb-11'} w-full h-[576px] tablet:h-[384px] mobile:h-[723px] gap-6`}>
-          <div className="w-[576px] tablet:w-[352px] mobile:w-[328px]">
-            <img
-              className="w-[576px] h-[576px] tablet:w-[352px] tablet:h-[384px] mobile:w-[328px] mobile:h-[723px] object-cover rounded-7"
-              src={data?.imageUrl}
-              alt={data?.buildingName}
-            />
-          </div>
-          <div className="flex flex-col gap-7 tablet:gap-2 mobile:gap-4 grow justify-center">
-            <div className="flex gap-4 tablet:mb-2 mobile:gap-3">
-              {data?.benefit?.map((benefit, index) => (
-                <Label
-                  key={index}
-                  keyword={getPropertyLabel(benefit.name)}
-                  size={isDesktop ? 'l' : 'm'}
-                  className="mobile:text-label-base-m">
-                  {getPropertyLabel(benefit.name)}
-                </Label>
-              ))}
-            </div>
-            <div className="flex flex-col gap-0 desktop:gap-4 ">
-              <div className="flex items-center gap-2 text-detail-xl tablet:text-detail-base mobile:text-detail-base-m text-assistive-detail">
-                <p>{getPropertyLabel(data?.propertyType || '')}</p>
-                <div className="w-[1px] h-[10px] bg-assistive-detail" />
-                <p>{getPropertyLabel(data?.salesType || '')}</p>
-                <div className="w-[1px] h-[10px] bg-assistive-detail" />
-                <p>총 {data?.totalNumber}세대</p>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-heading-base tablet:text-title-2xl mobile:text-title-2xl-m font-bold">
-                  {data?.buildingName}
-                </div>
-                {/* like api 추가하기 */}
-                <div className="p-3 border border-assistive-default rounded-10 cursor-pointer">
-                  {data?.likes ? (
-                    <Heart size={isDesktop ? 32 : 24} weight="fill" className="text-accent-strong" />
-                  ) : (
-                    <Heart size={isDesktop ? 32 : 24} weight="thin" className="text-assistive-strong" />
-                  )}
-                </div>
-              </div>
-              <div className="text-assistive-detail text-detail-xl tablet:text-detail-base mobile:text-detail-base-m">
-                {data?.areaAddr}
-              </div>
-            </div>
-            <div>
-              {lowestPriceArea && (
-                <div>
-                  <span className="line-through text-detail-xl tablet:text-detail-base mobile:text-detail-base-m text-assistive-default">
-                    {formatAmount(lowestPriceArea.price)}
-                  </span>
-                  <div className="flex mt-1">
-                    <span className="text-accent-strong text-title-2xl tablet:text-title-xl mobile:text-title-xl-m font-bold mr-3">
-                      {lowestPriceArea.discountPercent}%
-                    </span>
-                    <span className="text-static-default text-title-2xl tablet:text-title-xl mobile:text-title-xl-m font-bold">
-                      {formatAmount(lowestPriceArea.discountPrice)}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div>
-              <span className="text-assistive-strong text-detail-xl tablet:text-detail-base mobile:text-detail-base-m">
-                편의시설
-              </span>
-              <div className="flex gap-4 mt-4 tablet:my-2">
-                {data?.infra?.map((infra, index) => (
-                  <Label
-                    key={index}
-                    keyword={getPropertyLabel(infra.name)}
-                    size={isDesktop ? 'l' : 'm'}
-                    className="mobile:text-label-base-m">
-                    {getPropertyLabel(infra.name)}
-                  </Label>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="flex gap-3">
-                <Button
-                  variant="assistive"
-                  size={isDesktop ? 'xl' : 'sm'}
-                  className="w-full"
-                  onClick={() => setIsPhoneDialog(!isPhoneDialog)}>
-                  전화문의
-                </Button>
-                <Button
-                  variant="assistive"
-                  size={isDesktop ? 'xl' : 'sm'}
-                  className="w-full"
-                  onClick={() => data?.contactChannel && window.open(data?.contactChannel)}>
-                  카카오톡 채널문의
-                </Button>
-              </div>
-              <Button
-                className="w-full mt-3"
-                size={isDesktop ? 'xl' : 'sm'}
-                onClick={() => setIsCounselRegister(!isCounselRegister)}>
-                상담신청
-              </Button>
-            </div>
-          </div>
-        </div>
+        <PropertyTopContent
+          isMobile={isMobile}
+          isDesktop={isDesktop}
+          data={data}
+          toggleLike={toggleLike}
+          liked={liked}
+          lowestPriceArea={lowestPriceArea}
+          setIsPhoneDialog={setIsPhoneDialog}
+          isPhoneDialog={isPhoneDialog}
+          setIsCounselRegister={setIsCounselRegister}
+          isCounselRegister={isCounselRegister}
+        />
         <div className="flex flex-col">
-          <TabsNavigation marketingFiles={marketingFiles?.length || 0} />
+          <TabsNavigation marketingFiles={data?.marketing !== undefined ? 1 : 0} />
           <div id="areasTab" className="pt-16 mobile:pt-9">
             <div className="flex items-center justify-between mb-6">
               <p className="text-title-2xl tablet:text-title-lg mobile:text-title-lg-m font-bold">
                 평형별 매물가격
               </p>
-              <a href={supplyInformationFile?.url} download={supplyInformationFile?.name}>
+              <a href={data?.supplyInformation?.url} download={data?.supplyInformation?.name}>
                 <Button variant="outline" size={isDesktop ? 'lg' : 'xs'}>
                   공급안내표
                   <ArrowLineDown size={isDesktop ? 24 : 16} weight="bold" className="ml-4" />
@@ -244,14 +218,35 @@ const PropertyDetail = () => {
 
             <div>
               {data?.areas?.map((area, index) => {
+                const discountPrice =
+                  area.discountPrice !== null
+                    ? area.discountPrice
+                    : area.discountPercent !== null
+                      ? parseFloat((area.price * ((100 - area.discountPercent) / 100)).toFixed(1))
+                      : area.price;
+
+                const discountPercent =
+                  area.discountPercent !== null
+                    ? area.discountPercent
+                    : area.discountPrice !== null
+                      ? Math.floor(parseFloat(((1 - discountPrice / area.price) * 100).toFixed(1)))
+                      : 0;
+
+                const adjustedArea = {
+                  ...area,
+                  discountPrice,
+                  discountPercent,
+                };
+
                 const isPrevIndex =
                   index ===
                   data.areas.findIndex((i) => i.discountPrice === lowestPriceArea?.discountPrice) - 1;
+
                 const isLastIndex = index === data.areas.length - 1;
                 return (
                   <AreaList
                     key={index}
-                    area={area}
+                    area={adjustedArea}
                     lowestPriceArea={lowestPriceArea}
                     isPrevIndex={isPrevIndex}
                     isLastIndex={isLastIndex}
@@ -291,9 +286,9 @@ const PropertyDetail = () => {
               </div>
             ))}
           </div>
-          {marketingFiles?.length !== 0 && (
+          {data?.marketing !== undefined && (
             <div id="detailsTab" className="pt-16 mobile:pt-9">
-              <MarketingViewer marketingFiles={marketingFiles || []} />
+              <MarketingViewer marketingFiles={data.marketing || []} />
             </div>
           )}
           <div id="locationTab" className="pt-16 pb-12 mobile:pt-9 mobile:pb-9">

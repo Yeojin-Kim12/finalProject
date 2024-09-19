@@ -5,6 +5,7 @@ import useResponsive from '@/hooks/useResponsive';
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '../ui/drawer';
 import { Popover, PopoverContent } from '../ui/popover';
 import { PopoverTrigger } from '@radix-ui/react-popover';
+import { getValues } from '@/utils/selectedValue';
 
 interface SelectedMenuProps {
   isOpen: boolean;
@@ -77,13 +78,17 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
         rangeSetter({ min: 0, max: value });
         return [2];
       }
+      if (id === 10) {
+        rangeSetter({ min: value, max: 0 });
+        return [10];
+      }
       // 이미 선택된 버튼을 다시 클릭 불가
       if (prevIds.includes(id)) {
         return prevIds;
       }
 
       // 첫 번째 클릭 (id = 1 or 2 선택 후 버튼 클릭 시 포함) : min 설정
-      if (prevIds.length === 0 || prevIds.includes(1) || prevIds.includes(2)) {
+      if (prevIds.length === 0 || prevIds.includes(1) || prevIds.includes(2) || prevIds.includes(10)) {
         rangeSetter({ min: value, max: null });
         return [id];
       }
@@ -152,62 +157,6 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
     });
   };
 
-  const getValues = () => {
-    if (activeTab === 'price')
-      return [
-        { id: 1, value: 0, text: '전체' },
-        { id: 2, value: 5000, text: '~5천' },
-        { id: 3, value: 5000, text: '5천' },
-        { id: 4, value: 10000, text: '1억' },
-        { id: 5, value: 20000, text: '2억' },
-        { id: 6, value: 30000, text: '3억' },
-        { id: 7, value: 40000, text: '4억' },
-        { id: 8, value: 50000, text: '5억' },
-        { id: 9, value: 60000, text: '6억' },
-        { id: 10, value: 70000, text: '7억~' },
-      ];
-    if (activeTab === 'squareMeter' && !isSquareMeterToggle)
-      return [
-        { id: 1, value: 0, text: '전체' },
-        { id: 2, value: 10, text: '~10평' },
-        { id: 3, value: 10, text: '10평' },
-        { id: 4, value: 20, text: '20평' },
-        { id: 5, value: 30, text: '30평' },
-        { id: 6, value: 40, text: '40평' },
-        { id: 7, value: 50, text: '50평' },
-        { id: 8, value: 60, text: '60평' },
-        { id: 9, value: 70, text: '70평' },
-        { id: 10, value: 80, text: '80평~' },
-      ];
-    if (activeTab === 'squareMeter' && isSquareMeterToggle)
-      return [
-        { id: 1, value: 0, text: '전체' },
-        { id: 2, value: 33, text: '~33㎡' },
-        { id: 3, value: 33, text: '33㎡' },
-        { id: 4, value: 66, text: '66㎡' },
-        { id: 5, value: 99, text: '99㎡' },
-        { id: 6, value: 132, text: '132㎡' },
-        { id: 7, value: 165, text: '165㎡' },
-        { id: 8, value: 198, text: '198㎡' },
-        { id: 9, value: 231, text: '231㎡' },
-        { id: 10, value: 264, text: '264㎡~' },
-      ];
-    if (activeTab === 'householdNumber')
-      return [
-        { id: 1, value: 0, text: '전체' },
-        { id: 2, value: 1000, text: '~1천' },
-        { id: 3, value: 1000, text: '1천' },
-        { id: 4, value: 1500, text: '1.5천' },
-        { id: 5, value: 2000, text: '2천' },
-        { id: 6, value: 2500, text: '2.5천' },
-        { id: 7, value: 3000, text: '3천' },
-        { id: 8, value: 4000, text: '4천' },
-        { id: 9, value: 5000, text: '5천' },
-        { id: 10, value: 6000, text: '6천~' },
-      ];
-    return [];
-  };
-
   const getCurrentRange = () => {
     if (activeTab === 'price') return priceRange;
     if (activeTab === 'squareMeter') return squareMeterRange;
@@ -237,7 +186,7 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
   };
 
   const handleSubmit = () => {
-    // 적용 누르면 api 보내기, max가 min보다 작을 때 안 되게 하기
+    // 적용 누르면 값 부모에게 보내기?
     console.log(
       'price',
       priceRange.min,
@@ -247,6 +196,13 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
       'householdNumber',
       householdNumberRange,
     );
+    const allRangesValid = [priceRange, squareMeterRange, householdNumberRange].every(
+      (range) => range.min !== null && range.max !== null,
+    );
+    if (allRangesValid) {
+      //null값이 없을때, 근데 그냥 max가 null이면 0을 보내면 될듯함? 전체면 api에 안보내는게 맞는 듯함
+      onClose();
+    }
   };
 
   const renderContent = () => {
@@ -258,7 +214,6 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
         <div>
           <div
             className={`flex items-center justify-center w-full gap-2 ${isMobile ? 'text-label-lg-m' : 'py-3 text-label-lg'} font-bold text-center`}>
-            {/* 저장된 값 있으면 색 변경 이후 추가 */}
             <div
               className={`w-full px-7 py-4 ${activeTab === 'price' ? 'text-primary-default' : 'text-assistive-detail'} cursor-pointer`}
               onClick={() => handleTabChange('price')}>
@@ -282,18 +237,17 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
           <div
             className={`${!isMobile ? `${activeTab === 'squareMeter' ? '' : 'mt-[64px]'} mx-[50px]` : `${activeTab === 'squareMeter' ? '' : 'mt-[70px]'} my-6`} `}>
             <div className={`${activeTab === 'squareMeter' ? 'block' : 'hidden'} flex justify-end mb-5`}>
-              {/* Button 변경예정 */}
               <Button
                 size="sm"
                 variant="assistive"
                 onClick={handleSquareMeterToggle}
-                className={`${isSquareMeterToggle ? 'bg-primary-strong' : ''} ${isMobile ? 'py-3 px-6' : ''}`}>
+                className={`${isSquareMeterToggle && 'bg-primary-strong !text-white'} ${isMobile && 'py-3 px-6'}`}>
                 ㎡
               </Button>
             </div>
             <div>
               <div className={`grid grid-cols-5 ${!isMobile ? ' mb-7' : ''}`}>
-                {getValues().map(({ id, value, text }) => (
+                {getValues(activeTab, isSquareMeterToggle).map(({ id, value, text }) => (
                   <button
                     key={id}
                     onClick={() => handleButtonClick(value, id)}
@@ -312,7 +266,15 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
             <input
               type="text"
               placeholder="최소"
-              value={selectedIds.includes(1) ? '' : currentRange.min !== null ? currentRange.min : ''}
+              value={
+                selectedIds.includes(1)
+                  ? ''
+                  : selectedIds.includes(2)
+                    ? ''
+                    : currentRange.min !== null
+                      ? currentRange.min
+                      : ''
+              }
               onChange={(e) => handleInputChange(e, 'min')}
               className="w-[123px] px-3 py-4 border rounded-4 text-center"
             />
@@ -325,7 +287,15 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
             <input
               type="text"
               placeholder="최대"
-              value={selectedIds.includes(1) ? '' : currentRange.max !== null ? currentRange.max : ''}
+              value={
+                selectedIds.includes(1)
+                  ? ''
+                  : selectedIds.includes(10)
+                    ? ''
+                    : currentRange.max !== null
+                      ? currentRange.max
+                      : ''
+              }
               onChange={(e) => handleInputChange(e, 'max')}
               className="w-[123px] px-3 py-4 border rounded-4 text-center"
             />

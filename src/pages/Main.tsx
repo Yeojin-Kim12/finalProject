@@ -5,6 +5,7 @@ import ItemList from '@/components/common/ItemList';
 import { Button } from '@/components/ui/button';
 import BannerSwiper from '@/components/Main/BannerSwiper';
 import useResponsive from '@/hooks/useResponsive';
+import { BASE_URL } from '@/lib/constants';
 import { CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -19,16 +20,42 @@ const Main = () => {
   const navigate = useNavigate();
 
   const fetchProperties = async (page: any) => {
-    const res = await axios.get(`/api/common/home?page=${page}`);
+    const res = await axios.get(`${BASE_URL}/api/common/home`, {
+      params: {
+        page,
+      },
+      withCredentials: true,
+    });
     return res.data;
   };
 
   const { data, isLoading } = useQuery({
     queryKey: ['properties', currentPage],
-    queryFn: () => fetchProperties({ page: currentPage }),
+    queryFn: () => fetchProperties(currentPage - 1),
+    staleTime: 600000,
+    gcTime: 900000,
+    refetchOnWindowFocus: false,
   });
 
   const totalPages = data?.totalPages || 1;
+
+  const handleAdd = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/common/my-information`, {
+        withCredentials: true,
+      });
+      const { role } = res.data;
+
+      if (role === 'ADMIN') {
+        navigate('/property-add');
+      } else if (role === 'MEMBER') {
+        navigate('/login');
+      }
+    } catch {
+      // 로그인되어 있지 않음
+      navigate('/login');
+    }
+  };
 
   return (
     <div className="py-12 mobile:py-9">
@@ -56,7 +83,7 @@ const Main = () => {
               trailingExtra={
                 <MagnifyingGlass
                   size={isDesktop ? 32 : 24}
-                  weight="thin"
+                  weight="bold"
                   className="text-primary-default cursor-pointer"
                   onClick={() => navigate(`/search?search=${searchQuery}`)}
                 />
@@ -125,18 +152,18 @@ const Main = () => {
               </p>
             </div>
             <div className="flex items-end justify-end mobile:justify-center">
-              {/* 로그인 - 매물등록, 비로그인 - 로그인화면 */}
               <Button
                 variant="assistive"
                 size={`${isMobile ? 'sm' : 'md'}`}
-                className="!text-assistive-strong">
+                className="!text-assistive-strong"
+                onClick={handleAdd}>
                 매물 등록하기
                 <CaretRight size={isMobile ? 16 : 24} className="ml-[10px]" />
               </Button>
             </div>
           </div>
         </div>
-        {data?.content?.properties.length > 0 && (
+        {Array.isArray(data?.contents[0]?.properties) && data.contents[0].properties.length !== 0 && (
           <div className="">
             <div className="mb-12 tablet:mb-11 mobile:mb-9">
               <div className="mb-6 mobile:mb-9">
@@ -146,7 +173,7 @@ const Main = () => {
                 </p>
               </div>
               <div className="flex flex-col gap-6 items-center">
-                {data?.content?.properties.map((property: any, index: any) => {
+                {data.contents[0].properties.map((property: any, index: any) => {
                   const commonProps = {
                     id: property.id,
                     imageUrl: property.imageUrl,
@@ -159,6 +186,7 @@ const Main = () => {
                     price: property.price,
                     discountPrice: property.discountPrice,
                     like: property.like,
+                    onLikeToggle: () => property.id,
                     rank: index + 1 + (currentPage - 1) * 5,
                   };
                   return isMobile ? (
