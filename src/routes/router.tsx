@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react';
 import Layout from '../components/Layout';
 import Footer from '@/components/common/Footer';
 import FAB from '@/components/common/FAB';
+import ServiceOverview from '@/pages/ServiceOverview';
 const TestMS = lazy(() => import('@/pages/TestMS'));
 const TestHY = lazy(() => import('@/pages/TestHY'));
 const TestYJ = lazy(() => import('@/pages/TestYJ'));
@@ -96,6 +97,15 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: '/service-overview',
+        element: (
+          <Suspense fallback={<div>로딩 중...</div>}>
+            <ServiceOverview />
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
         path: '/property-add',
         element: (
           <Suspense fallback={<div>로딩 중...</div>}>
@@ -146,6 +156,7 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>로딩 중...</div>}>
             <PropertyKeywords />
+            <Footer />
           </Suspense>
         ),
       },
@@ -154,6 +165,7 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>로딩 중...</div>}>
             <Search />
+            <Footer />
           </Suspense>
         ),
       },
@@ -162,6 +174,7 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>로딩 중...</div>}>
             <PropertySearch />
+            <Footer />
           </Suspense>
         ),
       },
@@ -170,6 +183,7 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>로딩 중...</div>}>
             <CustomerService />
+            <Footer />
           </Suspense>
         ),
       },
@@ -178,6 +192,7 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>로딩 중...</div>}>
             <PropertyManagement />
+            <Footer />
           </Suspense>
         ),
       },
@@ -186,6 +201,7 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>로딩 중...</div>}>
             <Favorite />
+            <Footer />
           </Suspense>
         ),
       },
@@ -194,6 +210,7 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>로딩 중...</div>}>
             <CounselList />
+            <Footer />
           </Suspense>
         ),
       },

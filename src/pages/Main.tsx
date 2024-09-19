@@ -9,7 +9,7 @@ import useResponsive from '@/hooks/useResponsive';
 import { CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Main = () => {

@@ -97,7 +97,7 @@ const GNB = () => {
                   미분양정보
                 </Link>
                 <Link
-                  to="/"
+                  to="/service-overview"
                   className={`w-[193px] px-5 py-8 text-center ${location.pathname === '/service' ? 'text-primary-default' : ''}`}>
                   서비스 소개
                 </Link>
@@ -186,7 +186,7 @@ const GNB = () => {
               <Link to="/">미분양 정보</Link>
             </li>
             <li className="p-5 ">
-              <Link to="/">서비스 소개</Link>
+              <Link to="/service-overview">서비스 소개</Link>
             </li>
             {/* 마이페이지 리스트 - 어드민이 로그인 시 내용 변경 이후 추가 */}
             <li
