@@ -1,8 +1,10 @@
 import { Heart } from '@phosphor-icons/react';
 import { Label } from '../ui/label';
 import { formatAmount, getPropertyLabel } from '@/lib/utils';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useLike from '@/hooks/useLike';
+import { loginState } from '@/recoilstate/login/atoms';
+import { useRecoilValue } from 'recoil';
 
 export interface ItemCardProps {
   size: 'l' | 's' | 'default'; // 사이즈
@@ -13,9 +15,11 @@ export interface ItemCardProps {
   propertyType?: string; // 분양유형
   salesType?: string; // 분양형태
   totalNumber?: number; // 세대수
-  keywords?: string[]; // 키워드
+  infra?: string[];
+  benefit?: string[];
   price?: number; // 가격
   discountPrice?: number | null; // 할인가격
+  discountPercent?: number | null;
   like?: boolean; // 찜 -> 상태관리 해야함
   rank?: number; // 순위 -> 홈 화면에서만 사용
   status?: boolean; // 모집상태 -> 매물 관리에서만 사용 -> string형태 주는지, boolean 형태로 주는지, date를 줘서 날짜 확인해야 하는지?
@@ -31,19 +35,26 @@ const ItemCard = ({
   propertyType = '',
   salesType = '',
   totalNumber,
-  keywords,
+  infra,
+  benefit,
   price = 0,
   discountPrice = null,
+  discountPercent = null,
   like,
   rank,
   status,
   onLikeToggle,
 }: ItemCardProps) => {
   const { liked, toggleLike } = useLike(like || false, id);
-  const discountRate =
-    discountPrice !== null && discountPrice !== 0 ? Math.round(((price - discountPrice) / price) * 100) : 0; // 할인율 계산
+  const loginData = useRecoilValue(loginState);
+  const navigate = useNavigate();
 
   const handleLikeToggle = () => {
+    if (!loginData.isLoggedIn || loginData.userInfo?.role !== 'MEMBER') {
+      navigate('/login');
+      return;
+    }
+
     if (onLikeToggle) {
       toggleLike();
       onLikeToggle();
@@ -91,7 +102,12 @@ const ItemCard = ({
             </div>
 
             <div className="absolute bottom-3 left-3 flex gap-2">
-              {keywords?.map((kw, index) => (
+              {benefit?.map((kw, index) => (
+                <Label key={index} size="m" variant="accent" keyword={getPropertyLabel(kw)}>
+                  {getPropertyLabel(kw)}
+                </Label>
+              ))}
+              {infra?.map((kw, index) => (
                 <Label key={index} size="m" variant="accent" keyword={getPropertyLabel(kw)}>
                   {getPropertyLabel(kw)}
                 </Label>
@@ -122,9 +138,9 @@ const ItemCard = ({
                   {formatAmount(price)}
                 </span>
               )}
-              <div className={`${!discountPrice && 'mt-7'}`}>
-                {discountRate > 0 && (
-                  <span className="text-accent-strong text-title-xl font-bold mr-2">{discountRate}%</span>
+              <div className={`${!discountPrice && 'mt-6'}`}>
+                {discountPercent !== null && (
+                  <span className="text-accent-strong text-title-xl font-bold mr-2">{discountPercent}%</span>
                 )}
                 <span className="text-static-default text-title-xl font-bold mr-2">
                   {formatAmount(discountPrice || price)}
@@ -140,14 +156,14 @@ const ItemCard = ({
           className={`${cardSizeClass[size]} flex flex-col bg-white rounded-5  border border-assistive-divider cursor-pointer`}>
           <div className="flex gap-4  px-4 pt-5 pb-4 border-b border-assistive-divider">
             <div className="w-[180px]">
-              <div className="flex gap-2 mb-3">
-                {keywords?.map((kw, index) => (
-                  <Label
-                    key={index}
-                    size="s"
-                    variant="accent"
-                    keyword={getPropertyLabel(kw)}
-                    className="text-[11px]">
+              <div className="flex gap-1 mb-3">
+                {benefit?.map((kw, index) => (
+                  <Label key={index} size="s" variant="accent" className="text-[11px]">
+                    {getPropertyLabel(kw)}
+                  </Label>
+                ))}
+                {infra?.map((kw, index) => (
+                  <Label key={index} size="s" variant="primary" className="text-[11px]">
                     {getPropertyLabel(kw)}
                   </Label>
                 ))}
@@ -167,10 +183,10 @@ const ItemCard = ({
                       {formatAmount(price)}
                     </span>
                   )}
-                  <div className={`h-6 ${!discountPrice && 'mt-5'}`}>
-                    {discountRate > 0 && (
+                  <div className={`h-6 ${!discountPrice && 'mt-4'}`}>
+                    {discountPercent !== null && (
                       <span className="text-accent-strong text-title-base-m font-bold mr-2">
-                        {discountRate}%
+                        {discountPercent}%
                       </span>
                     )}
                     <span className="text-static-default text-title-base-m font-bold">

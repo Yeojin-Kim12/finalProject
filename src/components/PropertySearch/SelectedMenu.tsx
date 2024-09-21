@@ -1,5 +1,5 @@
 import { X } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import useResponsive from '@/hooks/useResponsive';
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '../ui/drawer';
@@ -10,35 +10,34 @@ import { getValues } from '@/utils/selectedValue';
 interface SelectedMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmitFilters: (filters: {
+    price: { min: number | undefined | null; max: number | undefined | null };
+    squareMeter: { min: number | undefined | null; max: number | undefined | null };
+    householdNumber: { min: number | undefined | null; max: number | undefined | null };
+    priceSelectedIds: number[];
+    squareMeterSelectedIds: number[];
+    householdNumberSelectedIds: number[];
+  }) => void;
+  filters: {
+    price: { min: number | undefined | null; max: number | undefined | null };
+    squareMeter: { min: number | undefined | null; max: number | undefined | null };
+    householdNumber: { min: number | undefined | null; max: number | undefined | null };
+    priceSelectedIds: number[];
+    squareMeterSelectedIds: number[];
+    householdNumberSelectedIds: number[];
+  };
 }
 
-const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
+const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMenuProps) => {
   const [activeTab, setActiveTab] = useState<'price' | 'squareMeter' | 'householdNumber'>('price');
-
-  // 전체 값 : 0 ~ 마지막값 해두고 나중에 변경
-  // 분양가
-  const [priceRange, setPriceRange] = useState<{ min: number | null; max: number | null }>({
-    min: 0,
-    max: 70000,
-  });
-  const [priceSelectedIds, setPriceSelectedIds] = useState<number[]>([1]);
-
-  // 면적
-  const [squareMeterRange, setSquareMeterRange] = useState<{ min: number | null; max: number | null }>({
-    min: 0,
-    max: 80,
-  });
-  const [squareMeterSelectedIds, setSquareMeterSelectedIds] = useState<number[]>([1]);
-
-  // 세대수
-  const [householdNumberRange, setHouseholdNumberRange] = useState<{
-    min: number | null;
-    max: number | null;
-  }>({
-    min: 0,
-    max: 6000,
-  });
-  const [householdNumberSelectedIds, setHouseholdNumberSelectedIds] = useState<number[]>([1]);
+  const [priceRange, setPriceRange] = useState(filters.price);
+  const [priceSelectedIds, setPriceSelectedIds] = useState(filters.priceSelectedIds);
+  const [squareMeterRange, setSquareMeterRange] = useState(filters.squareMeter);
+  const [squareMeterSelectedIds, setSquareMeterSelectedIds] = useState(filters.squareMeterSelectedIds);
+  const [householdNumberRange, setHouseholdNumberRange] = useState(filters.householdNumber);
+  const [householdNumberSelectedIds, setHouseholdNumberSelectedIds] = useState(
+    filters.householdNumberSelectedIds,
+  );
 
   // 제곱미터
   const [isSquareMeterToggle, setIsSquareMeterToggle] = useState(false);
@@ -49,7 +48,9 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
   };
 
   const handleButtonClick = (value: number, id: number) => {
-    let rangeSetter: React.Dispatch<React.SetStateAction<{ min: number | null; max: number | null }>>;
+    let rangeSetter: React.Dispatch<
+      React.SetStateAction<{ min: number | undefined | null; max: number | undefined | null }>
+    >;
     let selectedIdsSetter: React.Dispatch<React.SetStateAction<number[]>> = setPriceSelectedIds;
     let maxTabValue = 0;
 
@@ -79,7 +80,7 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
         return [2];
       }
       if (id === 10) {
-        rangeSetter({ min: value, max: 0 });
+        rangeSetter({ min: value, max: null });
         return [10];
       }
       // 이미 선택된 버튼을 다시 클릭 불가
@@ -113,8 +114,9 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'min' | 'max') => {
     const value = parseInt(e.target.value, 10) || 0;
 
-    let rangeSetter: React.Dispatch<React.SetStateAction<{ min: number | null; max: number | null }>> =
-      setPriceRange;
+    let rangeSetter: React.Dispatch<
+      React.SetStateAction<{ min: number | undefined | null; max: number | undefined | null }>
+    > = setPriceRange;
     let selectedIdsSetter: React.Dispatch<React.SetStateAction<number[]>> = setPriceSelectedIds;
 
     if (activeTab === 'price') {
@@ -145,8 +147,12 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
       const newToggle = !prevToggle;
       setSquareMeterRange((prevRange) => {
         const unit = 3.3;
-        const changeUnit = (value: number | null) =>
-          value !== null ? (newToggle ? Math.round(value * unit) : Math.round(value / unit)) : null;
+        const changeUnit = (value: number | null | undefined) =>
+          value !== null && value !== undefined
+            ? newToggle
+              ? Math.round(value * unit)
+              : Math.round(value / unit)
+            : null;
 
         return {
           min: changeUnit(prevRange.min),
@@ -175,7 +181,6 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
   const selectedIds = getCurrentSelectedIds(); // 현재 선택된 Tab의 button Id
 
   const handleReset = () => {
-    // 모두 초기화
     setPriceRange({ min: 0, max: 70000 });
     setPriceSelectedIds([1]);
     setSquareMeterRange({ min: 0, max: 80 });
@@ -185,25 +190,68 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
     setHouseholdNumberSelectedIds([1]);
   };
 
+  const isValidSelection = () => {
+    const validPriceSelections = priceSelectedIds.filter((id) => ![1, 2, 10].includes(id));
+    const validSquareMeterSelections = squareMeterSelectedIds.filter((id) => ![1, 2, 10].includes(id));
+    const validHouseholdSelections = householdNumberSelectedIds.filter((id) => ![1, 2, 10].includes(id));
+
+    // 최소 또는 최대값이 입력되었는지 확인
+    const isPriceRangeValid = priceRange.min !== undefined || priceRange.max !== undefined;
+    const isSquareMeterRangeValid = squareMeterRange.min !== undefined || squareMeterRange.max !== undefined;
+    const isHouseholdNumberRangeValid =
+      householdNumberRange.min !== undefined || householdNumberRange.max !== undefined;
+
+    // ID가 2개 이상 선택되었거나, 값이 입력되었을 때 유효한 선택으로 간주
+    const isValidPrice =
+      validPriceSelections.length >= 2 ||
+      isPriceRangeValid ||
+      priceSelectedIds.includes(1) ||
+      priceSelectedIds.includes(2) ||
+      priceSelectedIds.includes(10);
+    const isValidSquareMeter =
+      validSquareMeterSelections.length >= 2 ||
+      isSquareMeterRangeValid ||
+      squareMeterSelectedIds.includes(1) ||
+      squareMeterSelectedIds.includes(2) ||
+      squareMeterSelectedIds.includes(10);
+    const isValidHousehold =
+      validHouseholdSelections.length >= 2 ||
+      isHouseholdNumberRangeValid ||
+      householdNumberSelectedIds.includes(1) ||
+      householdNumberSelectedIds.includes(2) ||
+      householdNumberSelectedIds.includes(10);
+
+    // 각 탭에서 조건을 만족하는지 확인
+    return isValidPrice && isValidSquareMeter && isValidHousehold;
+  };
   const handleSubmit = () => {
-    // 적용 누르면 값 부모에게 보내기?
-    console.log(
-      'price',
-      priceRange.min,
-      priceRange.max,
-      'squareMeter',
-      squareMeterRange,
-      'householdNumber',
-      householdNumberRange,
-    );
-    const allRangesValid = [priceRange, squareMeterRange, householdNumberRange].every(
-      (range) => range.min !== null && range.max !== null,
-    );
-    if (allRangesValid) {
-      //null값이 없을때, 근데 그냥 max가 null이면 0을 보내면 될듯함? 전체면 api에 안보내는게 맞는 듯함
+    if (isValidSelection()) {
+      const adjustedFilters = {
+        price: priceRange,
+        squareMeter: squareMeterRange,
+        householdNumber: householdNumberRange,
+        priceSelectedIds,
+        squareMeterSelectedIds,
+        householdNumberSelectedIds,
+      };
+
+      onSubmitFilters(adjustedFilters);
       onClose();
+    } else {
+      console.log('2개이상 선택');
     }
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setPriceRange(filters.price);
+      setPriceSelectedIds(filters.priceSelectedIds);
+      setSquareMeterRange(filters.squareMeter);
+      setSquareMeterSelectedIds(filters.squareMeterSelectedIds);
+      setHouseholdNumberRange(filters.householdNumber);
+      setHouseholdNumberSelectedIds(filters.householdNumberSelectedIds);
+    }
+  }, [isOpen, filters]);
 
   const renderContent = () => {
     return (
@@ -314,7 +362,7 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
   };
 
   return (
-    <>
+    <div className="absolute top-7 right-48">
       {isMobile && isOpen ? (
         <Drawer open={true} onOpenChange={onClose}>
           <DrawerHeader>
@@ -333,7 +381,7 @@ const SelectedMenu = ({ isOpen, onClose }: SelectedMenuProps) => {
           </PopoverContent>
         </Popover>
       )}
-    </>
+    </div>
   );
 };
 

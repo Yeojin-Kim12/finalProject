@@ -45,10 +45,10 @@ export const ImageUpload = () => {
         const uploadedUrls = await uploadToServer([file], 'PROPERTY_IMAGE');
 
         if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-          console.log('업로드된 파일 URL:', uploadedUrls[0]);
+          console.log('업로드된 파일 URL:', decodeURI(uploadedUrls[0]));
           appendFile({
             name: file.name,
-            url: uploadedUrls[0],
+            url: decodeURI(uploadedUrls[0]),
             type: 'PROPERTY_IMAGE',
           });
         }

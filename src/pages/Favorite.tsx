@@ -81,7 +81,8 @@ const Favorite = () => {
                     propertyType={property.propertyType}
                     salesType={property.salesType}
                     totalNumber={property.count}
-                    keywords={property.keywords}
+                    infra={property.infra}
+                    benefit={property.benefit}
                     price={property.price}
                     discountPrice={property.salesPrice}
                     like={true}

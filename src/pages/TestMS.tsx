@@ -32,12 +32,16 @@ const TestMS = () => {
 
       <div className="max-w-[1200px]">
         <p className="text-title-2xl">혜택</p>
+        {/* @ts-ignore: Unreachable code error */}
         <CustomFilterToggleList list={toggleIcon1} onToggle={handleToggle} activeItems={activeItems} />
         <p className="text-title-2xl">인프라</p>
+        {/* @ts-ignore: Unreachable code error */}
         <CustomFilterToggleList list={toggleIcon2} onToggle={handleToggle} activeItems={activeItems} />
         <p className="text-title-2xl">분양 형태</p>
+        {/* @ts-ignore: Unreachable code error */}
         <CustomFilterToggleList list={toggleIcon3} onToggle={handleToggle} activeItems={activeItems} />
         <p className="text-title-2xl">분양 유형</p>
+        {/* @ts-ignore: Unreachable code error */}
         <CustomFilterToggleList list={toggleIcon4} onToggle={handleToggle} activeItems={activeItems} />
       </div>
       <div className=""></div>

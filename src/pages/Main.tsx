@@ -12,11 +12,14 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '@/components/common/SearchBar';
+import { useRecoilValue } from 'recoil';
+import { loginState } from '@/recoilstate/login/atoms';
 
 const Main = () => {
   const { isDesktop, isTablet, isMobile } = useResponsive();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const { isLoggedIn, userInfo } = useRecoilValue(loginState);
   const navigate = useNavigate();
 
   const fetchProperties = async (page: any) => {
@@ -42,19 +45,13 @@ const Main = () => {
   const totalPages = data?.totalPages || 1;
 
   const handleAdd = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/api/common/my-information`, {
-        withCredentials: true,
-      });
-      const { role } = res.data;
-
-      if (role === 'ADMIN') {
+    if (isLoggedIn) {
+      if (userInfo?.role === 'ADMIN') {
         navigate('/property-add');
-      } else if (role === 'MEMBER') {
+      } else if (userInfo?.role === 'MEMBER') {
         navigate('/login');
       }
-    } catch {
-      // 로그인되어 있지 않음
+    } else {
       navigate('/login');
     }
   };
@@ -186,9 +183,12 @@ const Main = () => {
                     propertyType: property.propertyType,
                     salesType: property.salesType,
                     totalNumber: property.totalNumber,
+                    infra: property.infra,
+                    benefit: property.benefit,
                     keywords: property.keywords,
                     price: property.price,
                     discountPrice: property.discountPrice,
+                    discountPercent: property.discountPercent,
                     like: property.like,
                     onLikeToggle: () => property.id,
                     rank: index + 1 + (currentPage - 1) * 5,

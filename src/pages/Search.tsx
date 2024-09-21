@@ -35,13 +35,14 @@ const Search = () => {
 
   const { data } = useQuery({
     queryKey: ['search', currentPage, size, searchQuery],
-    queryFn: () => fetchSearch(currentPage, size, searchQuery),
+    queryFn: () => fetchSearch(currentPage - 1, size, searchQuery),
   });
   const totalPages = data?.totalPages || 1;
 
   const handleSearch = () => {
     setSearchQuery(inputValue);
     setSearchParams({ search: inputValue });
+    setCurrentPage(1);
   };
 
   return (
@@ -74,10 +75,10 @@ const Search = () => {
 
       <div>
         <p className="text-detail-lg mobile:text-detail-base-m text-assistive-strong my-4">
-          총 <span className="text-primary-default">{data?.content?.properties.length}</span>건의 검색 결과가
-          있어요
+          총 <span className="text-primary-default">{data?.contents[0]?.totalProperties}</span>
+          건의 검색 결과가 있어요
         </p>
-        {data?.content?.properties.length === 0 ? (
+        {data?.contents[0]?.totalProperties === 0 ? (
           <div className="flex flex-col items-center justify-center h-[676px] tablet:h-[600px] mobile:h-[400px]">
             <div className="flex items-center justify-center w-[120px] h-[120px] mobile:w-[96px] mobile:h-[96px] bg-primary-base rounded-10 mb-9">
               <MagnifyingGlass size={isMobile ? 48 : 80} weight="thin" className="text-primary-strong" />
@@ -98,22 +99,24 @@ const Search = () => {
         ) : (
           <div className="flex flex-col gap-11 mobile:gap-9">
             <div className="grid grid-cols-3 tablet:grid-cols-2 mobile:grid-cols-1 gap-6 mobile:gap-4 mt-6">
-              {data?.content?.properties.map((property: any, index: any) => (
+              {data?.contents[0]?.propertySearchResponses.map((property: any, index: any) => (
                 <div className="flex flex-col items-center">
                   <ItemCard
                     key={index}
                     id={property.id}
                     size={isMobile ? 's' : 'l'}
-                    imageUrl={property.image_url}
-                    title={property.property_name}
-                    address={property.area_addr}
-                    propertyType={property.property_type}
-                    salesType={property.sales_type}
-                    totalNumber={property.total_number}
-                    keywords={property.keywords}
+                    imageUrl={property.imageUrl}
+                    title={property.propertyName}
+                    address={property.areaAddr}
+                    propertyType={property.propertyType}
+                    salesType={property.salesType}
+                    totalNumber={property.totalNumber}
+                    infra={property.infra}
+                    benefit={property.benefit}
                     price={property.price}
-                    discountPrice={property.discount_price}
+                    discountPrice={property.discountPrice}
                     like={property.like}
+                    onLikeToggle={() => property.id}
                   />
                 </div>
               ))}

@@ -29,13 +29,14 @@ const CounselList = () => {
       },
       withCredentials: true,
     });
+    console.log(res.data);
 
     return res.data;
   };
 
   const { data } = useQuery({
     queryKey: ['counsel', currentPage, waitingStatus, searchValue],
-    queryFn: () => fetchCounsel(currentPage, searchValue),
+    queryFn: () => fetchCounsel(currentPage - 1, searchValue),
   });
   const totalPages = data?.totalPages || 1;
 

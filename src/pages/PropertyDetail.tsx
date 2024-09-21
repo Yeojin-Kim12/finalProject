@@ -63,6 +63,8 @@ const PropertyDetail = () => {
         : `${BASE_URL}/api/common/properties/${id}`;
 
     const res = await axios.get<SalesInformation>(url, { withCredentials: true });
+    console.log(res.data);
+
     return res.data;
   };
 
@@ -110,14 +112,11 @@ const PropertyDetail = () => {
         let discountPrice = area.discountPrice;
         let discountPercent = area.discountPercent;
 
-        if (discountPrice === null && discountPercent !== null) {
-          discountPrice = parseFloat((area.price * ((100 - discountPercent) / 100)).toFixed(1));
-        } else if (discountPercent === null && discountPrice !== null) {
-          discountPercent = Math.floor(parseFloat(((1 - discountPrice / area.price) * 100).toFixed(1)));
-        } else if (discountPrice === null && discountPercent === null) {
+        if (discountPrice === null && discountPercent === null) {
           discountPrice = area.price;
           discountPercent = 0;
         }
+
         return {
           ...area,
           discountPrice,
@@ -202,7 +201,7 @@ const PropertyDetail = () => {
           isCounselRegister={isCounselRegister}
         />
         <div className="flex flex-col">
-          <TabsNavigation marketingFiles={data?.marketing !== undefined ? 1 : 0} />
+          <TabsNavigation marketingFiles={data?.marketing ? 1 : 0} />
           <div id="areasTab" className="pt-16 mobile:pt-9">
             <div className="flex items-center justify-between mb-6">
               <p className="text-title-2xl tablet:text-title-lg mobile:text-title-lg-m font-bold">
@@ -219,18 +218,12 @@ const PropertyDetail = () => {
             <div>
               {data?.areas?.map((area, index) => {
                 const discountPrice =
-                  area.discountPrice !== null
-                    ? area.discountPrice
-                    : area.discountPercent !== null
-                      ? parseFloat((area.price * ((100 - area.discountPercent) / 100)).toFixed(1))
-                      : area.price;
+                  area.discountPrice === null && area.discountPercent === null
+                    ? area.price
+                    : area.discountPrice;
 
                 const discountPercent =
-                  area.discountPercent !== null
-                    ? area.discountPercent
-                    : area.discountPrice !== null
-                      ? Math.floor(parseFloat(((1 - discountPrice / area.price) * 100).toFixed(1)))
-                      : 0;
+                  area.discountPrice === null && area.discountPercent === null ? 0 : area.discountPercent;
 
                 const adjustedArea = {
                   ...area,
@@ -286,7 +279,7 @@ const PropertyDetail = () => {
               </div>
             ))}
           </div>
-          {data?.marketing !== undefined && (
+          {data?.marketing && (
             <div id="detailsTab" className="pt-16 mobile:pt-9">
               <MarketingViewer marketingFiles={data.marketing || []} />
             </div>

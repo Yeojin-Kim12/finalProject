@@ -8,18 +8,19 @@ import { CaretDown, CaretUp } from '@phosphor-icons/react';
 export interface CustomFilterToggleListProps {
   list: ListItem[];
   activeItems: string[];
-  onToggle: (title: string) => void;
+  onToggle: (title: string, category: string) => void;
+  category: string;
 }
 
-const CustomFilterToggleList = ({ list, onToggle, activeItems }: CustomFilterToggleListProps) => {
+const CustomFilterToggleList = ({ list, onToggle, activeItems, category }: CustomFilterToggleListProps) => {
   const ref = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
   const [open, setOpen] = React.useState<boolean>(false);
   const { events } = useDraggable(ref); //
   const handleToggle = useCallback(
     (title: string) => {
-      onToggle(title);
+      onToggle(title, category);
     },
-    [onToggle],
+    [onToggle, category],
   );
   const { isDesktop } = useResponsive();
   return (

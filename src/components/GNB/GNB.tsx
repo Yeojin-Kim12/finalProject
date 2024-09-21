@@ -86,22 +86,20 @@ const GNB = () => {
     }
   };
 
-  // const { data } = useQuery({
-  //   queryKey: ['gnb'],
-  //   queryFn: () => fetchGnb(),
-  //   staleTime: 600000,
-  //   gcTime: 900000,
-  //   refetchOnWindowFocus: false,
-  //   enabled: isLoggedIn === null ? false : isLoggedIn,
-  // });
-
   const handleLogout = async () => {
     try {
-      await axios.get(`${BASE_URL}/api/auth/logout`, { withCredentials: true });
-      navigate('/');
+      await axios.get(`${BASE_URL}/api/auth/logout`, {
+        withCredentials: true,
+      });
+      setLoginData({
+        isLoggedIn: false,
+        userInfo: null,
+      });
     } catch (error) {
       console.error('Logout failed', error);
     }
+
+    window.location.replace('/');
   };
 
   const adminLinks = [
@@ -178,9 +176,9 @@ const GNB = () => {
                   서비스 소개
                 </Link>
                 {loginData.isLoggedIn && (
-                  <Link
-                    to="/favorite"
-                    className={`block w-[193px] px-5 py-8 text-center cursor-pointer relative group ${location.pathname === '/favorite' || location.pathname === '/counsel-list' || location.pathname === '/dashboard' || location.pathname === '/customer-service' || location.pathname === '/property-management' ? 'text-primary-default' : ''}`}>
+                  <div
+                    className={`block w-[193px] px-5 py-8 text-center cursor-pointer relative group ${location.pathname === '/favorite' || location.pathname === '/counsel-list' || location.pathname === '/dashboard' || location.pathname === '/customer-service' || location.pathname === '/property-management' ? 'text-primary-default' : ''}`}
+                    onClick={() => navigate('/favorite')}>
                     <p>마이페이지</p>
                     <div className="hidden absolute left-0 top-[93px] w-full bg-white shadow-lg text-assistive-detail group-hover:flex flex-col items-start font-normal z-40">
                       <ul className="w-full">
@@ -191,7 +189,8 @@ const GNB = () => {
                                 to={link.to}
                                 className={`block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold ${
                                   location.pathname === link.to ? 'text-primary-default font-bold' : ''
-                                }`}>
+                                }`}
+                                onClick={(e) => e.stopPropagation()}>
                                 {link.label}
                               </Link>
                             ))
@@ -201,18 +200,22 @@ const GNB = () => {
                                 to={link.to}
                                 className={`block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold ${
                                   location.pathname === link.to ? 'text-primary-default font-bold' : ''
-                                }`}>
+                                }`}
+                                onClick={(e) => e.stopPropagation()}>
                                 {link.label}
                               </Link>
                             ))}
                         <li
                           className="block px-9 py-7 cursor-pointer hover:bg-primary-default hover:text-white hover:font-bold"
-                          onClick={handleLogout}>
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLogout();
+                          }}>
                           로그아웃
                         </li>
                       </ul>
                     </div>
-                  </Link>
+                  </div>
                 )}
               </ul>
             </div>

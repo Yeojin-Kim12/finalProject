@@ -42,7 +42,7 @@ export const PdfUpload = () => {
         console.log('업로드된 파일 URL:', uploadedUrls[0]);
         appendFile({
           name: file.name,
-          url: uploadedUrls[0],
+          url: decodeURI(uploadedUrls[0]),
           type: 'SUPPLY_INFORMATION',
         });
       }

@@ -112,10 +112,11 @@ const PropertyAdd = () => {
       });
     }
   };
+
   const prevStep = useCallback(() => {
     scrollToTop();
     if (step === 1) {
-      navigate('/');
+      navigate('/property-management');
     } else {
       setStep(step - 1);
     }

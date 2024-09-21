@@ -1,9 +1,10 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import Layout from '../components/Layout';
 import Footer from '@/components/common/Footer';
 import FAB from '@/components/common/FAB';
 import ServiceOverview from '@/pages/ServiceOverview';
+import ProtectedRoute from './ProtectedRoute';
 const TestMS = lazy(() => import('@/pages/TestMS'));
 const TestHY = lazy(() => import('@/pages/TestHY'));
 const TestYJ = lazy(() => import('@/pages/TestYJ'));
@@ -130,7 +131,9 @@ export const router = createBrowserRouter([
         path: '/property-add',
         element: (
           <Suspense fallback={<ProgressBar />}>
-            <PropertyAdd />
+            <ProtectedRoute allowedRoles={'ADMIN'}>
+              <PropertyAdd />
+            </ProtectedRoute>
           </Suspense>
         ),
       },
@@ -148,8 +151,10 @@ export const router = createBrowserRouter([
         path: '/dashboard',
         element: (
           <Suspense fallback={<ProgressBar />}>
-            <DashBoard />
-            <Footer />
+            <ProtectedRoute allowedRoles={'ADMIN'}>
+              <DashBoard />
+              <Footer />
+            </ProtectedRoute>
           </Suspense>
         ),
       },
@@ -182,29 +187,13 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: '/search',
-        element: (
-          <Suspense fallback={<ProgressBar />}>
-            <Search />
-            <Footer />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/property',
-        element: (
-          <Suspense fallback={<ProgressBar />}>
-            <PropertySearch />
-            <Footer />
-          </Suspense>
-        ),
-      },
-      {
         path: '/customer-service',
         element: (
           <Suspense fallback={<ProgressBar />}>
-            <CustomerService />
-            <Footer />
+            <ProtectedRoute allowedRoles={'ADMIN'}>
+              <CustomerService />
+              <Footer />
+            </ProtectedRoute>
           </Suspense>
         ),
       },
@@ -212,8 +201,10 @@ export const router = createBrowserRouter([
         path: '/property-management',
         element: (
           <Suspense fallback={<ProgressBar />}>
-            <PropertyManagement />
-            <Footer />
+            <ProtectedRoute allowedRoles={'ADMIN'}>
+              <PropertyManagement />
+              <Footer />
+            </ProtectedRoute>
           </Suspense>
         ),
       },
@@ -221,8 +212,10 @@ export const router = createBrowserRouter([
         path: '/favorite',
         element: (
           <Suspense fallback={<ProgressBar />}>
-            <Favorite />
-            <Footer />
+            <ProtectedRoute allowedRoles={'MEMBER'}>
+              <Favorite />
+              <Footer />
+            </ProtectedRoute>
           </Suspense>
         ),
       },
@@ -230,10 +223,16 @@ export const router = createBrowserRouter([
         path: '/counsel-list',
         element: (
           <Suspense fallback={<ProgressBar />}>
-            <CounselList />
-            <Footer />
+            <ProtectedRoute allowedRoles={'MEMBER'}>
+              <CounselList />
+              <Footer />
+            </ProtectedRoute>
           </Suspense>
         ),
+      },
+      {
+        path: '*', // 잘못된 접근
+        element: <Navigate to="/" replace />,
       },
     ],
   },

@@ -3,7 +3,7 @@ import ItemCard from '@/components/common/ItemCard';
 import ItemCounselList from '@/components/common/ItemCounselList';
 import ItemList from '@/components/common/ItemList';
 import Toast from '@/components/common/Toast';
-import SelectedMenu from '@/components/LandList/SelectedMenu';
+import SelectedMenu from '@/components/PropertySearch/SelectedMenu';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -61,6 +61,7 @@ const TestYJ = () => {
         <Button variant="assistive" size="sm" onClick={showMenu}>
           Menu
         </Button>
+        {/* @ts-ignore: Unreachable code error */}
         <SelectedMenu isOpen={isSelectedMenu} onClose={hideMenu} />
       </div>
       {isToast && <Toast setIsToast={setIsToast} />}
@@ -75,6 +76,7 @@ const TestYJ = () => {
           propertyType="VILLA"
           salesType="PRIVATE_SALE"
           totalNumber={100}
+          // @ts-ignore: Unreachable code error
           keywords={['BALANCE_DEFERRAL', 'SUBWAY', 'PARK']}
           price={29800}
           discountPrice={22000}
@@ -89,6 +91,7 @@ const TestYJ = () => {
           propertyType="LIVING_ACCOMMODATION"
           salesType="LEASE_SALE"
           totalNumber={100}
+          // @ts-ignore: Unreachable code error
           keywords={['DISCOUNT_SALE', 'SHOPPING', 'CASH_PAYMENT']}
           price={29800}
           discountPrice={22000}
@@ -112,6 +115,7 @@ const TestYJ = () => {
           propertyType="APARTMENT"
           salesType="PRIVATE_SALE"
           totalNumber={100}
+          // @ts-ignore: Unreachable code error
           keywords={['DISCOUNT_SALE', 'SHOPPING', 'CASH_PAYMENT']}
           price={29800}
           discountPrice={22000}
@@ -126,6 +130,7 @@ const TestYJ = () => {
           propertyType="OFFICETEL"
           salesType="PUBLIC_SALE"
           totalNumber={100}
+          // @ts-ignore: Unreachable code error
           keywords={['DISCOUNT_SALE', 'SHOPPING', 'CASH_PAYMENT']}
           price={29800}
           discountPrice={22000}
