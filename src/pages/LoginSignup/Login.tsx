@@ -49,7 +49,7 @@ export default function Login() {
         },
       );
       console.log(res);
-      if (typeof res.data.body !== null) {
+      if (res.data.body !== null) {
         const { accessToken, refreshToken } = res.data;
         const setCookie = (name: string, value: string, days: number) => {
           Cookies.set(name, value, {
