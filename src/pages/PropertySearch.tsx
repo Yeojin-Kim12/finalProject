@@ -15,6 +15,8 @@ import useResponsive from '@/hooks/useResponsive';
 import ItemCard from '@/components/common/ItemCard';
 import DefaultPagination from '@/components/common/DefaultPagination';
 import SelectedMenu from '@/components/PropertySearch/SelectedMenu';
+import SkeletonSelectedList from '@/components/PropertySearch/SkeletonSelectedList';
+import { Link } from 'react-scroll';
 
 const areasMap = [
   { label: '서울', value: '서울' },
@@ -87,7 +89,7 @@ const PropertySearch = () => {
     return res.data;
   };
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [
       'propertySearch',
       currentPage,
@@ -233,74 +235,80 @@ const PropertySearch = () => {
           </Tabs>
         </article>
       </section>
-      <section>
-        <div className="mb-5">
-          <p className="text-title-2xl font-bold">전체 목록</p>
-          <p className="text-detail-lg">표시되는 가격은 최소 평형 기준 최저가입니다</p>
-        </div>
-        <div className="relative flex items-center justify-between mb-6">
-          <p className="inline text-detail-lg mobile:text-detail-base-m text-assistive-strong">
-            총 <span className="text-primary-default">{data?.contents[0]?.totalProperties}</span>
-            건의 매물이 있습니다
-          </p>
-          <Button variant="assistive" size="sm" onClick={handleSelectMenu}>
-            세부조건
-            <CaretUpDown size={16} className="ml-3 text-assistive-strong" />
-          </Button>
-          <SelectedMenu
-            isOpen={isMenuOpen}
-            onClose={() => setIsMenuOpen(false)}
-            onSubmitFilters={handleFiltersUpdate}
-            filters={selectedFilters}
-          />
-        </div>
-        {data?.contents[0]?.totalProperties === 0 ? (
-          <div className="flex flex-col items-center justify-center h-[676px] tablet:h-[600px] mobile:h-[400px]">
-            <div className="flex items-center justify-center w-[120px] h-[120px] mobile:w-[96px] mobile:h-[96px] bg-primary-base rounded-10 mb-9">
-              <MagnifyingGlass size={isMobile ? 48 : 80} weight="thin" className="text-primary-strong" />
-            </div>
-            <div className="text-center">
-              <p className="text-title-2x mobile:text-title-lg-m font-bold mb-4">
-                찾으시는 미분양 매물이 없어요
-              </p>
-              <p className="text-body-lg  mobile:text-body-sm-m">
-                다른 조건으로 미분양 매물을 찾아보시는 건 어때요?
-              </p>
-            </div>
+      {isLoading ? (
+        <SkeletonSelectedList />
+      ) : (
+        <section>
+          <div id="list" className="mb-5">
+            <p className="text-title-2xl font-bold">전체 목록</p>
+            <p className="text-detail-lg">표시되는 가격은 최소 평형 기준 최저가입니다</p>
           </div>
-        ) : (
-          <div className="flex flex-col gap-11 mobile:gap-9">
-            <div className="grid grid-cols-3 tablet:grid-cols-2 mobile:grid-cols-1 gap-6 mobile:gap-4 mt-6">
-              {data?.contents[0]?.propertySearchResponses.map((property: any, index: any) => (
-                <div className="flex flex-col items-center" key={property.id}>
-                  <ItemCard
-                    key={index}
-                    id={property.id}
-                    size={isMobile ? 's' : 'l'}
-                    imageUrl={property.imageUrl}
-                    title={property.propertyName}
-                    address={property.areaAddr}
-                    propertyType={property.propertyType}
-                    salesType={property.salesType}
-                    totalNumber={property.totalNumber}
-                    infra={property.infra}
-                    benefit={property.benefit}
-                    price={property.price}
-                    discountPrice={property.discountPrice}
-                    like={property.like}
-                    onLikeToggle={() => property.id}
-                  />
-                </div>
-              ))}
-            </div>
-            <DefaultPagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
+          <div className="relative flex items-center justify-between mb-6">
+            <p className="inline text-detail-lg mobile:text-detail-base-m text-assistive-strong">
+              총 <span className="text-primary-default">{data?.contents[0]?.totalProperties}</span>
+              건의 매물이 있습니다
+            </p>
+            <Button variant="assistive" size="sm" onClick={handleSelectMenu}>
+              세부조건
+              <CaretUpDown size={16} className="ml-3 text-assistive-strong" />
+            </Button>
+            <SelectedMenu
+              isOpen={isMenuOpen}
+              onClose={() => setIsMenuOpen(false)}
+              onSubmitFilters={handleFiltersUpdate}
+              filters={selectedFilters}
             />
           </div>
-        )}
-      </section>
+          {data?.contents[0]?.totalProperties === 0 ? (
+            <div className="flex flex-col items-center justify-center h-[676px] tablet:h-[600px] mobile:h-[400px]">
+              <div className="flex items-center justify-center w-[120px] h-[120px] mobile:w-[96px] mobile:h-[96px] bg-primary-base rounded-10 mb-9">
+                <MagnifyingGlass size={isMobile ? 48 : 80} weight="thin" className="text-primary-strong" />
+              </div>
+              <div className="text-center">
+                <p className="text-title-2x mobile:text-title-lg-m font-bold mb-4">
+                  찾으시는 미분양 매물이 없어요
+                </p>
+                <p className="text-body-lg  mobile:text-body-sm-m">
+                  다른 조건으로 미분양 매물을 찾아보시는 건 어때요?
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-11 mobile:gap-9">
+              <div className="grid grid-cols-3 tablet:grid-cols-2 mobile:grid-cols-1 gap-6 mobile:gap-4 mt-6">
+                {data?.contents[0]?.propertySearchResponses.map((property: any, index: any) => (
+                  <div className="flex flex-col items-center" key={property.id}>
+                    <ItemCard
+                      key={index}
+                      id={property.id}
+                      size={isMobile ? 's' : 'l'}
+                      imageUrl={property.imageUrl}
+                      title={property.propertyName}
+                      address={property.areaAddr}
+                      propertyType={property.propertyType}
+                      salesType={property.salesType}
+                      totalNumber={property.totalNumber}
+                      infra={property.infra}
+                      benefit={property.benefit}
+                      price={property.price}
+                      discountPrice={property.discountPrice}
+                      like={property.like}
+                      onLikeToggle={() => property.id}
+                    />
+                  </div>
+                ))}
+              </div>
+              <Link to="list" spy={true} smooth={true} duration={300}>
+                <DefaultPagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={setCurrentPage}
+                />
+              </Link>
+            </div>
+          )}
+        </section>
+      )}
     </main>
   );
 };

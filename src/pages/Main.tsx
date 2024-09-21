@@ -15,6 +15,7 @@ import SearchBar from '@/components/common/SearchBar';
 import { useRecoilValue } from 'recoil';
 import { loginState } from '@/recoilstate/login/atoms';
 import SkeletonPropertyList from '@/components/Main/SkeletonPropertyList';
+import { Link } from 'react-scroll';
 
 const Main = () => {
   const { isDesktop, isTablet, isMobile } = useResponsive();
@@ -165,50 +166,56 @@ const Main = () => {
             </div>
           </div>
         </div>
-        {Array.isArray(data?.contents[0]?.properties) && data.contents[0].properties.length !== 0 && (
-          <div className="">
-            <div className="mb-12 tablet:mb-11 mobile:mb-9">
-              <div className="mb-6 mobile:mb-9">
-                <h1 className="text-title-2xl mobile:text-title-lg-m font-bold">전국 미분양 매물 TOP 20</h1>
-                <p className="text-detail-lg mobile:text-detail-base-m">
-                  표시되는 가격은 최소 평형 최저가입니다
-                </p>
+        {isLoading ? (
+          <SkeletonPropertyList />
+        ) : (
+          Array.isArray(data?.contents[0]?.properties) &&
+          data.contents[0].properties.length !== 0 && (
+            <div className="">
+              <div className="mb-12 tablet:mb-11 mobile:mb-9">
+                <div id="list" className="mb-6 mobile:mb-9">
+                  <h1 className="text-title-2xl mobile:text-title-lg-m font-bold">전국 미분양 매물 TOP 20</h1>
+                  <p className="text-detail-lg mobile:text-detail-base-m">
+                    표시되는 가격은 최소 평형 최저가입니다
+                  </p>
+                </div>
+                <div className="flex flex-col gap-6 items-center">
+                  {data.contents[0].properties.map((property: any, index: any) => {
+                    const commonProps = {
+                      id: property.id,
+                      imageUrl: property.imageUrl,
+                      title: property.propertyName,
+                      address: property.areaAddr,
+                      propertyType: property.propertyType,
+                      salesType: property.salesType,
+                      totalNumber: property.totalNumber,
+                      infra: property.infra,
+                      benefit: property.benefit,
+                      keywords: property.keywords,
+                      price: property.price,
+                      discountPrice: property.discountPrice,
+                      discountPercent: property.discountPercent,
+                      like: property.like,
+                      onLikeToggle: () => property.id,
+                      rank: index + 1 + (currentPage - 1) * 5,
+                    };
+                    return isMobile ? (
+                      <ItemCard key={property.id} size="s" {...commonProps} />
+                    ) : (
+                      <ItemList key={property.id} size={isTablet ? 'm' : 'l'} {...commonProps} />
+                    );
+                  })}
+                </div>
               </div>
-              <SkeletonPropertyList />
-              <div className="flex flex-col gap-6 items-center">
-                {data.contents[0].properties.map((property: any, index: any) => {
-                  const commonProps = {
-                    id: property.id,
-                    imageUrl: property.imageUrl,
-                    title: property.propertyName,
-                    address: property.areaAddr,
-                    propertyType: property.propertyType,
-                    salesType: property.salesType,
-                    totalNumber: property.totalNumber,
-                    infra: property.infra,
-                    benefit: property.benefit,
-                    keywords: property.keywords,
-                    price: property.price,
-                    discountPrice: property.discountPrice,
-                    discountPercent: property.discountPercent,
-                    like: property.like,
-                    onLikeToggle: () => property.id,
-                    rank: index + 1 + (currentPage - 1) * 5,
-                  };
-                  return isMobile ? (
-                    <ItemCard key={property.id} size="s" {...commonProps} />
-                  ) : (
-                    <ItemList key={property.id} size={isTablet ? 'm' : 'l'} {...commonProps} />
-                  );
-                })}
-              </div>
+              <Link to="list" spy={true} smooth={true} duration={300}>
+                <DefaultPagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={setCurrentPage}
+                />
+              </Link>
             </div>
-            <DefaultPagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
-            />
-          </div>
+          )
         )}
       </div>
     </div>

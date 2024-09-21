@@ -15,19 +15,172 @@ const SkeletonPropertyList = () => {
             </div>
             <div className="w-full flex justify-between items-center">
               <div className="flex flex-col gap-4">
-                <Skeleton className="w-[230px] h-[45px]" />
-                <Skeleton className="w-[300px] h-[20px]" />
-                <Skeleton className="w-[180px] h-[20px]" />
+                <Skeleton className="w-[230px] h-[45px] tablet:w-[200px]" />
+                <Skeleton className="w-[300px] h-[26px] tablet:w-[250px]" />
+                <Skeleton className="w-[180px] h-[26px] tablet:w-[150px]" />
               </div>
               <div className="flex flex-col items-center gap-4 ml-10">
-                <Skeleton className="w-[200px] h-[30px] tablet:w-[150px]" />
-                <Skeleton className="w-[70px] h-[20px]" />
-                <Skeleton className="w-[220px] h-[30px] tablet:w-[180px]" />
+                <Skeleton className="w-[180px] h-[26px]" />
+                <Skeleton className="w-[70px] h-[26px]" />
+                <Skeleton className="w-[150px] h-[26px]" />
               </div>
               <Skeleton className="size-8" />
             </div>
           </div>
           <Skeleton className="w-full h-[2px] mb-6" />
+        </div>
+        <div className="flex flex-col w-[1200px] tablet:w-full">
+          <div className="flex items-center gap-7 px-7 py-6 tablet:gap-6">
+            <div>
+              <Skeleton className="w-[272px] h-[153px] !rounded-5 tablet:w-[192px] tablet:h-[108px]" />
+            </div>
+            <div className="w-full flex justify-between items-center">
+              <div className="flex flex-col gap-4">
+                <Skeleton className="w-[230px] h-[45px] tablet:w-[200px]" />
+                <Skeleton className="w-[300px] h-[26px] tablet:w-[250px]" />
+                <Skeleton className="w-[180px] h-[26px] tablet:w-[150px]" />
+              </div>
+              <div className="flex flex-col items-center gap-4 ml-10">
+                <Skeleton className="w-[180px] h-[26px]" />
+                <Skeleton className="w-[70px] h-[26px]" />
+                <Skeleton className="w-[150px] h-[26px]" />
+              </div>
+              <Skeleton className="size-8" />
+            </div>
+          </div>
+          <Skeleton className="w-full h-[2px] mb-6" />
+        </div>
+        <div className="flex flex-col w-[1200px] tablet:w-full">
+          <div className="flex items-center gap-7 px-7 py-6 tablet:gap-6">
+            <div>
+              <Skeleton className="w-[272px] h-[153px] !rounded-5 tablet:w-[192px] tablet:h-[108px]" />
+            </div>
+            <div className="w-full flex justify-between items-center">
+              <div className="flex flex-col gap-4">
+                <Skeleton className="w-[230px] h-[45px] tablet:w-[200px]" />
+                <Skeleton className="w-[300px] h-[26px] tablet:w-[250px]" />
+                <Skeleton className="w-[180px] h-[26px] tablet:w-[150px]" />
+              </div>
+              <div className="flex flex-col items-center gap-4 ml-10">
+                <Skeleton className="w-[180px] h-[26px]" />
+                <Skeleton className="w-[70px] h-[26px]" />
+                <Skeleton className="w-[150px] h-[26px]" />
+              </div>
+              <Skeleton className="size-8" />
+            </div>
+          </div>
+          <Skeleton className="w-full h-[2px] mb-6" />
+        </div>
+        <div className="flex flex-col w-[1200px] tablet:w-full">
+          <div className="flex items-center gap-7 px-7 py-6 tablet:gap-6">
+            <div>
+              <Skeleton className="w-[272px] h-[153px] !rounded-5 tablet:w-[192px] tablet:h-[108px]" />
+            </div>
+            <div className="w-full flex justify-between items-center">
+              <div className="flex flex-col gap-4">
+                <Skeleton className="w-[230px] h-[45px] tablet:w-[200px]" />
+                <Skeleton className="w-[300px] h-[26px] tablet:w-[250px]" />
+                <Skeleton className="w-[180px] h-[26px] tablet:w-[150px]" />
+              </div>
+              <div className="flex flex-col items-center gap-4 ml-10">
+                <Skeleton className="w-[180px] h-[26px]" />
+                <Skeleton className="w-[70px] h-[26px]" />
+                <Skeleton className="w-[150px] h-[26px]" />
+              </div>
+              <Skeleton className="size-8" />
+            </div>
+          </div>
+          <Skeleton className="w-full h-[2px] mb-6" />
+        </div>
+        <div className="flex flex-col w-[1200px] tablet:w-full">
+          <div className="flex items-center gap-7 px-7 py-6 tablet:gap-6">
+            <div>
+              <Skeleton className="w-[272px] h-[153px] !rounded-5 tablet:w-[192px] tablet:h-[108px]" />
+            </div>
+            <div className="w-full flex justify-between items-center">
+              <div className="flex flex-col gap-4">
+                <Skeleton className="w-[230px] h-[45px] tablet:w-[200px]" />
+                <Skeleton className="w-[300px] h-[26px] tablet:w-[250px]" />
+                <Skeleton className="w-[180px] h-[26px] tablet:w-[150px]" />
+              </div>
+              <div className="flex flex-col items-center gap-4 ml-10">
+                <Skeleton className="w-[180px] h-[26px]" />
+                <Skeleton className="w-[70px] h-[26px]" />
+                <Skeleton className="w-[150px] h-[26px]" />
+              </div>
+              <Skeleton className="size-8" />
+            </div>
+          </div>
+          <Skeleton className="w-full h-[2px] mb-6" />
+        </div>
+      </section>
+      <section className="hidden mobile:block">
+        <div className="flex flex-col gap-4 items-center ">
+          <div className="w-[326px] h-[184px] px-4 py-5 flex justify-between">
+            <div className="flex flex-col gap-3">
+              <Skeleton className="w-[120px] h-[20px]" />
+              <Skeleton className="w-[100px] h-[20px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[150px] h-[25px]" />
+              <Skeleton className="w-[170px] h-[20px]" />
+            </div>
+            <div>
+              <Skeleton className="size-[112px] !rounded-5" />
+            </div>
+          </div>
+          <div className="w-[326px] h-[184px] px-4 py-5 flex justify-between">
+            <div className="flex flex-col gap-3">
+              <Skeleton className="w-[120px] h-[20px]" />
+              <Skeleton className="w-[100px] h-[20px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[150px] h-[25px]" />
+              <Skeleton className="w-[170px] h-[20px]" />
+            </div>
+            <div>
+              <Skeleton className="size-[112px] !rounded-5" />
+            </div>
+          </div>
+          <div className="w-[326px] h-[184px] px-4 py-5 flex justify-between">
+            <div className="flex flex-col gap-3">
+              <Skeleton className="w-[120px] h-[20px]" />
+              <Skeleton className="w-[100px] h-[20px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[150px] h-[25px]" />
+              <Skeleton className="w-[170px] h-[20px]" />
+            </div>
+            <div>
+              <Skeleton className="size-[112px] !rounded-5" />
+            </div>
+          </div>
+          <div className="w-[326px] h-[184px] px-4 py-5 flex justify-between">
+            <div className="flex flex-col gap-3">
+              <Skeleton className="w-[120px] h-[20px]" />
+              <Skeleton className="w-[100px] h-[20px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[150px] h-[25px]" />
+              <Skeleton className="w-[170px] h-[20px]" />
+            </div>
+            <div>
+              <Skeleton className="size-[112px] !rounded-5" />
+            </div>
+          </div>
+          <div className="w-[326px] h-[184px] px-4 py-5 flex justify-between">
+            <div className="flex flex-col gap-3">
+              <Skeleton className="w-[120px] h-[20px]" />
+              <Skeleton className="w-[100px] h-[20px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[50px] h-[15px]" />
+              <Skeleton className="w-[150px] h-[25px]" />
+              <Skeleton className="w-[170px] h-[20px]" />
+            </div>
+            <div>
+              <Skeleton className="size-[112px] !rounded-5" />
+            </div>
+          </div>
         </div>
       </section>
     </div>
