@@ -7,7 +7,9 @@ import { loginSchema, FormFields } from '@/types/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosed, Eye } from '@phosphor-icons/react';
 import PageHeader from '@/components/common/PageHeader';
-import { login } from '@/api/login';
+import { BASE_URL } from '@/lib/constants';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -22,24 +24,52 @@ export default function Login() {
     handleSubmit,
     setError,
     clearErrors,
+    trigger,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
   });
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     console.log('Form data:', data);
-
-    try {
-      await login(data.email, data.password);
-      console.log('Login successful');
-      navigate('/');
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('root', {
-        type: 'manual',
-        message: `아이디 또는 비밀번호가 잘못되었습니다.\n아이디와 비밀번호를 정확히 입력해주세요.`,
-      });
+    const isValid = await trigger(['email', 'password']);
+    console.log(isValid);
+    if (isValid) {
+      const { email, password } = data;
+      const res = await axios.post(
+        `${BASE_URL}/api/auth/login`,
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log(res);
+      if (typeof res.data.body !== null) {
+        const { accessToken, refreshToken } = res.data;
+        const setCookie = (name: string, value: string, days: number) => {
+          Cookies.set(name, value, {
+            expires: days,
+            path: '/',
+            secure: true,
+            sameSite: 'None',
+          });
+        };
+        setCookie('accessToken', accessToken, 2);
+        setCookie('refreshToken', refreshToken, 2);
+        navigate('/');
+      } else {
+        setError('root', {
+          type: 'manual',
+          message: res.data.result.resultMessage || '로그인에 실패했습니다. 다시 시도해주세요.',
+        });
+        console.error(res.data.result.resultMessage);
+      }
     }
   };
 

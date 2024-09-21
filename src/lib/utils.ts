@@ -77,7 +77,7 @@ export function formatInfraText(item: InfraItemProps): string {
 type BenefitInputItem = { input1: string; input2: string };
 export interface BenefitItemProps {
   name: string;
-  input: number | BenefitInputItem[];
+  input: number | BenefitInputItem[] | BenefitInputItem;
 }
 export function formatBenefitText(item: BenefitItemProps): string {
   switch (item.name) {
@@ -88,11 +88,11 @@ export function formatBenefitText(item: BenefitItemProps): string {
       }
       return `${item.input}`;
     case 'BALANCE_DEFERRAL':
-      if (Array.isArray(item.input)) {
-        const i = item.input[0];
-        return `잔금 ${i.input1}% ${i.input2}개월동안 유예`;
+      if (!Array.isArray(item.input) && typeof item.input === 'object') {
+        return `잔금 ${item.input.input1}% ${item.input.input2}개월동안 유예`;
       }
       return `${item.input}`;
+
     case 'CASH_PAYMENT':
       return `현금 ${item.input}만원 지급`;
     case 'GUARANTEED_PAYMENT':
