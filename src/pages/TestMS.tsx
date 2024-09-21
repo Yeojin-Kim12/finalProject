@@ -7,7 +7,8 @@ import createToggleIcons from '@/constants/keywordIconMap';
 import { KeywordData } from '@/constants/msData';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import PropertyManagementCard from '@/components/PropertyManagement/PropertyManagementCard';
+
+import SkeletonPropertyList from '@/components/Main/SkeletonPropertyList';
 
 const TestMS = () => {
   const [activeItems, setActiveItems] = useState<string[]>([]);
@@ -22,8 +23,9 @@ const TestMS = () => {
   const { toggleIcon1, toggleIcon2, toggleIcon3, toggleIcon4 } = createToggleIcons();
   console.log('dateRange', dateRange, 'date', date);
   return (
-    <div className="flex flex-col items-center gap-11 py-12">
-      <PropertyManagementCard />
+    <div className="flex flex-col gap-11 py-12">
+      <SkeletonPropertyList />
+
       <SkeletonSwiper />
       {/* 단일 날짜선택 */}
       <SingleDatePicker defaultLabel="상담날짜 선택" onChange={setDate} />

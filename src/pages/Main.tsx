@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchBar from '@/components/common/SearchBar';
 import { useRecoilValue } from 'recoil';
 import { loginState } from '@/recoilstate/login/atoms';
+import SkeletonPropertyList from '@/components/Main/SkeletonPropertyList';
 
 const Main = () => {
   const { isDesktop, isTablet, isMobile } = useResponsive();
@@ -173,6 +174,7 @@ const Main = () => {
                   표시되는 가격은 최소 평형 최저가입니다
                 </p>
               </div>
+              <SkeletonPropertyList />
               <div className="flex flex-col gap-6 items-center">
                 {data.contents[0].properties.map((property: any, index: any) => {
                   const commonProps = {
