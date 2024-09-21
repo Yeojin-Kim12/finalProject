@@ -32,7 +32,6 @@ export default function Login() {
   });
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log('Form data:', data);
     const isValid = await trigger(['email', 'password']);
     console.log(isValid);
     if (isValid) {
