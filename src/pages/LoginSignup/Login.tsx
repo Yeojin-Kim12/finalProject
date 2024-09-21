@@ -62,6 +62,8 @@ export default function Login() {
         };
         setCookie('accessToken', accessToken, 2);
         setCookie('refreshToken', refreshToken, 2);
+        Cookies.remove('accessToken');
+        Cookies.remove('refreshToken');
         navigate('/');
       } else {
         setError('root', {
