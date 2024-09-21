@@ -166,100 +166,61 @@ const KeywordData = {
     },
   ],
 };
-const DashBoardData = {
+const data = {
   today: {
-    // 오늘의 상담진행률
-    pending: 2000, // 상담 대기 개수
-    completed: 400, // 상담 완료 개수
-    all: 2400, // 상담 신청 총 개수
+    pending: 0,
+    completed: 0,
+    all: 0,
   },
-  this_week: {
-    // 이번 주 상담진행률
-    completed: 3,
-    all: 9,
+  thisWeekProgress: {
+    completed: 0,
+    all: 0,
   },
-  last_week: {
-    // 지난 주 상담 진행률
-    completed: 1100,
-    all: 2000,
+  lastWeekProgress: {
+    completed: 0,
+    all: 0,
   },
-  last_five_weeks: [
-    // 금주 기준 지난 다섯 주
-    {
-      period_label: '1st', // 첫 째 주
-      all: 0, // 상담 신청 총 개수
-    },
-    {
-      period_label: '2nd',
-      all: 13,
-    },
-    {
-      period_label: '3rd',
-      all: 100,
-    },
-    {
-      period_label: '4th',
-      all: 200,
-    },
-    {
-      period_label: '5th', // 이번주
-      all: 200,
-    },
-  ],
-  highest_consultation: {
-    // 상담 신청 수가 가장 높은
-    property_name: '청계 힐스테이트', // 매물 이름
-    all: 2400,
+  totalNumberByWeek: [0, 0, 0, 0, 7],
+  highestConsultation: {
+    propertyName: '건물 1',
+    all: 5,
   },
-  lowest_consultation: {
-    // 상담 신청 수가 가장 낮은
-    property_name: '양평 리버사이드', // 매물 이름
-    all: 3,
-  },
-  allProperties: 15, // 총 매물 개수
-  properties: [
-    // 현재 페이지의 프로젝트별 현황 (총 5개씩 리턴)
-    {
-      property_name: '반포 더 숲 자이',
-      pending: 9,
-      completed: 3,
-    },
-    {
-      property_name: '반포 더 바다 자이',
-      pending: 9,
-      completed: 3,
-    },
-  ],
-  status_properties: [
-    // 현재 선택한 {모집 중|모집 완료}인 매물 목록
-    '계양 학마을서원',
-    '반포 더 숲 자이',
-    '청계 힐스테이트',
-    '양평 리버사이드',
-  ],
-  situation: {
-    // 매물 현황
-    property_name: '계양 학마을서원', // 이름
-    status: 'PENDING', // 모집 중
-    period: 'MONTHLY', // daily, weekly, monthly, yearly
-    completed: 9, // 상담 완료 개수
-    phone: 23, // 전화
-    channel: 28, // 채널톡
-    lms: 10, // lms
-    each_period: [
-      // 기간 별 상담 신청 현황
-      {
-        period_label: '2m', // 2시 기준
-        pending: 13,
-        completed: 2,
-      },
-      {
-        period_label: '4m', // 4시 기준
-        pending: 13,
-        completed: 2,
-      },
-    ],
+  lowestConsultation: {
+    propertyName: '건물 2',
+    all: 2,
   },
 };
-
-export { DashBoardData, KeywordData };
+const dashboard2Data = {
+  totalPages: 1,
+  pageSize: 5,
+  currentPage: 0,
+  totalCount: 15,
+  contents: [
+    {
+      propertyName: '반포 더 숲자이 ',
+      pending: 23,
+      all: 20,
+    },
+    {
+      propertyName: '양평 리버사이드',
+      pending: 21,
+      all: 35,
+    },
+    {
+      propertyName: '계양 학마을서원',
+      pending: 24,
+      all: 52,
+    },
+    {
+      propertyName: '청계 힐스테이트',
+      pending: 42,
+      all: 80,
+    },
+    {
+      propertyName: '김포 북변 우미린 파크리뷰',
+      pending: 7,
+      all: 43,
+    },
+  ],
+};
+export { data, KeywordData, dashboard2Data };

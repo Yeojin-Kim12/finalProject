@@ -23,6 +23,27 @@ const SignUpAdmin = lazy(() => import('@/pages/SignUp/SignUpAdmin'));
 const SignUpCompleted = lazy(() => import('@/components/SignUp/SignUpCompleted'));
 const SignUpMember = lazy(() => import('@/pages/SignUp/SignUpMember'));
 
+const ProgressBar = () => (
+  <>
+    <div className="fixed z-50 top-0 left-0 w-full h-3 bg-primary-strong">
+      <div className="progress-bar w-full h-full bg-primary-strong animate-progress transition-all"></div>
+      <style>
+        {`
+        @layer utilities {
+          @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+            }
+            .animate-progress {
+              animation: progress 2s linear infinite;
+              }
+              }
+              `}
+      </style>
+    </div>
+    <div className="fixed top-0 left-0 size-full bg-effect-shadow"></div>
+  </>
+);
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -40,7 +61,7 @@ export const router = createBrowserRouter([
       {
         path: '/test-ms',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <TestMS />
             <Footer />
           </Suspense>
@@ -49,7 +70,7 @@ export const router = createBrowserRouter([
       {
         path: '/test-hy',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <TestHY />
             <Footer />
           </Suspense>
@@ -58,7 +79,7 @@ export const router = createBrowserRouter([
       {
         path: '/test-yj',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <TestYJ />
             <Footer />
           </Suspense>
@@ -67,7 +88,7 @@ export const router = createBrowserRouter([
       {
         path: '/login',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <Login />
           </Suspense>
         ),
@@ -75,7 +96,7 @@ export const router = createBrowserRouter([
       {
         path: '/admin-signup',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <SignUpAdmin />
           </Suspense>
         ),
@@ -83,7 +104,7 @@ export const router = createBrowserRouter([
       {
         path: '/member-signup',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <SignUpMember />
           </Suspense>
         ),
@@ -91,7 +112,7 @@ export const router = createBrowserRouter([
       {
         path: '/signup-completed',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <SignUpCompleted />
           </Suspense>
         ),
@@ -99,7 +120,7 @@ export const router = createBrowserRouter([
       {
         path: '/service-overview',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <ServiceOverview />
             <Footer />
           </Suspense>
@@ -108,7 +129,7 @@ export const router = createBrowserRouter([
       {
         path: '/property-add',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <PropertyAdd />
           </Suspense>
         ),
@@ -116,7 +137,7 @@ export const router = createBrowserRouter([
       {
         path: '/property/:id',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <PropertyDetail />
             <Footer />
             <FAB />
@@ -126,7 +147,7 @@ export const router = createBrowserRouter([
       {
         path: '/dashboard',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <DashBoard />
             <Footer />
           </Suspense>
@@ -135,7 +156,7 @@ export const router = createBrowserRouter([
       {
         path: '/search',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <Search />
             <Footer />
           </Suspense>
@@ -144,7 +165,7 @@ export const router = createBrowserRouter([
       {
         path: '/property',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <PropertySearch />
             <Footer />
           </Suspense>
@@ -154,7 +175,7 @@ export const router = createBrowserRouter([
       {
         path: '/keywordTest',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <PropertyKeywords />
             <Footer />
           </Suspense>
@@ -163,7 +184,7 @@ export const router = createBrowserRouter([
       {
         path: '/search',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <Search />
             <Footer />
           </Suspense>
@@ -172,7 +193,7 @@ export const router = createBrowserRouter([
       {
         path: '/property',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <PropertySearch />
             <Footer />
           </Suspense>
@@ -181,7 +202,7 @@ export const router = createBrowserRouter([
       {
         path: '/customer-service',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <CustomerService />
             <Footer />
           </Suspense>
@@ -190,7 +211,7 @@ export const router = createBrowserRouter([
       {
         path: '/property-management',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <PropertyManagement />
             <Footer />
           </Suspense>
@@ -199,7 +220,7 @@ export const router = createBrowserRouter([
       {
         path: '/favorite',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <Favorite />
             <Footer />
           </Suspense>
@@ -208,7 +229,7 @@ export const router = createBrowserRouter([
       {
         path: '/counsel-list',
         element: (
-          <Suspense fallback={<div>로딩 중...</div>}>
+          <Suspense fallback={<ProgressBar />}>
             <CounselList />
             <Footer />
           </Suspense>

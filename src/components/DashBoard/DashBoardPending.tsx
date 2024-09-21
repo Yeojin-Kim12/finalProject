@@ -3,8 +3,9 @@ import fitty from 'fitty';
 
 interface DashBoardPendingProps {
   data: number;
+  time: string;
 }
-const DashBoardPending = ({ data }: DashBoardPendingProps) => {
+const DashBoardPending = ({ data = 0, time }: DashBoardPendingProps) => {
   const textRef = useRef(null);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const DashBoardPending = ({ data }: DashBoardPendingProps) => {
   return (
     <article className="size-full bg-accent-base rounded-6 px-5 py-8 flex flex-col justify-between">
       <div className="flex flex-col gap-2">
-        <span className="text-detail-sm text-assistive-strong">최근 11:56</span>{' '}
+        <span className="text-detail-sm text-assistive-strong">최근 {time}</span>{' '}
         <h4 className="text-title-base text-assistive-detail font-bold">상담대기</h4>
       </div>
       <div className="flex items-end justify-end text-title-base text-assistive-detail font-bold">

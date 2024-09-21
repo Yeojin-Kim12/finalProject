@@ -25,7 +25,7 @@ export default function Dropdown({ items, defaultLabel, onSelect, buttonWidth }:
           size="lg"
           role="combobox"
           aria-expanded={open}
-          className={`font-normal text-label-lg !text-static-default justify-center ${buttonWidth}`}>
+          className={`font-normal text-label-lg !text-static-default justify-between ${buttonWidth}`}>
           {selectedItem ? selectedItem.label : defaultLabel}
           {open ? (
             <CaretUp className="ml-4 h-7 w-7 shrink-0 opacity-50" />

@@ -10,13 +10,13 @@ import { useLocation } from 'react-router-dom';
 const areasMap = [
   { label: '서울', value: '서울' },
   { label: '전북', value: '전북' },
-  { label: '경기·인천', value: '경기 인천' },
-  { label: '대구·경북', value: '대구 경북' },
-  { label: '대전·충북', value: '대전 충북' },
-  { label: '부산·울산·경남', value: '부산 울산 경남' },
-  { label: '세종·충남', value: '세종 충남' },
+  { label: '경기·인천', value: '경기/인천' },
+  { label: '대구·경북', value: '대구/경북' },
+  { label: '대전·충북', value: '대전/충북' },
+  { label: '부산·울산·경남', value: '부산/울산/경남' },
+  { label: '세종·충남', value: '세종/충남' },
   { label: '강원', value: '강원' },
-  { label: '광주·전남', value: '광주 전남' },
+  { label: '광주·전남', value: '광주/전남' },
   { label: '제주', value: '제주' },
 ];
 
@@ -41,9 +41,11 @@ const PropertySearch = () => {
     );
   };
   return (
-    <main className="max-w-[1200px] m-auto flex flex-col gap-12 tablet:gap-11 mobile:gap-9 mobile:py-9">
-      <Breadcrumb links={['미분양 정보']} />
-      <section className="flex flex-col gap-11 tablet:px-7 mobile:px-5 mobile:gap-6 ">
+    <main className="flex flex-col items-center gap-12 py-10 tablet:gap-11 mobile:gap-9 mobile:py-9">
+      <div className="w-full max-w-[1200px]">
+        <Breadcrumb links={['미분양 정보']} />
+      </div>
+      <section className="flex w-full max-w-[1200px] flex-col gap-11 tablet:px-7 mobile:px-5 mobile:gap-6 ">
         <div className="flex flex-col gap-5 mobile:gap-4">
           <p className="text-title-2xl text-static-default font-bold mobile:text-title-lg-m">
             관심있는 지역을 선택해보세요
@@ -69,7 +71,7 @@ const PropertySearch = () => {
           </div>
         </div>
       </section>
-      <section className="flex flex-col gap-11 mobile:gap-6">
+      <section className="w-full max-w-[1200px]">
         <div className="flex flex-col gap-5 tablet:px-7 mobile:px-5 mobile:gap-4">
           <p className="text-title-2xl text-static-default font-bold mobile:text-title-lg-m">
             나만의 맞춤 조건을 설정해보세요
@@ -78,26 +80,31 @@ const PropertySearch = () => {
             다양한 조건들을 통해 나에게 꼭 맞는 매물을 찾아보세요
           </p>
         </div>
-        <Tabs defaultValue={location.state?.keyword || 'propertyType'}>
-          <TabsList className="mb-[3px]">
-            <TabsTrigger value="propertyType">분양유형</TabsTrigger>
-            <TabsTrigger value="salesType">분양형태</TabsTrigger>
-            <TabsTrigger value="benefit">혜택</TabsTrigger>
-            <TabsTrigger value="infra">인프라</TabsTrigger>
-          </TabsList>
-          <TabsContent value="propertyType">
-            <CustomFilterToggleList list={toggleIcon3} onToggle={handleToggle} activeItems={activeItems} />
-          </TabsContent>
-          <TabsContent value="salesType">
-            <CustomFilterToggleList list={toggleIcon4} onToggle={handleToggle} activeItems={activeItems} />
-          </TabsContent>
-          <TabsContent value="benefit">
-            <CustomFilterToggleList list={toggleIcon1} onToggle={handleToggle} activeItems={activeItems} />
-          </TabsContent>
-          <TabsContent value="infra">
-            <CustomFilterToggleList list={toggleIcon2} onToggle={handleToggle} activeItems={activeItems} />
-          </TabsContent>
-        </Tabs>
+      </section>
+      <section className="relative flex w-full flex-col items-center gap-11 mobile:gap-6">
+        <div className="absolute top-[55px] left-0 w-full h-[calc(100%-55px)] bg-assistive-base shadow-inner"></div>
+        <article className="w-full max-w-[1200px]">
+          <Tabs defaultValue={location.state?.keyword || 'propertyType'}>
+            <TabsList className="mb-[3px]">
+              <TabsTrigger value="propertyType">분양유형</TabsTrigger>
+              <TabsTrigger value="salesType">분양형태</TabsTrigger>
+              <TabsTrigger value="benefit">혜택</TabsTrigger>
+              <TabsTrigger value="infra">인프라</TabsTrigger>
+            </TabsList>
+            <TabsContent value="propertyType">
+              <CustomFilterToggleList list={toggleIcon3} onToggle={handleToggle} activeItems={activeItems} />
+            </TabsContent>
+            <TabsContent value="salesType">
+              <CustomFilterToggleList list={toggleIcon4} onToggle={handleToggle} activeItems={activeItems} />
+            </TabsContent>
+            <TabsContent value="benefit">
+              <CustomFilterToggleList list={toggleIcon1} onToggle={handleToggle} activeItems={activeItems} />
+            </TabsContent>
+            <TabsContent value="infra">
+              <CustomFilterToggleList list={toggleIcon2} onToggle={handleToggle} activeItems={activeItems} />
+            </TabsContent>
+          </Tabs>
+        </article>
       </section>
     </main>
   );

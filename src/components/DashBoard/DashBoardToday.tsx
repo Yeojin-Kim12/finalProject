@@ -4,9 +4,10 @@ interface GraphProps {
     completed: number;
     all: number;
   };
+  time: string;
 }
-const DashBoardToday = ({ data }: GraphProps) => {
-  const progress = Math.round((data.completed / data.all) * 100);
+const DashBoardToday = ({ data = { pending: 0, completed: 0, all: 0 }, time }: GraphProps) => {
+  const progress = Math.round((data.completed / data.all) * 100) || 0;
   const graphProgress = Math.max(progress, 9);
   const calProgress = graphProgress - 4.1;
   const deg = Math.round((graphProgress / 100) * 360);
@@ -14,7 +15,7 @@ const DashBoardToday = ({ data }: GraphProps) => {
   return (
     <article className="relative flex flex-col justify-between size-full border border-assistive-default rounded-6 p-9">
       <div className="flex flex-col gap-4">
-        <span className="text-detail-lg text-assistive-strong">최근 11:56</span>
+        <span className="text-detail-lg text-assistive-strong">최근 {time}</span>
         <h4 className="text-title-2xl text-static-default font-bold">오늘의 상담진행률</h4>
         <div className="text-display-lg text-primary-default font-bold">{progress}%</div>
       </div>

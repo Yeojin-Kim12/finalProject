@@ -28,21 +28,13 @@ interface SignUpInputValidationProps {
   children?: React.ReactNode;
   onBlur?: () => void;
   disabled?: boolean;
-  success?: boolean;
+  buttonDisabled?: boolean;
   noValidation?: boolean;
 }
 const successMessage: { [key: string]: string } = {
-  name: '유효한 형식이에요',
   email: '올바른 이메일(아이디) 형식이에요',
-  emailVerificationCode: '인증번호가 일치해요',
   password: '올바른 비밀번호 형식이에요',
-  confirmPassword: '비밀번호가 일치해요',
-  phoneNumber: '',
-  companyName: '',
-  registrationNumber: '',
-  housingFile: '',
-  address: '',
-  addressDetail: '',
+  confirmPassword: '비밀번호가 일치합니다',
 };
 const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputValidationProps>(
   (
@@ -68,6 +60,7 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
       optional,
       children,
       disabled = false,
+      buttonDisabled = false,
       noValidation = false,
     },
     ref,
@@ -94,6 +87,7 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
             field.onChange(e);
             const isValid = await trigger(name);
             if (!isValid) {
+              console.log(fieldState.error?.message);
               setIsValid(false);
               setIsMessage(fieldState.error?.message || errorMessage);
             } else {
@@ -104,9 +98,7 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
 
           const handleButtonClick = async () => {
             if (noValidation && onButtonClick) return onButtonClick(true);
-            if (!errorMessage) {
-              return;
-            }
+
             const isValid = await trigger(name); //
             setIsValid(isValid);
             errorMessage;
@@ -197,10 +189,10 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
                     <Button
                       type={buttonType}
                       size={buttonSize}
-                      variant={disabled ? 'disabled' : buttonVariant}
+                      variant={buttonDisabled ? 'disabled' : buttonVariant}
                       className={buttonClassName}
                       onClick={handleButtonClick}
-                      disabled>
+                      disabled={buttonDisabled}>
                       {buttonTitle}
                     </Button>
                   ))}

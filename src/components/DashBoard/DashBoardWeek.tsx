@@ -10,7 +10,7 @@ interface DashBoardWeekProps {
 interface dateTypeProps {
   type: 'thisWeek' | 'lastWeek';
 }
-const DashBoardWeek = ({ type, data }: DashBoardWeekProps) => {
+const DashBoardWeek = ({ type, data = { completed: 0, all: 0 } }: DashBoardWeekProps) => {
   function getWeekDates({ type }: dateTypeProps) {
     const today = new Date();
     const dayOfWeek = today.getDay();
@@ -34,7 +34,7 @@ const DashBoardWeek = ({ type, data }: DashBoardWeekProps) => {
     return `${formatDate(startOfWeek)} ~ ${formatDate(endOfWeek)}`;
   }
 
-  const progress = Math.round((data.completed / data.all) * 100);
+  const progress = Math.round((data.completed / data.all) * 100) || 0;
   const graphProgress = Math.max(progress, 0);
   const calProgress = graphProgress / 2;
   const turnProgress = calProgress / 100;

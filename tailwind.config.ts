@@ -185,6 +185,7 @@ module.exports = {
       boxShadow: {
         default: 'inset 0 0 0 1px #b2b6be',
         default2: 'inset 0 0 0 2px #b2b6be',
+        tab: 'inset -1px -1px 0 1px #778292',
         focus: 'inset 0 0 0 2px #204AE5',
         error: 'inset 0 0 0 2px #F1134B',
         assistive: 'inset 0 0 0 2px #778292',

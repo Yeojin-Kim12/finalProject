@@ -2,17 +2,14 @@ import { getCurrentMonth, getWeekOfMonth } from '@/lib/utils';
 import { IconTriangleFilled, IconTriangleInvertedFilled } from '@tabler/icons-react';
 
 interface DashBoardFiveWeeksProps {
-  data: {
-    period_label: string;
-    all: number;
-  }[];
+  data: number[];
 }
-const DashBoardFiveWeeks = ({ data }: DashBoardFiveWeeksProps) => {
+const DashBoardFiveWeeks = ({ data = [0, 0, 0, 0, 0] }: DashBoardFiveWeeksProps) => {
   const currentMonth = getCurrentMonth();
   const renderComparison = () => {
     if (data.length >= 2) {
-      const thisWeek = data[data.length - 1].all;
-      const lastWeek = data[data.length - 2].all;
+      const thisWeek = data[data.length - 1];
+      const lastWeek = data[data.length - 2];
       const difference = thisWeek - lastWeek;
       switch (true) {
         // 증가
@@ -60,20 +57,18 @@ const DashBoardFiveWeeks = ({ data }: DashBoardFiveWeeksProps) => {
     return result.reverse();
   };
 
-  const transformData = (
-    data: { period_label: string; all: number }[],
-  ): { all: string; height: string; label: string }[] => {
-    const maxAll = Math.max(...data.map((item) => item.all));
+  const transformData = (data: number[]): { all: string; height: string; label: string }[] => {
+    const maxAll = Math.max(...data.map((item) => item));
     const lastWeeksLabels = getWeeksLabel(data.length);
 
     return data.map((item, index) => {
-      let percentage = Math.round((item.all / maxAll) * 100);
+      let percentage = Math.round((item / maxAll) * 100);
       if (percentage === 0) {
         percentage = 0;
       } else if (percentage < 15) {
         percentage = 15;
       }
-      const displayAll = item.all === 0 ? '-' : item.all.toLocaleString();
+      const displayAll = item === 0 ? '-' : item.toLocaleString();
       return {
         all: displayAll,
         height: `${percentage}%`,

@@ -6,6 +6,7 @@ import { useFileUpload } from '@/hooks/useFileUpload';
 import { Tag } from '../ui/tag';
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
+import { getUsableFileUrl } from '@/lib/utils';
 
 const SignUpAdminStep2 = () => {
   const [isSendCode, setIsSendCode] = React.useState<boolean>(false);
@@ -49,9 +50,12 @@ const SignUpAdminStep2 = () => {
     if (typeof res.data === 'string') {
       setValue('isSendCode', true);
       setIsSendCode(true);
+      setError('email', { type: 'emailSuccess', message: res.data });
     } else {
       setValue('isSendCode', false);
       setIsSendCode(false);
+      const errorMessage = res.data.result.resultMessage;
+      setError('email', { type: 'emailError', message: errorMessage });
     }
   };
 
@@ -73,14 +77,15 @@ const SignUpAdminStep2 = () => {
     if (typeof res.data === 'string') {
       setValue('isVerifyCode', true);
       setIsVerifyCode(true);
+      setError('certificationCode', { type: 'codeSuccess', message: res.data });
     } else {
+      setValue('isVerifyCode', false);
       const errorMessage = res.data.result.resultMessage;
       console.log(errorMessage);
       setError('certificationCode', { type: 'codeError', message: errorMessage });
     }
   };
 
-  // useEffect를 사용하여 pdfName 업데이트
   React.useEffect(() => {
     const getFile = getValues('registrationFile');
     if (getFile.length > 0) {
@@ -89,26 +94,25 @@ const SignUpAdminStep2 = () => {
       setPdfName('');
     }
   }, [getValues]);
-  // 파일첨부
   const handlePdfFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     console.log(file);
 
     if (file && file.type === 'application/pdf') {
+      const fileType = 'REGISTRATION';
       const getFile = getValues('registrationFile');
       setPdfName(file.name);
       if (getFile.length > 0) {
         removeRegistrationFile(0);
       }
-
-      // 새로운 파일 업로드
-      const uploadedUrls = await uploadToServer([file], 'REGISTRATION');
+      const uploadedUrls = await uploadToServer([file], fileType);
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-        console.log('업로드된 파일 URL:', uploadedUrls[0]);
+        const url = getUsableFileUrl(uploadedUrls[0], fileType, file.name);
+        console.log(url);
         appendRegistrationFile({
           name: file.name,
-          url: uploadedUrls[0],
-          type: 'REGISTRATION',
+          url: url,
+          type: fileType,
         });
       }
     } else {
@@ -121,13 +125,12 @@ const SignUpAdminStep2 = () => {
 
     if (index !== -1) {
       removeRegistrationFile(index);
-      setPdfName(''); // pdfName 상태 초기화
+      setPdfName('');
     }
   };
   //우편번호 검색
   const handlePostcodeClick = (isValid: boolean) => {
     isValid;
-    console.log('check');
     postcodeOpen({
       onComplete: (data) => setValue('address', data.address),
     });
@@ -144,9 +147,11 @@ const SignUpAdminStep2 = () => {
           buttonTitle={isSendCode ? '전송 완료' : '이메일 인증'}
           buttonVariant="outline"
           buttonSize="lg"
-          errorMessage="이메일(아이디)을 입력해주세요"
+          buttonType="button"
+          errorMessage={'이메일(아이디)을 입력해주세요'}
           onButtonClick={handleSendEmailCode}
           disabled={isVerifyCode}
+          buttonDisabled={isVerifyCode}
         />
         {isSendCode && (
           <SignUpInputValidation
@@ -158,6 +163,8 @@ const SignUpAdminStep2 = () => {
             buttonSize="lg"
             errorMessage="인증코드를 입력해주세요"
             onButtonClick={handleConfirmEmailCode}
+            disabled={isVerifyCode}
+            buttonDisabled={isVerifyCode}
           />
         )}
         <SignUpInputValidation
@@ -176,7 +183,7 @@ const SignUpAdminStep2 = () => {
       <div className="w-full h-1 bg-assistive-divider divide-y"></div>
       <article className="flex flex-col gap-10 mobile:gap-6">
         <SignUpInputValidation
-          name="callNumber"
+          name="phoneNumber"
           label="대표번호"
           placeholder="대표 번호를 입력해주세요"
           numberOnly

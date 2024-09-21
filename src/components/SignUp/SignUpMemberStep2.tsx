@@ -64,7 +64,6 @@ const SignUpMemberStep2 = () => {
   //인증번호 확인
   const handleConfirmPhoneCode = async (isValid: boolean) => {
     if (!isValid) return;
-    console.log('check');
     const phoneNumber = getValues('phoneNumber');
     const certificationCode = getValues('certificationCode');
     const res = await axios.post(
@@ -105,6 +104,7 @@ const SignUpMemberStep2 = () => {
           buttonSize="lg"
           onButtonClick={handleVerifyEmail}
           disabled={isVerifyEmail}
+          buttonDisabled={isVerifyEmail}
         />
         <SignUpInputValidation
           type="password"
@@ -132,6 +132,7 @@ const SignUpMemberStep2 = () => {
           onButtonClick={handleSendPhoneCode}
           numberOnly
           disabled={isVerifyCode}
+          buttonDisabled={isVerifyCode}
         />
         {isSendCode && (
           <SignUpInputValidation
@@ -145,6 +146,7 @@ const SignUpMemberStep2 = () => {
             buttonSize="lg"
             onButtonClick={handleConfirmPhoneCode}
             disabled={isVerifyCode}
+            buttonDisabled={isVerifyCode}
             numberOnly
           />
         )}

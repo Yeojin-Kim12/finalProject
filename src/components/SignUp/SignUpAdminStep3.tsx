@@ -3,6 +3,7 @@ import SignUpInputValidation from '../common/SignUpInputValidation';
 import { useFileUpload } from '@/hooks/useFileUpload';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Tag } from '../ui/tag';
+import { getUsableFileUrl } from '@/lib/utils';
 
 const SignUpAdminStep3 = () => {
   const [pdfName, setPdfName] = React.useState('');
@@ -33,6 +34,7 @@ const SignUpAdminStep3 = () => {
     console.log(file);
 
     if (file && file.type === 'application/pdf') {
+      const fileType = 'HOUSING';
       const getFile = getValues('housingFile');
       setPdfName(file.name);
       // 기존 파일이 있으면 제거
@@ -41,13 +43,14 @@ const SignUpAdminStep3 = () => {
       }
 
       // 새로운 파일 업로드
-      const uploadedUrls = await uploadToServer([file], 'HOUSING');
+      const uploadedUrls = await uploadToServer([file], fileType);
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
         console.log('업로드된 파일 URL:', uploadedUrls[0]);
+        const url = getUsableFileUrl(uploadedUrls[0], fileType, file.name);
         appendHousingFile({
           name: file.name,
-          url: uploadedUrls[0],
-          type: 'HOUSING',
+          url: url,
+          type: fileType,
         });
       }
     } else {
@@ -75,7 +78,7 @@ const SignUpAdminStep3 = () => {
           placeholder="회사명을 입력해주세요"
           disabled
         />
-        <SignUpInputValidation name="name" label="담당 업무" placeholder="담당 업무를 입력해주세요" />
+        <SignUpInputValidation name="business" label="담당 업무" placeholder="담당 업무를 입력해주세요" />
         <SignUpInputValidation
           name="email"
           label="회사 메일"

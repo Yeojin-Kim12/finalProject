@@ -3,11 +3,11 @@ import { Buildings } from '@phosphor-icons/react';
 interface DashBoardConsultationProps {
   type: 'highest' | 'lowest';
   data: {
-    property_name: string;
+    propertyName: string;
     all: number;
   };
 }
-const DashBoardConsultation = ({ type, data }: DashBoardConsultationProps) => {
+const DashBoardConsultation = ({ type, data = { propertyName: '', all: 0 } }: DashBoardConsultationProps) => {
   const currentMonth = getCurrentMonth();
   return (
     <article className="relative w-full p-9 border border-assistive-default rounded-5 flex flex-col gap-7">
@@ -18,7 +18,7 @@ const DashBoardConsultation = ({ type, data }: DashBoardConsultationProps) => {
         </p>
       </div>
       <div className="flex items-center gap-4 font-bold">
-        <p className="text-title-2xl text-static-default">{data.property_name}</p>
+        <p className="text-title-2xl text-static-default">{data.propertyName}</p>
         <p
           className={`${type === 'highest' ? 'text-accent-strong' : 'text-secondary-default'} text-display-sm `}>
           {data.all.toLocaleString()}건

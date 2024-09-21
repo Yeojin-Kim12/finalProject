@@ -35,7 +35,6 @@ export const useFileUpload = () => {
       const successfulUploads = uploadResults
         .filter((uploadRes) => uploadRes.status === 200)
         .map((_, index) => presignedUrls[index]);
-
       // 성공한 URL 반환
       return successfulUploads;
     } catch (error) {

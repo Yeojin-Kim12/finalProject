@@ -8,8 +8,8 @@ interface DropdownProps {
   items: Array<{ value: string; label: string }>;
   defaultLabel: string;
   onSelect: (value: string) => void;
-  buttonWidth: string;
-  value: string;
+  buttonWidth?: string;
+  value?: string;
 }
 
 export default function DropdownWithReset({

@@ -345,6 +345,56 @@ const handlers = [
     allPosts.set(1, newPost);
     return HttpResponse.json(newPost, { status: 200 });
   }),
+  http.get('/api/admin/dashboard/cards', () => {
+    return HttpResponse.json({
+      today: {
+        pending: 0,
+        completed: 0,
+        all: 0,
+      },
+      thisWeekProgress: {
+        completed: 0,
+        all: 0,
+      },
+      lastWeekProgress: {
+        completed: 0,
+        all: 0,
+      },
+      totalNumberByWeek: [0, 0, 0, 0, 7],
+      highestConsultation: {
+        propertyName: '건물 1',
+        all: 5,
+      },
+      lowestConsultation: {
+        propertyName: '건물 2',
+        all: 2,
+      },
+    });
+  }),
+  http.get('/api/admin/dashboard/dropdown-selects', () => {
+    return HttpResponse.json({
+      openList: [
+        {
+          propertyId: 2,
+          propertyName: '건물 2',
+        },
+        {
+          propertyId: 1,
+          propertyName: '건물 1',
+        },
+      ],
+      closedList: [
+        {
+          propertyId: 3,
+          propertyName: '건물 3',
+        },
+        {
+          propertyId: 4,
+          propertyName: '건물 4',
+        },
+      ],
+    });
+  }),
 ];
 
 export default handlers;

@@ -37,7 +37,7 @@ const SignUpMember = () => {
 
   const navigate = useNavigate();
   const nextStep = useCallback(async () => {
-    let isValid = true;
+    let isValid = false;
     if (step === 1) {
       isValid = await methods.trigger(['agree1', 'agree2']);
     }
