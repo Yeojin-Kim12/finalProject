@@ -1,5 +1,4 @@
-// import { useConsultPendingSummaries } from '@/api/consulting';
-import { ComponentType } from 'react';
+import { ComponentType, useEffect } from 'react';
 import { ConsultingPending } from '@/components/Table/ConsultingPending';
 import { CustomerData } from '@/types/types';
 import { ConsultingCompleted } from '@/components/Table/ConsultingCompleted';
@@ -14,81 +13,186 @@ import { CustomerInquiryProps } from '@/components/CustomerService/CustomerInqui
 import { CustomerCompletedProps } from '@/components/CustomerService/CustomerCompleted';
 import { ListDashes, Plus } from '@phosphor-icons/react';
 import AccordionMenu from '@/components/CustomerService/AccordionMenu';
-import SampleImg from '../../../public/Imagesample.png';
+import { propertyTypeMapping } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import NewCustomer from '@/components/CustomerService/NewCustomer';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogTrigger, DialogDescription } from '@/components/ui/dialogNewCustomer';
 import NoProperty from '../../components/CustomerService/NoProperty';
-import { sampleResponse } from './data';
+import { useQueries, useQueryClient } from '@tanstack/react-query';
+import {
+  fetchSidebarData,
+  fetchPendingConsultations,
+  fetchCompletedConsultations,
+  fetchAddNewCustomer,
+} from '@/api/consulting';
 
-const queryClient = new QueryClient();
-
-const accordionSections = [
-  {
-    title: '모집중',
-    items: sampleResponse.sideBarPendingResponseList.map((item) => item.name),
-  },
-  {
-    title: '모집완료',
-    items: sampleResponse.sideBarCompletedResponseList.map((item) => item.name),
-  },
-];
+// const queryClient = new QueryClient();
 
 export default function CustomerService() {
   const [isOpen, setIsOpen] = useState(false);
   const [customers, setCustomers] = useState<CustomerData[]>([]);
-  const [selectedProperty, setSelectedProperty] = useState(sampleResponse.sideBarSelectedPropertyResponse);
+  const [selectedProperty, setSelectedProperty] = useState({
+    id: 892,
+    image: 'https://cdn.smarttoday.co.kr/news/photo/202312/40471_34270_5157.jpg',
+    propertyName: '내포신도시모아미래도메가시티2',
+    companyName: '(주)성찬',
+    constructor: '미래도건설',
+    totalNumber: 836,
+    startDate: '2024-09-04',
+    endDate: '2024-10-10',
+    propertyType: 'APARTMENT',
+  });
   const popupWindowRef = useRef<Window | null>(null);
 
-  const addNewCustomer = (newCustomer: CustomerData) => {
+  const [selectedConsultant, setSelectedConsultant] = useState<string>('a1-1');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [date, setDate] = useState<Date | undefined>();
+
+  const queryClient = useQueryClient();
+  console.log(customers);
+
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: [
+          'pendingConsultations',
+          {
+            propertyId: selectedProperty.id || 892,
+            search: '',
+            consultant: selectedConsultant,
+            preferredAt: date,
+            page: currentPage,
+          },
+        ],
+        queryFn: fetchPendingConsultations,
+      },
+      {
+        queryKey: [
+          'completedConsultations',
+          {
+            propertyId: selectedProperty.id || 892,
+            search: '',
+            tier: '',
+            consultant: '',
+            preferredAt: undefined,
+            page: 0,
+          },
+        ],
+        queryFn: fetchCompletedConsultations,
+      },
+      {
+        queryKey: ['sidebarData', { propertyId: selectedProperty.id || 892 }],
+        queryFn: fetchSidebarData,
+      },
+    ],
+  });
+
+  const [pendingConsultationsResult, completedConsultationsResult, sidebarDataResult] = results;
+
+  const isLoading =
+    pendingConsultationsResult.isLoading ||
+    completedConsultationsResult.isLoading ||
+    sidebarDataResult.isLoading;
+  const error =
+    pendingConsultationsResult.error || completedConsultationsResult.error || sidebarDataResult.error;
+
+  const pendingConsultationsData = pendingConsultationsResult.data?.consultCompletedSummaries || [];
+  const completedConsultationsData = completedConsultationsResult.data?.consultCompletedSummaries || [];
+  const sidebarData = sidebarDataResult.data;
+
+  const pendingCustomersData = pendingConsultationsData;
+  const completedCustomersData = completedConsultationsData;
+
+  console.log(pendingCustomersData); // Debug log
+
+  const addNewCustomer = async (newCustomer: CustomerData) => {
     const customerWithPropertyId = { ...newCustomer, id: selectedProperty.id };
 
-    setCustomers((prevCustomers) => {
-      // 전화번호가 동일한 고객은 상담대기에서 제거
-      const updatedCustomers = prevCustomers.filter(
-        (customer) => customer.phoneNumber !== newCustomer.phoneNumber,
-      );
-      return [...updatedCustomers, customerWithPropertyId];
-    });
-  };
-
-  const pendingCustomers = customers.filter((customer) => customer.status === 'pending');
-  const completedCustomers = customers.filter((customer) => customer.status === 'complete');
-
-  const handlePropertySelect = (name: string) => {
-    const selectedFromPending = sampleResponse.sideBarPendingResponseList.find(
-      (property) => property.name === name,
-    );
-    const selectedFromCompleted = sampleResponse.sideBarCompletedResponseList.find(
-      (property) => property.name === name,
-    );
-    const selected = selectedFromPending || selectedFromCompleted;
-
-    if (selected) {
-      setSelectedProperty({
-        ...selected,
-        file: 'https://example.com/sample-image.png',
-        companyName: 'Selected Company',
-        constructor: 'Selected Constructor',
-        totalNumber: 300,
-        startDate: '2024-01-01',
-        endDate: '2024-12-31',
-        propertyType: 'APARTMENT',
+    try {
+      const response = await fetchAddNewCustomer(selectedProperty.id, customerWithPropertyId);
+      setCustomers((prevCustomers) => {
+        const updatedCustomers = prevCustomers.filter(
+          (customer) => customer.phoneNumber !== newCustomer.phoneNumber,
+        );
+        return [...updatedCustomers, response];
       });
+    } catch (error) {
+      console.error('Failed to add new customer:', error);
     }
   };
 
-  const filteredPendingCustomers = pendingCustomers.filter((customer) => customer.id === selectedProperty.id);
-  const filteredCompletedCustomers = completedCustomers.filter(
-    (customer) => customer.id === selectedProperty.id,
-  );
+  // const pendingCustomers = customers.filter((customer) => customer.status === 'pending');
+  // const completedCustomers = customers.filter((customer) => customer.status === 'complete');
 
-  const isSampleResponseEmpty =
-    !sampleResponse ||
-    (!sampleResponse.sideBarPendingResponseList.length &&
-      !sampleResponse.sideBarCompletedResponseList.length);
+  const accordionSections = [
+    {
+      title: '모집중',
+      items:
+        sidebarData?.sideBarPendingResponseList?.map((item: { id: number; name: string }) => ({
+          id: item.id,
+          name: item.name,
+        })) || [],
+    },
+    {
+      title: '모집완료',
+      items:
+        sidebarData?.sideBarCompletedResponseList?.map((item: { id: number; name: string }) => ({
+          id: item.id,
+          name: item.name,
+        })) || [],
+    },
+  ];
+
+  const handlePropertySelect = (id: number) => {
+    if (selectedProperty.id !== id) {
+      const selectedFromPending = sidebarData?.sideBarPendingResponseList.find(
+        (property: { id: number }) => property.id === id,
+      );
+      const selectedFromCompleted = sidebarData?.sideBarCompletedResponseList.find(
+        (property: { id: number }) => property.id === id,
+      );
+      const selected = selectedFromPending || selectedFromCompleted;
+
+      if (selected) {
+        const selectedPropertyDetails = sidebarData.sideBarSelectedPropertyResponse;
+        console.log('Selected property details:', selectedPropertyDetails); // Debug log
+        setSelectedProperty({
+          id: selected.id,
+          image: selectedPropertyDetails.image,
+          propertyName: selectedPropertyDetails.name,
+          companyName: selectedPropertyDetails.companyName,
+          constructor: selectedPropertyDetails.constructor,
+          totalNumber: selectedPropertyDetails.totalNumber,
+          startDate: selectedPropertyDetails.startDate,
+          endDate: selectedPropertyDetails.endDate,
+          propertyType: selectedPropertyDetails.propertyType,
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (selectedProperty.id) {
+      queryClient.invalidateQueries({ queryKey: ['sidebarData', { propertyId: selectedProperty.id }] });
+      queryClient.invalidateQueries({
+        queryKey: ['pendingConsultations', { propertyId: selectedProperty.id }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['completedConsultations', { propertyId: selectedProperty.id }],
+      });
+    }
+  }, [selectedProperty, queryClient]);
+
+  // const filteredPendingCustomers = pendingCustomers.filter((customer) => customer.id === selectedProperty.id);
+  // const filteredCompletedCustomers = completedCustomers.filter(
+  //   (customer) => customer.id === selectedProperty.id,
+  // );
+
+  const isSidebarDataEmpty =
+    !sidebarData ||
+    (!sidebarData.sideBarPendingResponseList.length && !sidebarData.sideBarCompletedResponseList.length);
 
   // popup 윈도우
   const openPopupWindow = <P extends {}>(
@@ -184,7 +288,7 @@ export default function CustomerService() {
 
   return (
     <main className="flex">
-      <aside className="flex flex-col w-[264px] mt-7 ml-7">
+      <aside className="flex flex-col w-[280px] mt-7 ml-7">
         <div className="flex py-6 px-6 gap-6 border-b-[1px] border-assistive-alternative">
           <ListDashes size={24} weight="light" />
           <h1 className="text-label-lg font-bold text-static-default ">매물 전체보기</h1>
@@ -192,15 +296,17 @@ export default function CustomerService() {
         <AccordionMenu sections={accordionSections} onItemSelect={handlePropertySelect} />
       </aside>
 
-      {isSampleResponseEmpty ? (
+      {isSidebarDataEmpty ? (
         <NoProperty />
       ) : (
         <section className="container mx-auto py-10 ">
           <article className="flex flex-col mb-10">
-            <p className="ml-3 text-body-lg font-normal text-assistive-strong">아파트 민간분양</p>
-            <h1 className="ml-3 text-title-2xl font-bold">{selectedProperty.name}</h1>
+            <p className="ml-3 text-body-lg font-normal text-assistive-strong">
+              {propertyTypeMapping[selectedProperty.propertyType]}
+            </p>
+            <h1 className="ml-3 text-title-2xl font-bold">{selectedProperty.propertyName}</h1>
             <div className="flex">
-              <img src={SampleImg} className="object-cover w-[320px] h-[180px]" />
+              <img src={selectedProperty.image} className="object-cover w-[320px] h-[180px]" />
               <div className="flex flex-col self-center ml-10 w-[64px] gap-3 text-detail-base text-assistive-strong">
                 <p>시행사</p>
                 <p>시공사</p>
@@ -240,15 +346,27 @@ export default function CustomerService() {
             <TabsContent value="pending">
               <ConsultingPending
                 columns={columnsPending(handleInquiryClick)}
-                // @ts-ignore: Unreachable code error
-                data={filteredPendingCustomers}
+                data={pendingCustomersData}
+                isLoading={isLoading}
+                error={error}
+                selectedConsultant={selectedConsultant}
+                setSelectedConsultant={setSelectedConsultant}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                date={date}
+                setDate={setDate}
               />
             </TabsContent>
             <TabsContent value="completed">
               <ConsultingCompleted
                 columns={columnsCompleted(handleCompletedClick)}
-                // @ts-ignore: Unreachable code error
-                data={filteredCompletedCustomers}
+                data={completedCustomersData}
+                selectedConsultant={selectedConsultant}
+                setSelectedConsultant={setSelectedConsultant}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                date={date}
+                setDate={setDate}
               />
             </TabsContent>
           </Tabs>
@@ -257,31 +375,3 @@ export default function CustomerService() {
     </main>
   );
 }
-
-// response
-// {
-//   "sideBarPendingResponseList": [// 모집중(최대 20개 출력),
-//     {
-//          "id": 1,
-//           "name": "Example Property Name"
-//     }
-//   ],
-//   "sideBarCompletedResponseList": [
-//       {
-//           "id": 2,
-//           "name": "Example Property Name"
-//       }
-//   ],
-//   "sideBarSelectedPropertyResponse": { // 현재 사이드바에서 선택된 매물 정보
-//       "id": 2,
-//       "name": "Example Property Name", //매물 이름
-//       "file": "image url", //이미지
-//       "companyName": "Example Company",
-//       "constructor": "Example Constructor",
-//       "totalNumber": 500,
-//       "startDate": "2026-01-01",
-//       "endDate": "2024-01-01",
-//       "propertyType": "APARTMENT"
-//   }
-// }
-// }

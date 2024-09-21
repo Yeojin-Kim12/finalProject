@@ -7,9 +7,9 @@ export interface MyProperty {
   name: string;
   createdAt: string;
   endDate: string;
-  total_number: number;
+  totalCount: number;
   pending: boolean;
-  consultation_pending: number;
+  consultationPendingCount: number;
 }
 
 export const columnsMyProperty: ColumnDef<MyProperty>[] = [
@@ -18,11 +18,11 @@ export const columnsMyProperty: ColumnDef<MyProperty>[] = [
     header: '매물명',
   },
   {
-    accessorKey: 'total_number',
+    accessorKey: 'totalCount',
     header: '세대수',
   },
   {
-    accessorKey: 'consultation_pending',
+    accessorKey: 'consultationPendingCount',
     header: '상담대기',
   },
   {

@@ -5,16 +5,18 @@ import { Navigation } from 'swiper/modules';
 import ItemCard from '../common/ItemCard';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { BASE_URL } from '@/lib/constants';
 
 const PropertyManagementCard = () => {
   const [currentPage, setCurrentPage] = React.useState(0);
 
   const fetchPropertyCard = async (page: number) => {
-    const res = await axios.get('/api/admin/my-properties/card', {
+    const res = await axios.get(`${BASE_URL}/api/admin/my-properties/card`, {
       params: {
         page: page,
         size: 4,
       },
+      withCredentials: true,
     });
     console.log(res);
     return res.data;

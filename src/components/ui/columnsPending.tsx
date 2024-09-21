@@ -11,7 +11,7 @@ export interface ConsultingPending {
   preferredAt: string;
   consultant: string;
   consultingMessage: string;
-  addConsultation: string;
+  addConsultation: boolean;
 }
 
 export const columnsPending = (
@@ -23,9 +23,11 @@ export const columnsPending = (
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span className="flex text-center justify-center mb-7 bg-primary-base text-primary-default text-label-xs px-3 py-1 rounded-6 mr-2">
-            추가
-          </span>
+          {row.original.addConsultation && (
+            <span className="flex text-center justify-center mb-7 bg-primary-base text-primary-default text-label-xs px-3 py-1 rounded-6 mr-2">
+              추가
+            </span>
+          )}
           <span>{row.original.name}</span>
         </div>
       );

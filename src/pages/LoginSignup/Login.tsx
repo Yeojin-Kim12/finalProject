@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import buildingImg from '../../assets/buildings.svg';
 import { Button } from '@/components/ui/button';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -7,10 +7,11 @@ import { loginSchema, FormFields } from '@/types/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeClosed, Eye } from '@phosphor-icons/react';
 import PageHeader from '@/components/common/PageHeader';
-// import { login } from '@/api/login';
+import { login } from '@/api/login';
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -27,32 +28,19 @@ export default function Login() {
   });
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    console.log('Form data:', data);
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      throw new Error();
-      console.log(data);
-    } catch (err) {
+      await login(data.email, data.password);
+      console.log('Login successful');
+      navigate('/');
+    } catch (error) {
+      console.error('Login error:', error);
       setError('root', {
+        type: 'manual',
         message: `아이디 또는 비밀번호가 잘못되었습니다.\n아이디와 비밀번호를 정확히 입력해주세요.`,
       });
     }
-
-    // try {
-    //   const response = await login(data.email, data.password);
-
-    //   if (response.errors) {
-    //     for (const [key, value] of Object.entries(response.errors)) {
-    //       setError(key as keyof FormFields, { type: 'manual', message: value });
-    //     }
-    //   } else if (response.success) {
-    //     console.log('Login successful:', response.access_token);
-    //   }
-    // } catch (error) {
-    //   setError('root', {
-    //     type: 'manual',
-    //     message: `아이디 또는 비밀번호가 잘못되었습니다.\n아이디와 비밀번호를 정확히 입력해주세요.`,
-    //   });
-    // }
   };
 
   return (

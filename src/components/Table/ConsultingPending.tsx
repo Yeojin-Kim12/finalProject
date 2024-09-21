@@ -16,52 +16,37 @@ import { Input } from '../ui/input';
 import { operatorIdAll } from '../../lib/dropdownItems';
 import SingleDatePicker from '@/components/common/SingleDatePicker';
 
-// import DefaultPagination from '../common/DefaultPagination';
-// import axios from 'axios';
-// import { useQuery } from '@tanstack/react-query';
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  // totalPage: number;
+  isLoading: boolean;
+  error: any;
+  selectedConsultant: string;
+  setSelectedConsultant: (value: string) => void;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  date: Date | undefined;
+  setDate: (date: Date | undefined) => void;
 }
 
-export function ConsultingPending<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function ConsultingPending<TData, TValue>({
+  columns,
+  data,
+  isLoading,
+  error,
+  selectedConsultant,
+  setSelectedConsultant,
+  currentPage,
+  setCurrentPage,
+  date,
+  setDate,
+}: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [selectedConsultant, setSelectedConsultant] = useState<string>('a1-1');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [date, setDate] = useState<Date | undefined>();
-  // const [search, setSearch] = useState<string>('');
-  // const [preferredAt, setPreferredAt] = useState<string>('');
 
   const [pagination, setPagination] = useState({
     pageIndex: 0, //초기 인덱스
     pageSize: 5, //페이지 길이
   });
-  // const fetchConsultingPending = async (
-  //   page: number,
-  //   search: string,
-  //   consultant: string,
-  //   preferredAt: string,
-  // ) => {
-  //   const res = await axios.get(`/api/admin/properties/{propertyId}/consultations/pending`, {
-  //     params: {
-  //       search,
-  //       consultant,
-  //       preferred_at: preferredAt,
-  //       page,
-  //       size: 5,
-  //     },
-  //   });
-  //   return res.data;
-  // };
-
-  // const { data } = useQuery({
-  //   queryKey: ['consultingPending', currentPage, search, selectedConsultant, preferredAt],
-  //   queryFn: () => fetchConsultingPending(currentPage, search, selectedConsultant, preferredAt),
-  //   keepPreviousData: true,
-  // });
-  // const totalPages = data?.totalPages || 1;
 
   const table = useReactTable({
     data,
@@ -157,44 +142,51 @@ export function ConsultingPending<TData, TValue>({ columns, data }: DataTablePro
         </span>
       </div>
 
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      {/* ... existing JSX ... */}
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>Error loading data</div>
+      ) : (
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                {columns.map((_, index) => (
+                  <TableCell key={index} className="h-24 text-center">
+                    -
                   </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              {columns.map((_, index) => (
-                <TableCell key={index} className="h-24 text-center">
-                  -
-                </TableCell>
-              ))}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      )}
       {/* <DefaultPagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} /> */}
 
       <section className="flex items-center justify-center space-x-3 py-4 mt-11">
@@ -211,7 +203,7 @@ export function ConsultingPending<TData, TValue>({ columns, data }: DataTablePro
           className="border-none p-1"
           onClick={() => {
             table.previousPage();
-            setCurrentPage((prev) => Math.max(prev - 1, 1));
+            setCurrentPage(currentPage - 1);
           }}
           disabled={!table.getCanPreviousPage()}>
           <CaretLeft size={32} weight="light" className="text-assistive-divider" />
@@ -235,7 +227,7 @@ export function ConsultingPending<TData, TValue>({ columns, data }: DataTablePro
           className="border-none p-1"
           onClick={() => {
             table.nextPage();
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+            setCurrentPage(Math.min(currentPage + 1, totalPages));
           }}
           disabled={!table.getCanNextPage()}>
           <CaretRight size={32} weight="light" className="text-assistive-divider" />

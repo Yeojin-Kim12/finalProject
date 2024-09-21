@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TrashSimple } from '@phosphor-icons/react';
 import { CaretRight, CaretLeft, CaretDoubleLeft, CaretDoubleRight } from '@phosphor-icons/react';
+import axios from 'axios';
 
 import {
   ColumnDef,
@@ -37,9 +38,26 @@ export function MyPropertyTable<TData extends Identifiable, TValue>({
   });
   const [currentPage, setCurrentPage] = useState(1);
 
-  const handleDelete = (id: number) => {
+  // const handleDelete = (id: number) => {
+  //   const updatedData = tableData.filter((row) => row.id !== id);
+  //   setTableData(updatedData);
+  // };
+
+  // HTTP DELETE 요청
+  const handleDelete = async (id: number) => {
     const updatedData = tableData.filter((row) => row.id !== id);
     setTableData(updatedData);
+    try {
+      const response = await axios.delete(`/api/properties/${id}`);
+      if (response.status === 200) {
+        const updatedData = tableData.filter((row) => row.id !== id);
+        setTableData(updatedData);
+      } else {
+        console.error('Failed to delete the property');
+      }
+    } catch (error) {
+      console.error('Error deleting the property:', error);
+    }
   };
 
   const columnsWithDelete = React.useMemo(() => {

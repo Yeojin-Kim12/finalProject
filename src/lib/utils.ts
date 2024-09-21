@@ -148,3 +148,13 @@ export function getUsableFileUrl(url: string, type: string, name: string): strin
   const filePath = url.match(regex);
   return filePath ? `https://delivery183.org/${filePath[0]}${name}` : '';
 }
+
+// 프로퍼티 유형 변환
+export const propertyTypeMapping: { [key: string]: string } = {
+  APARTMENT: '아파트',
+  OFFICETEL: '오피스텔',
+  VILLA: '빌라',
+  URBAN_HOUSING: '도시형 생활 주택',
+  LIVING_ACCOMMODATION: '생활 숙박 시설',
+  DOWNTOWN: '상가/업무',
+};

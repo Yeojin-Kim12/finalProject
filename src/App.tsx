@@ -4,11 +4,14 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import './App.css';
 import { router } from './routes/router';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
     <div>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </div>
   );
 }

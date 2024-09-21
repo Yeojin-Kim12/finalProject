@@ -14,6 +14,10 @@ export interface ConsultingCompleted {
   consultingMessage: string;
 }
 
+export function formatDate(dateString: string): string {
+  return dateString.split('T')[0].replace(/-/g, '.');
+}
+
 export const columnsCompleted = (
   handleCompletedClick: (props: CustomerCompletedProps) => void,
 ): ColumnDef<ConsultingCompleted>[] => [
@@ -42,10 +46,18 @@ export const columnsCompleted = (
   {
     accessorKey: 'createdAt',
     header: '상담신청일자',
+    cell: ({ row }) => {
+      const createdAt = row.getValue('createdAt') as string;
+      return <div className="text-center font-medium">{formatDate(createdAt)}</div>;
+    },
   },
   {
     accessorKey: 'completedAt',
     header: '처리일자',
+    cell: ({ row }) => {
+      const completedAt = row.getValue('completedAt') as string;
+      return <div className="text-center font-medium">{formatDate(completedAt)}</div>;
+    },
   },
   {
     accessorKey: 'consultant',

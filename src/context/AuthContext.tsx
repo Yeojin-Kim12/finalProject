@@ -11,7 +11,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   // signup: (name: string, email: string, password: string) => Promise<void>;
-  // logout: () => void;
+  logout: () => void;
   // confirmLogout: () => void;
   // deleteAccount: () => Promise<void>;
 }
@@ -60,9 +60,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   //   }
   // };
 
-  // const logout = () => {
-  //   openLogoutConfirmModal();
-  // };
+  const logout = () => {
+    alert('성공적으로 로그아웃하셨습니다.');
+  };
 
   // const confirmLogout = () => {
   //   logoutApi();
@@ -82,7 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   //   }
   // };
 
-  return <AuthContext.Provider value={{ user, login }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextType => {

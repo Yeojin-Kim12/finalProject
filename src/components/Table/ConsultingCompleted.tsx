@@ -25,19 +25,32 @@ import SingleDatePicker from '@/components/common/SingleDatePicker';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  selectedConsultant: string;
+  setSelectedConsultant: React.Dispatch<React.SetStateAction<string>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  date: Date | undefined;
+  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }
 
-export function ConsultingCompleted<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function ConsultingCompleted<TData, TValue>({
+  columns,
+  data,
+  selectedConsultant,
+  setSelectedConsultant,
+  currentPage,
+  setCurrentPage,
+  date,
+  setDate,
+}: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [selectedConsultant, setSelectedConsultant] = useState<string>('a1-1');
+
   const [selectedRating, setSelectedRating] = useState<string>('고객등급');
-  const [date, setDate] = useState<Date | undefined>();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0, //초기 인덱스
     pageSize: 5, //페이지 길이
   });
-  const [currentPage, setCurrentPage] = useState(1);
 
   const table = useReactTable({
     data,
@@ -238,17 +251,3 @@ export function ConsultingCompleted<TData, TValue>({ columns, data }: DataTableP
     </>
   );
 }
-
-// "totalPages": 4,
-// "pageSize": 5,
-// "currentPage": 0,
-// "content": {
-//     "consultCompletedSummaries": [
-//         {
-//             "name": "0304",
-//             "consultant": "a-10",
-//             "createdAt": "2024-08-20T15:04:28.595917",
-//             "completedAt": "2024-08-20",
-//             "tier": "A",
-//             "phoneNumber": "01012341999"
-//         },

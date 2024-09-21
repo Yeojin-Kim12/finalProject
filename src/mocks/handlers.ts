@@ -197,14 +197,10 @@ const handlers = [
 
   http.get('/api/common/home?page={page}', () => {
     return HttpResponse.json({
-      homeImagesUrl: [
-        'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png',
-        'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png',
-        'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png',
-        'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png',
-        'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png',
-        'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png',
-        'https://delivery183.org/PROPERTY_IMAGE/8de749ab-7fd0-4e5d-95e7-a88711a4cc9c%3Aswiper.png',
+      HomeImagesUrl: [
+        'https://delivery183.org/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b%3Abyebyebyebyebye',
+        'https://delivery183.org/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b%3Abyebyebyebyebye',
+        'https://delivery183.org/MARKETING/4ca28725-c17e-43c9-84a6-314e328b3b0b%3Abyebyebyebyebye',
       ],
       content: {
         properties: [
@@ -281,6 +277,110 @@ const handlers = [
     });
   }),
 
+  http.post('/api/admin/properties', async ({ request }) => {
+    const newPost = await request.json();
+    console.log('MSW에서 POST된 데이터:', newPost);
+    allPosts.set(1, newPost);
+    return HttpResponse.json(newPost, { status: 200 });
+  }),
+
+  http.get('/api/admin/properties/:propertyId/consultations/sidebar', (req) => {
+    const { propertyId } = req.params;
+    propertyId;
+
+    return HttpResponse.json({
+      sideBarPendingResponseList: [
+        { id: 108, name: '한강수자인오브센트' },
+        { id: 104, name: '푸르지오 아파트' },
+        { id: 103, name: '푸르지오 아파트' },
+        { id: 101, name: '푸르지오 아파트' },
+        { id: 100, name: '푸르지오 아파트' },
+        { id: 99, name: '푸르지오 아파트' },
+        { id: 97, name: '양주백석모아엘가그랑데' },
+        { id: 48, name: '푸르지오 아파트' },
+        { id: 43, name: '푸르지오 아파트' },
+        { id: 42, name: '푸르지오 아파트' },
+        { id: 41, name: '푸르지오 아파트' },
+        { id: 40, name: '푸르지오 아파트' },
+        { id: 34, name: '푸르지오 아파트' },
+        { id: 33, name: '푸르지오 아파트' },
+        { id: 32, name: '푸르지오 아파트' },
+        { id: 30, name: '푸르지오 아파트' },
+        { id: 3, name: '잠실 푸르지오' },
+      ],
+      sideBarCompletedResponseList: [
+        { id: 21, name: '잠실 푸르지오' },
+        { id: 18, name: '잠실 푸르지오' },
+        { id: 17, name: '잠실 푸르지오' },
+        { id: 16, name: '잠실 푸르지오' },
+        { id: 15, name: '잠실 푸르지오' },
+        { id: 14, name: '잠실 푸르지오' },
+        { id: 12, name: '잠실 푸르지오' },
+        { id: 11, name: '잠실 푸르지오' },
+        { id: 10, name: '잠실 푸르지오' },
+        { id: 9, name: '잠실 푸르지오' },
+        { id: 8, name: '잠실 푸르지오' },
+        { id: 7, name: '잠실 푸르지오' },
+        { id: 6, name: '잠실 푸르지오' },
+        { id: 2, name: 'Example Property Name' },
+      ],
+      sideBarSelectedPropertyResponse: {
+        id: 2,
+        name: '잠실 푸르지오',
+        image: null,
+        propertyName: '잠실 푸르지오',
+        companyName: '(주)건설개발',
+        constructor: '자이',
+        totalNumber: 500,
+        startDate: '2024-01-01',
+        endDate: '2026-01-01',
+        propertyType: 'APARTMENT',
+      },
+    });
+  }),
+
+  http.get('/api/admin/my-properties/table?page={page}&size={size}', (req) => {
+    const { page, size } = req.params;
+    page;
+    size;
+
+    return HttpResponse.json({
+      favorateNumber: 0,
+      totalPages: 1,
+      pageSize: 4,
+      currentPage: 0,
+      contents: [
+        {
+          id: 97,
+          name: '양주백석모아엘가그랑데',
+          totalCount: 929,
+          consultationPendingCount: 0,
+          createdAt: '2024-09-15',
+          endDate: '2027-10-29',
+          pending: true,
+        },
+        {
+          id: 102,
+          name: '북수원이목지구디에트르더리체Ⅰ',
+          totalCount: 768,
+          consultationPendingCount: 0,
+          createdAt: '2024-09-15',
+          endDate: '2026-10-01',
+          pending: true,
+        },
+        {
+          id: 108,
+          name: '한강수자인오브센트',
+          totalCount: 2116,
+          consultationPendingCount: 0,
+          createdAt: '2024-09-15',
+          endDate: '2026-06-01',
+          pending: true,
+        },
+      ],
+    });
+  }),
+
   http.get('/api/admin/properties/:propertyId/consultations/pending', (req) => {
     const { propertyId, search, consultant, preferred_at, page, size } = req.params;
     propertyId;
@@ -298,52 +398,106 @@ const handlers = [
           {
             preferredAt: '2025-01-01',
             createdAt: '2024-08-20',
-            consultant: 'a-10',
-            name: '2:37',
-            phoneNumber: '01012341899',
-            addConsultation: 'true',
+            consultant: 'a1-1',
+            name: 'cc',
+            phoneNumber: '01012341299',
+            addConsultation: true,
           },
           {
             preferredAt: '2025-01-01',
             createdAt: '2024-08-20',
-            consultant: 'a-10',
-            name: '2:33',
-            phoneNumber: '01012341799',
-            addConsultation: 'false',
+            consultant: 'a1-2',
+            name: 'cc',
+            phoneNumber: '01012341399',
+            addConsultation: true,
           },
           {
             preferredAt: '2025-01-01',
             createdAt: '2024-08-20',
-            consultant: 'a-10',
-            name: '12:56',
-            phoneNumber: '01012341699',
-            addConsultation: 'true',
-          },
-          {
-            preferredAt: '2025-01-01',
-            createdAt: '2024-08-20',
-            consultant: 'a-10',
-            name: '12:56',
-            phoneNumber: '01012341599',
-            addConsultation: 'true',
-          },
-          {
-            preferredAt: '2025-01-01',
-            createdAt: '2024-08-20',
-            consultant: 'a-10',
+            consultant: 'a1-3',
             name: 'cc',
             phoneNumber: '01012341499',
-            addConsultation: 'true',
+            addConsultation: false,
+          },
+          {
+            preferredAt: '2025-01-01',
+            createdAt: '2024-08-20',
+            consultant: 'a1-4',
+            name: '12:56',
+            phoneNumber: '01012341599',
+            addConsultation: false,
+          },
+          {
+            preferredAt: '2025-01-01',
+            createdAt: '2024-08-20',
+            consultant: 'a1-5',
+            name: '12:56',
+            phoneNumber: '01012341699',
+            addConsultation: false,
           },
         ],
       },
     });
   }),
-  http.post('/api/admin/properties', async ({ request }) => {
-    const newPost = await request.json();
-    console.log('MSW에서 POST된 데이터:', newPost);
-    allPosts.set(1, newPost);
-    return HttpResponse.json(newPost, { status: 200 });
+
+  http.get('/api/admin/properties/:propertyId/consultations/completed', (req) => {
+    const { propertyId, search, tier, consultant, preferred_at, page, size } = req.params;
+    propertyId;
+    search;
+    tier;
+    consultant;
+    preferred_at;
+    size;
+
+    return HttpResponse.json({
+      totalPages: 7,
+      pageSize: 5,
+      currentPage: page,
+      contents: {
+        consultCompletedSummaries: [
+          {
+            completedAt: '2024-09-10',
+            createdAt: '2024-08-20',
+            consultant: 'a1-1',
+            name: 'cc',
+            phoneNumber: '01012341299',
+            tier: 'A',
+          },
+          {
+            completedAt: '2024-09-10',
+            createdAt: '2024-08-20',
+            consultant: 'a1-2',
+            name: 'cc',
+            phoneNumber: '01012341299',
+            tier: 'B',
+          },
+          {
+            completedAt: '2024-09-10',
+            createdAt: '2024-08-20',
+            consultant: 'a1-3',
+            name: 'cc',
+            phoneNumber: '01012341299',
+            tier: 'C',
+          },
+          {
+            completedAt: '2024-09-10',
+            createdAt: '2024-08-20',
+            consultant: 'a1-4',
+            name: 'cc',
+            phoneNumber: '01012341299',
+            tier: 'D',
+          },
+          {
+            completedAt: '2024-09-10',
+            createdAt: '2024-08-20',
+            consultant: 'a1-1',
+            name: 'cc',
+            phoneNumber: '01012341299',
+            tier: 'S',
+          },
+        ],
+      },
+    });
   }),
   http.get('/api/admin/dashboard/cards', () => {
     return HttpResponse.json({
@@ -394,6 +548,21 @@ const handlers = [
         },
       ],
     });
+  }),
+
+  http.post('/api/admin/properties/:propertyId/consultations', async (req) => {
+    const { propertyId } = req.params;
+    propertyId;
+    const newCustomer = await req.request.json();
+    console.log('New customer data:', newCustomer);
+
+    return HttpResponse.json(
+      {
+        id: 1,
+        ...(typeof newCustomer === 'object' && newCustomer !== null ? newCustomer : {}),
+      },
+      { status: 200 },
+    );
   }),
 ];
 
