@@ -7,7 +7,7 @@ import { BASE_URL } from '@/lib/constants';
 import axios from 'axios';
 
 function Layout() {
-  const [loginData, setLoginData] = useRecoilState(loginState);
+  const [setLoginData] = useRecoilState(loginState);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
