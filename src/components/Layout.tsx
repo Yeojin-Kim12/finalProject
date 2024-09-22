@@ -1,13 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import GNB from './GNB/GNB';
 import { loginState } from '@/recoilstate/login/atoms';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { BASE_URL } from '@/lib/constants';
 import axios from 'axios';
 
 function Layout() {
-  const [setLoginData] = useRecoilState(loginState);
+  const setLoginData = useSetRecoilState(loginState);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
