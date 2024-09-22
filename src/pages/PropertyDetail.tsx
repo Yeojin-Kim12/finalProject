@@ -52,7 +52,7 @@ const PropertyDetail = () => {
   const [isCounselRegister, setIsCounselRegister] = useState(false); // 상담신청
   const [isInfoContent, setIsInfoContent] = useState(false);
   const [counselForm, setCounselForm] = useState(initialFormState); // 상담신청 값
-  const [isCounselFormValidation, setisCounselFormValidation] = useState(false); // formValidation
+  const [isCounselFormValidation, setIsCounselFormValidation] = useState(false); // formValidation
   const [isToast, setIsToast] = useState(false);
   const { Funnel, Step, setStep } = useFunnel(steps[0]);
 
@@ -157,7 +157,7 @@ const PropertyDetail = () => {
 
   useEffect(() => {
     const { name, phoneNumber, preferredAt } = counselForm;
-    setisCounselFormValidation(name !== '' && isPhoneValidation(phoneNumber) && preferredAt !== undefined);
+    setIsCounselFormValidation(name !== '' && isPhoneValidation(phoneNumber) && preferredAt !== undefined);
   }, [counselForm]);
 
   const handleCounselRegister = () => {

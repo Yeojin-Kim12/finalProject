@@ -6,6 +6,7 @@ import DashBoardPending from './DashBoardPending';
 import DashBoardConsultation from './DashBoardConsultation';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { BASE_URL } from '@/lib/constants';
 
 const DashBoardCards = () => {
   const [time, setTime] = React.useState<string>('');
@@ -18,7 +19,7 @@ const DashBoardCards = () => {
   }, []);
 
   const fetchDashBoardCards = async () => {
-    const res = await axios.get('/api/admin/dashboard/cards');
+    const res = await axios.get(`${BASE_URL}/api/admin/dashboard/cards`, { withCredentials: true });
     return res.data;
   };
   const { data } = useQuery({
@@ -44,7 +45,7 @@ const DashBoardCards = () => {
         </div>
 
         <div className="col-span-1">
-          <DashBoardPending data={data?.today.pending} time={time} />
+          <DashBoardPending data={data?.today?.pending} time={time} />
         </div>
         <div className="col-span-4">
           <DashBoardConsultation type="highest" data={data?.highestConsultation} />

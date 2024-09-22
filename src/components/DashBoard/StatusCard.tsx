@@ -18,7 +18,7 @@ const StatusCard = ({ label, value }: StatusCardProps) => {
       valueColor = 'text-assistive-strong';
   }
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center">
       <span className="text-label-lg text-assistive-strong">{label}</span>
       <span className={`text-title-2xl font-bold ${valueColor}`}>{value}</span>
     </div>

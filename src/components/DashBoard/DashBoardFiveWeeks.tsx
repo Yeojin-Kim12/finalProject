@@ -7,10 +7,10 @@ interface DashBoardFiveWeeksProps {
 const DashBoardFiveWeeks = ({ data = [0, 0, 0, 0, 0] }: DashBoardFiveWeeksProps) => {
   const currentMonth = getCurrentMonth();
   const renderComparison = () => {
-    if (data.length >= 2) {
-      const thisWeek = data[data.length - 1];
-      const lastWeek = data[data.length - 2];
-      const difference = thisWeek - lastWeek;
+    const thisWeek = data[data.length - 1];
+    const lastWeek = data[data.length - 2];
+    const difference = thisWeek - lastWeek;
+    if (thisWeek !== 0 && lastWeek !== 0) {
       switch (true) {
         // 증가
         case difference > 0:
@@ -36,8 +36,6 @@ const DashBoardFiveWeeks = ({ data = [0, 0, 0, 0, 0] }: DashBoardFiveWeeksProps)
             </div>
           );
       }
-    } else {
-      return null;
     }
   };
   const getWeeksLabel = (length: number): string[] => {

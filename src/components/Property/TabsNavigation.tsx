@@ -23,6 +23,7 @@ const TabsNavigation = ({ marketingFiles }: { marketingFiles: number }) => {
         to="areasTab"
         spy={true}
         smooth={true}
+        duration={300}
         offset={isDesktop ? -166 : isTablet ? -52 : -60}
         activeClass="active-tab"
         className="grow flex justify-center">
@@ -40,6 +41,7 @@ const TabsNavigation = ({ marketingFiles }: { marketingFiles: number }) => {
         to="benefitTab"
         spy={true}
         smooth={true}
+        duration={300}
         offset={isDesktop ? -166 : isTablet ? -50 : -60}
         activeClass="active-tab"
         className="grow flex justify-center">
@@ -57,6 +59,7 @@ const TabsNavigation = ({ marketingFiles }: { marketingFiles: number }) => {
         to="infraTab"
         spy={true}
         smooth={true}
+        duration={300}
         offset={isDesktop ? -166 : isTablet ? -50 : -60}
         activeClass="active-tab"
         className="grow flex justify-center">
@@ -74,6 +77,7 @@ const TabsNavigation = ({ marketingFiles }: { marketingFiles: number }) => {
         to="propertyTab"
         spy={true}
         smooth={true}
+        duration={300}
         offset={isDesktop ? -160 : isTablet ? -50 : -58}
         activeClass="active-tab"
         className="grow flex justify-center">
@@ -92,6 +96,7 @@ const TabsNavigation = ({ marketingFiles }: { marketingFiles: number }) => {
           to="detailsTab"
           spy={true}
           smooth={true}
+          duration={300}
           offset={isDesktop ? -160 : isTablet ? -50 : -56}
           activeClass="active-tab"
           className="grow flex justify-center">
@@ -110,6 +115,7 @@ const TabsNavigation = ({ marketingFiles }: { marketingFiles: number }) => {
         to="locationTab"
         spy={true}
         smooth={true}
+        duration={300}
         offset={isDesktop ? -158 : isTablet ? -48 : -54}
         activeClass="active-tab"
         className="grow flex justify-center">

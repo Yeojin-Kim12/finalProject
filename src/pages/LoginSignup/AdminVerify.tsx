@@ -22,7 +22,7 @@ export default function AdminVerify() {
     <main className="flex w-full justify-center">
       <section className="flex flex-col max-w-[1536px] py-[80px] justify-center gap-y-16">
         <article className="flex justify-center">
-          <h1 className="font-pretendard font-bold text-heading-lg mobile:text-heading-sm">담당자 인증</h1>
+          <h1 className=" font-bold text-heading-lg mobile:text-heading-sm">담당자 인증</h1>
         </article>
 
         <article className="flex flex-col w-[720px] gap-y-9">
@@ -30,15 +30,15 @@ export default function AdminVerify() {
             <Input key={index} title={field.title} placeholder={field.placeholder} />
           ))}
           <div className="flex">
-            <label className="flex-col font-pretendard font-bold text-title-base">
+            <label className="flex-col  font-bold text-title-base">
               <span className="inline-block my-5">매물 증명</span>
               <div className="flex gap-4">
                 <input className="hidden" type="file" ref={fileInputRef} />
-                <div className="w-[589px] h-[53px] px-4 py-3 border rounded-5 font-pretendard font-normal text-label-lg text-neutral-40">
+                <div className="w-[589px] h-[53px] px-4 py-3 border rounded-5  font-normal text-label-lg text-neutral-40">
                   매물 증명을 위한 파일을 첨부해주세요
                 </div>
                 <button
-                  className="w-[119px] h-[53px] px-4 py-3 border rounded-5 font-pretendard font-bold text-primary-50"
+                  className="w-[119px] h-[53px] px-4 py-3 border rounded-5  font-bold text-primary-50"
                   onClick={handleFileBtnClick}>
                   파일 첨부
                 </button>

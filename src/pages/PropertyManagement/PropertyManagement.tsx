@@ -25,23 +25,27 @@ export default function PropertyManagement() {
   if (error) return <div>Error loading properties</div>;
 
   return (
-    <main className="flex">
-      <section className="container mx-auto py-10 ">
+    <>
+      <div className="w-[1200px] mx-auto">
         <Breadcrumb links={['마이페이지', '매물관리']} />
-        <h1 className="w-full py-3 px-6 mb-11 text-center text-heading-lg font-bold ">매물관리</h1>
+      </div>
+      <main className="flex">
+        <section className="container mx-auto py-10 ">
+          <h1 className="w-full py-3 px-6 mb-11 text-center text-heading-lg font-bold ">매물관리</h1>
 
-        {/* 이 위치에 매물 카드 들어갑니다. */}
-        {myPropertyData.length === 0 ? (
-          <div className="flex h-[412px] items-center">
-            <NoProperty />
-          </div>
-        ) : (
-          <PropertyManagementCard />
-        )}
+          {/* 이 위치에 매물 카드 들어갑니다. */}
+          {myPropertyData.length === 0 ? (
+            <div className="flex h-[412px] items-center">
+              <NoProperty />
+            </div>
+          ) : (
+            <PropertyManagementCard />
+          )}
 
-        {/* 매물 리스트 테이블 */}
-        <MyPropertyTable columns={columnsMyProperty} data={myPropertyData} />
-      </section>
-    </main>
+          {/* 매물 리스트 테이블 */}
+          <MyPropertyTable columns={columnsMyProperty} data={myPropertyData} />
+        </section>
+      </main>
+    </>
   );
 }

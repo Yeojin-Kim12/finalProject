@@ -530,21 +530,21 @@ const handlers = [
       openList: [
         {
           propertyId: 2,
-          propertyName: '건물 2',
+          propertyName: '수서역 어쩌구저쩌구',
         },
         {
           propertyId: 1,
-          propertyName: '건물 1',
+          propertyName: '반포 자이',
         },
       ],
       closedList: [
         {
           propertyId: 3,
-          propertyName: '건물 3',
+          propertyName: '대명자이그랜드시티',
         },
         {
           propertyId: 4,
-          propertyName: '건물 4',
+          propertyName: '북수원이목지구디에트르더리체1',
         },
       ],
     });
@@ -563,6 +563,122 @@ const handlers = [
       },
       { status: 200 },
     );
+  }),
+  http.get('/api/admin/dashboard/properties', ({ request }) => {
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page') ?? '0', 10);
+    const size = parseInt(url.searchParams.get('size') ?? '5', 10);
+    const allContents = [
+      {
+        propertyName: '건물 1',
+        pending: 10,
+        all: 20,
+      },
+      {
+        propertyName: '건물 2',
+        pending: 30,
+        all: 40,
+      },
+      {
+        propertyName: '건물 3',
+        pending: 70,
+        all: 80,
+      },
+      {
+        propertyName: '건물 4',
+        pending: 10,
+        all: 10,
+      },
+      {
+        propertyName: '건물 5',
+        pending: 23,
+        all: 45,
+      },
+      {
+        propertyName: '건물 6',
+        pending: 42,
+        all: 23,
+      },
+      {
+        propertyName: '건물 7',
+        pending: 32,
+        all: 43,
+      },
+      {
+        propertyName: '건물 8',
+        pending: 23,
+        all: 13,
+      },
+      {
+        propertyName: '건물 5',
+        pending: 23,
+        all: 45,
+      },
+      {
+        propertyName: '건물 6',
+        pending: 42,
+        all: 23,
+      },
+      {
+        propertyName: '건물 7',
+        pending: 32,
+        all: 43,
+      },
+      {
+        propertyName: '건물 8',
+        pending: 23,
+        all: 13,
+      },
+      {
+        propertyName: '건물 5',
+        pending: 23,
+        all: 45,
+      },
+      {
+        propertyName: '건물 6',
+        pending: 42,
+        all: 23,
+      },
+      {
+        propertyName: '건물 7',
+        pending: 32,
+        all: 43,
+      },
+      {
+        propertyName: '건물 8',
+        pending: 23,
+        all: 13,
+      },
+      {
+        propertyName: '건물 5',
+        pending: 23,
+        all: 45,
+      },
+      {
+        propertyName: '건물 6',
+        pending: 42,
+        all: 23,
+      },
+      {
+        propertyName: '건물 7',
+        pending: 32,
+        all: 43,
+      },
+      {
+        propertyName: '건물 8',
+        pending: 23,
+        all: 13,
+      },
+    ];
+    const startIndex = page * size;
+    const pagedContents = allContents.slice(startIndex, startIndex + size);
+    return HttpResponse.json({
+      totalPages: Math.ceil(allContents.length / size),
+      pageSize: size,
+      currentPage: page,
+      contents: pagedContents,
+      totalElements: allContents.length,
+    });
   }),
 ];
 

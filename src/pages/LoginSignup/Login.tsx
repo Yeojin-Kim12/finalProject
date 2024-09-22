@@ -9,7 +9,6 @@ import { EyeClosed, Eye } from '@phosphor-icons/react';
 import PageHeader from '@/components/common/PageHeader';
 import { BASE_URL } from '@/lib/constants';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
@@ -50,19 +49,6 @@ export default function Login() {
       );
       console.log(res);
       if (res.data.body !== null) {
-        const { accessToken, refreshToken } = res.data;
-        const setCookie = (name: string, value: string, days: number) => {
-          Cookies.set(name, value, {
-            expires: days,
-            path: '/',
-            secure: true,
-            sameSite: 'None',
-          });
-        };
-        setCookie('accessToken', accessToken, 2);
-        setCookie('refreshToken', refreshToken, 2);
-        Cookies.remove('accessToken');
-        Cookies.remove('refreshToken');
         window.location.replace('/');
       } else {
         setError('root', {

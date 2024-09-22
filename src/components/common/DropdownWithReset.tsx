@@ -10,6 +10,7 @@ interface DropdownProps {
   onSelect: (value: string) => void;
   buttonWidth?: string;
   value?: string;
+  buttonClassName?: string;
 }
 
 export default function DropdownWithReset({
@@ -18,6 +19,7 @@ export default function DropdownWithReset({
   onSelect,
   buttonWidth,
   value,
+  buttonClassName,
 }: DropdownProps) {
   const [open, setOpen] = React.useState(false);
   // const [value, setValue] = React.useState('');
@@ -32,7 +34,7 @@ export default function DropdownWithReset({
           size="lg"
           role="combobox"
           aria-expanded={open}
-          className={`font-pretendard font-normal text-label-lg !text-static-default justify-center ${buttonWidth}`}>
+          className={` font-normal text-label-lg !text-static-default justify-center ${buttonWidth} ${buttonClassName}`}>
           {selectedItem ? selectedItem.label : defaultLabel}
           {open ? (
             <CaretUp className="ml-4 h-7 w-7 shrink-0 text-static-default transition-transform duration-200" />
@@ -45,22 +47,23 @@ export default function DropdownWithReset({
         <Command>
           <CommandList>
             <CommandEmpty>No framework found.</CommandEmpty>
-            <CommandGroup>
+            <CommandGroup className="w-full">
               {items.map((item) => (
                 <CommandItem
                   key={item.value}
                   value={item.value}
-                  onSelect={(currentValue) => {
-                    if (currentValue === value) {
+                  onSelect={() => {
+                    if (item.value === value) {
                       // If the current value is already selected, reset
                       onSelect('');
                     } else {
                       // Set the selected value
-                      onSelect(currentValue);
+                      onSelect(item.value);
                     }
                     setOpen(false);
-                    onSelect(currentValue);
-                  }}>
+                    onSelect(item.value);
+                  }}
+                  className="cursor-pointer">
                   {item.label}
                 </CommandItem>
               ))}
@@ -69,7 +72,6 @@ export default function DropdownWithReset({
                 onSelect={() => {
                   onSelect(''); // Reset the value
                   setOpen(false);
-                  onSelect(''); // Call onSelect with an empty string to indicate reset
                 }}>
                 <ArrowClockwise size={16} weight="light" />
                 초기화
