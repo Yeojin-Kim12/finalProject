@@ -96,8 +96,6 @@ const DiscountInputField = ({ onClick, name }: DiscountInputFieldProps) => {
 
     // name을 사용해 keyword.input에 최소값과 최대값 저장
     if (name) {
-      console.log(name);
-
       (setValue as any)(`${name}.input1`, Number(minPercent));
       (setValue as any)(`${name}.input2`, Number(maxPercent));
     }
@@ -132,7 +130,6 @@ const DiscountInputField = ({ onClick, name }: DiscountInputFieldProps) => {
         );
   };
 
-  console.log(areaFields);
   return (
     <>
       <div className="flex mt-4 mb-7">

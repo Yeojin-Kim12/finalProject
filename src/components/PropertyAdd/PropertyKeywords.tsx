@@ -99,9 +99,6 @@ const PropertyKeywords = () => {
     });
   };
 
-  console.log(errors);
-  console.log(keywordFields);
-
   return (
     <div className="flex flex-col w-[720px] h-full m-auto">
       <section className="flex flex-col gap-9">

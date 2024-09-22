@@ -91,7 +91,6 @@ const PropertySearch = () => {
       },
       withCredentials: true,
     });
-    console.log(res.data);
 
     return res.data;
   };
@@ -245,7 +244,7 @@ const PropertySearch = () => {
       {isLoading ? (
         <SkeletonSelectedList />
       ) : (
-        <section className="w-full max-w-[1200px]">
+        <section className="w-full max-w-[1200px] tablet:px-7 mobile:px-5">
           <div id="list" className="mb-5">
             <p className="text-title-2xl tablet:text-title-lg mobile:text-title-lg-m font-bold">전체 목록</p>
             <p className="text-detail-lg tablet:text-detail-base mobile:text-detail-base-m">

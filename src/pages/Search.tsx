@@ -35,7 +35,6 @@ const Search = () => {
       },
       withCredentials: true,
     });
-    console.log(res.data);
 
     return res.data;
   };

@@ -69,7 +69,6 @@ const PropertyDetail = () => {
         : `${BASE_URL}/api/common/properties/${id}`;
 
     const res = await axios.get<SalesInformation>(url, { withCredentials: true });
-    console.log(res.data);
 
     return res.data;
   };

@@ -50,7 +50,6 @@ function Layout() {
     };
     fetchGnb();
   }, [setLoginData]);
-  console.log(loginData);
 
   if (loading) {
     // 새로고침 시 리코일보다 먼저 실행 방지

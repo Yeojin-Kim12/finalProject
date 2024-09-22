@@ -18,7 +18,6 @@ const PropertyManagementCard = () => {
       },
       withCredentials: true,
     });
-    console.log(res);
     return res.data;
   };
 

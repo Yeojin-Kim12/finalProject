@@ -26,7 +26,6 @@ const postProperty = async (property: any) => {
     const response = await axios.post(`${BASE_URL}/api/admin/properties`, property, {
       withCredentials: true,
     });
-    console.log('서버 응답:', response.data.property);
     return response.data.property;
   } catch (error: any) {
     if (error.response) {
