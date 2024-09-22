@@ -58,7 +58,6 @@ const SignUpMember = () => {
   }, [step, navigate]);
 
   const onSubmit = async (data: any) => {
-    console.log('data', data);
     const isValid = await methods.trigger([
       'name',
       'email',
@@ -80,7 +79,6 @@ const SignUpMember = () => {
           },
         },
       );
-      console.log(res);
       if (typeof res.data === 'string') {
         navigate('/signup-completed', { state: { name: data.name, type: 'member' } });
       } else {

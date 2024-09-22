@@ -31,7 +31,6 @@ const SignUpAdminStep3 = () => {
   // 파일첨부
   const handlePdfFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
 
     if (file && file.type === 'application/pdf') {
       const fileType = 'HOUSING';
@@ -45,7 +44,6 @@ const SignUpAdminStep3 = () => {
       // 새로운 파일 업로드
       const uploadedUrls = await uploadToServer([file], fileType);
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-        console.log('업로드된 파일 URL:', uploadedUrls[0]);
         const url = getUsableFileUrl(uploadedUrls[0], fileType, file.name);
         appendHousingFile({
           name: file.name,

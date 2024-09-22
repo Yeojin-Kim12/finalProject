@@ -92,18 +92,6 @@ const SignUpAdmin = () => {
       registrationFile,
     } = data;
     const fullAddress = `${address} ${addressDetail}`;
-    const test = {
-      name,
-      email,
-      password,
-      phoneNumber,
-      companyName,
-      address: fullAddress,
-      registrationFile: registrationFile[0],
-      business,
-      housingFile: housingFile[0],
-    };
-    console.log(test);
     if (isValid) {
       const res = await axios.post(
         `${BASE_URL}/api/auth/admin-signup`,

@@ -46,7 +46,7 @@ const SignUpAdminStep2 = () => {
         },
       },
     );
-    console.log(res);
+
     if (typeof res.data === 'string') {
       setValue('isSendCode', true);
       setIsSendCode(true);
@@ -73,7 +73,7 @@ const SignUpAdminStep2 = () => {
         },
       },
     );
-    console.log(res);
+
     if (typeof res.data === 'string') {
       setValue('isVerifyCode', true);
       setIsVerifyCode(true);
@@ -81,7 +81,7 @@ const SignUpAdminStep2 = () => {
     } else {
       setValue('isVerifyCode', false);
       const errorMessage = res.data.result.resultMessage;
-      console.log(errorMessage);
+
       setError('certificationCode', { type: 'codeError', message: errorMessage });
     }
   };
@@ -96,7 +96,6 @@ const SignUpAdminStep2 = () => {
   }, [getValues]);
   const handlePdfFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
 
     if (file && file.type === 'application/pdf') {
       const fileType = 'REGISTRATION';
@@ -108,7 +107,6 @@ const SignUpAdminStep2 = () => {
       const uploadedUrls = await uploadToServer([file], fileType);
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
         const url = getUsableFileUrl(uploadedUrls[0], fileType, file.name);
-        console.log(url);
         appendRegistrationFile({
           name: file.name,
           url: url,

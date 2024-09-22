@@ -23,14 +23,12 @@ const SignUpMemberStep2 = () => {
         },
       },
     );
-    console.log(res);
     if (typeof res.data === 'string') {
       setValue('isVerifyEmail', true);
       setError('email', { type: 'emailSuccess', message: res.data });
       setIsVerifyEmail(true);
     } else {
       const errorMessage = res.data.result.resultMessage;
-      console.log(errorMessage);
       setError('email', { type: 'emailError', message: errorMessage });
     }
   };
@@ -48,7 +46,6 @@ const SignUpMemberStep2 = () => {
         },
       },
     );
-    console.log(res);
     if (typeof res.data === 'string') {
       setValue('isSendCode', true);
       setError('phoneNumber', { type: 'phoneNumberSuccess', message: res.data });
@@ -75,14 +72,12 @@ const SignUpMemberStep2 = () => {
         },
       },
     );
-    console.log(res);
     if (typeof res.data === 'string') {
       setValue('isVerifyCode', true);
       setError('certificationCode', { type: 'codeSuccess', message: res.data });
       setIsVerifyCode(true);
     } else {
       const errorMessage = res.data.result.resultMessage;
-      console.log(errorMessage);
       setError('certificationCode', { type: 'codeError', message: errorMessage });
     }
   };
