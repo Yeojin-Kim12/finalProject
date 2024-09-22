@@ -87,7 +87,6 @@ const SignUpInputValidation = React.forwardRef<HTMLInputElement, SignUpInputVali
             field.onChange(e);
             const isValid = await trigger(name);
             if (!isValid) {
-              console.log(fieldState.error?.message);
               setIsValid(false);
               setIsMessage(fieldState.error?.message || errorMessage);
             } else {

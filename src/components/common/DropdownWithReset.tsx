@@ -53,13 +53,6 @@ export default function DropdownWithReset({
                   key={item.value}
                   value={item.value}
                   onSelect={() => {
-                    if (item.value === value) {
-                      // If the current value is already selected, reset
-                      onSelect('');
-                    } else {
-                      // Set the selected value
-                      onSelect(item.value);
-                    }
                     setOpen(false);
                     onSelect(item.value);
                   }}
@@ -68,9 +61,9 @@ export default function DropdownWithReset({
                 </CommandItem>
               ))}
               <CommandItem
-                className="flex items-center text-label-s gap-3 bg-assistive-base border-t-2"
+                className="flex items-center text-label-s gap-3 bg-assistive-base border-t-2 cursor-pointer"
                 onSelect={() => {
-                  onSelect(''); // Reset the value
+                  onSelect(items[0].value); // Reset the value
                   setOpen(false);
                 }}>
                 <ArrowClockwise size={16} weight="light" />
