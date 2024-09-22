@@ -18,37 +18,36 @@ export const propertyAddSchema = z.object({
   modelhouseAddr: z.string().min(1, '모델하우스 주소를 입력해주세요'),
   areas: z
     .array(
-      z
-        .object({
-          squareMeter: z.preprocess((val) => parseFloat(val as string), z.number().min(0).optional()),
-          price: z.preprocess(
-            (val) => (val === '' ? 0 : parseFloat(val as string)),
-            z.number().min(1, '가격은 0 이상이어야 합니다'),
-          ),
-          discountPercent: z.preprocess(
-            (val) => (val === '' ? 0 : parseFloat(val as string)),
-            z.number().min(0).max(100, '100% 이하이어야 합니다'),
-          ),
-          discountPrice: z.preprocess(
-            (val) => (val === '' ? undefined : parseFloat(val as string)),
-            z.number().min(0).optional(),
-          ),
-        })
-        .refine(
-          (area) => {
-            // discountPrice가 빈 값이면 price 값 설정
-            if (area.discountPrice === undefined || isNaN(area.discountPrice)) {
-              area.discountPrice = area.price;
-              return true;
-            }
-            // 가격 유효성 검사
-            return area.discountPrice <= area.price;
-          },
-          {
-            message: '할인가는 평형별 가격보다 높을 수 없습니다',
-            path: ['discountPrice'],
-          },
+      z.object({
+        squareMeter: z.preprocess((val) => parseFloat(val as string), z.number().min(0).optional()),
+        price: z.preprocess(
+          (val) => (val === '' ? 0 : parseFloat(val as string)),
+          z.number().min(1, '가격은 0 이상이어야 합니다'),
         ),
+        discountPercent: z.preprocess(
+          (val) => (val === '' || val === null ? 0 : parseFloat(val as string)),
+          z.number().min(0).max(100, '100% 이하이어야 합니다').nullable(),
+        ),
+        discountPrice: z.preprocess(
+          (val) => (val === '' || val === null ? undefined : parseFloat(val as string)),
+          z.number().min(0).optional().nullable(),
+        ),
+      }),
+      // .refine(
+      //   (area) => {
+      //     // discountPrice가 빈 값이면 price 값 설정
+      //     if (area.discountPrice === undefined || isNaN(area.discountPrice)) {
+      //       area.discountPrice = area.price;
+      //       return true;
+      //     }
+      //     // 가격 유효성 검사
+      //     return area.discountPrice <= area.price;
+      //   },
+      //   {
+      //     message: '할인가는 평형별 가격보다 높을 수 없습니다',
+      //     path: ['discountPrice'],
+      //   },
+      // ),
     )
     .min(1, '세대면적을 입력해주세요'),
   files: z
@@ -126,8 +125,13 @@ export const propertyAddSchema = z.object({
       name: z.string(),
       type: z.string(),
       input: z.union([
-        z.string().nonempty('입력해주세요'),
-        z.array(z.object({})).nonempty('입력추가해주세요.'),
+        z.string().nonempty('입력해주세요'), // 단순 string일 경우
+        z
+          .object({
+            input1: z.union([z.string(), z.number()]), // input1은 string 또는 number
+            input2: z.union([z.string(), z.number()]), // input2도 string 또는 number
+          })
+          .optional(), // object로 들어올 경우
       ]),
     }),
   ),

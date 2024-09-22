@@ -23,6 +23,8 @@ export const PropertyInformation = () => {
   setValue('propertyType', 'APARTMENT');
   setValue('salesType', 'PRIVATE_SALE');
 
+  console.log(errors);
+
   // Daum 주소 API
   const postcodeUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
   const postcodeOpen = useDaumPostcodePopup(postcodeUrl);
@@ -71,8 +73,8 @@ export const PropertyInformation = () => {
       appendArea({
         squareMeter: householdArea,
         price: 0,
-        discountPercent: 0,
-        discountPrice: 0,
+        discountPercent: null,
+        discountPrice: null,
       });
       setValue('propertyHouseholdArea', '');
     }

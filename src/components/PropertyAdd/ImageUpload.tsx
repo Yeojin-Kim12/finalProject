@@ -3,7 +3,7 @@ import { useFormContext, useFieldArray } from 'react-hook-form';
 import { FilePlus } from '@phosphor-icons/react';
 import { Tag } from '../ui/tag';
 import { useFileUpload } from '@/hooks/useFileUpload';
-import { getUsableImageUrl } from '@/lib/utils';
+import { getUsableFileUrl } from '@/lib/utils';
 
 export const ImageUpload = () => {
   const {
@@ -27,7 +27,7 @@ export const ImageUpload = () => {
   useEffect(() => {
     const existingFile = getValues('files')?.find((file: any) => file.type === 'PROPERTY_IMAGE');
     if (existingFile) {
-      setImageSrc(getUsableImageUrl(existingFile.url));
+      setImageSrc(existingFile.url);
       setImageName(existingFile.name);
     }
   }, []);
@@ -45,10 +45,10 @@ export const ImageUpload = () => {
         const uploadedUrls = await uploadToServer([file], 'PROPERTY_IMAGE');
 
         if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-          console.log('업로드된 파일 URL:', decodeURI(uploadedUrls[0]));
+          console.log('업로드된 파일 URL:', getUsableFileUrl(uploadedUrls[0], 'PROPERTY_IMAGE', file.name));
           appendFile({
             name: file.name,
-            url: decodeURI(uploadedUrls[0]),
+            url: getUsableFileUrl(uploadedUrls[0], 'PROPERTY_IMAGE', file.name),
             type: 'PROPERTY_IMAGE',
           });
         }

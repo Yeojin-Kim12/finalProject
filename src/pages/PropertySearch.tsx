@@ -61,6 +61,8 @@ const PropertySearch = () => {
     householdNumberSelectedIds: [1],
   });
 
+  console.log('1', selectedFilters);
+
   const fetchPropertySearch = async (page: number, size: number) => {
     const keyword = [...benefit, ...infra].join(',');
     const res = await axios.get(`${BASE_URL}/api/common/properties/filter`, {
@@ -292,6 +294,7 @@ const PropertySearch = () => {
                       benefit={property.benefit}
                       price={property.price}
                       discountPrice={property.discountPrice}
+                      discountPercent={property.discountPercent}
                       like={property.like}
                       onLikeToggle={() => property.id}
                     />

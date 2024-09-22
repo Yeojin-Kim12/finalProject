@@ -44,53 +44,22 @@ const GNB = () => {
     setIsLnbMenuOpen(false);
   };
 
-  useEffect(() => {
-    if (loginData.isLoggedIn === null) {
-      fetchGnb();
-    }
-  }, [loginData.isLoggedIn]);
-
-  const fetchGnb = async () => {
-    try {
-      const adminRes = await axios.get(`${BASE_URL}/api/admin/my-information`, {
-        withCredentials: true,
-      });
-      setLoginData({
-        isLoggedIn: true,
-        userInfo: {
-          name: adminRes.data.name,
-          role: adminRes.data.role,
-        },
-      });
-      return adminRes.data;
-    } catch (adminError) {
-      try {
-        const memberRes = await axios.get(`${BASE_URL}/api/member/my-information`, {
-          withCredentials: true,
-        });
-        setLoginData({
-          isLoggedIn: true,
-          userInfo: {
-            name: memberRes.data.name,
-            role: memberRes.data.role,
-          },
-        });
-        return memberRes.data;
-      } catch (memberError) {
-        setLoginData({
-          isLoggedIn: false,
-          userInfo: null,
-        });
-        return null;
-      }
-    }
-  };
+  // useEffect(() => {
+  //   if (loginData.isLoggedIn === null) {
+  //     console.log('gnb: ', loginData);
+  //   }
+  // }, [loginData.isLoggedIn]);
 
   const handleLogout = async () => {
     try {
-      await axios.get(`${BASE_URL}/api/auth/logout`, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${BASE_URL}/api/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+          maxRedirects: 0,
+        },
+      );
       setLoginData({
         isLoggedIn: false,
         userInfo: null,
@@ -99,7 +68,7 @@ const GNB = () => {
       console.error('Logout failed', error);
     }
 
-    window.location.replace('/');
+    // window.location.replace('/');
   };
 
   const adminLinks = [

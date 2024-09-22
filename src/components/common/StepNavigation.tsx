@@ -14,11 +14,11 @@ const StepNavigation = ({ next, back, isLastStep, lastLabel }: StepNavigationPro
         이전
       </Button>
       {isLastStep ? (
-        <Button type="submit" className="w-full">
+        <Button type="button" onClick={next} className="w-full">
           {lastLabel}
         </Button>
       ) : (
-        <Button onClick={next} className="w-full">
+        <Button type="button" onClick={next} className="w-full">
           다음
         </Button>
       )}

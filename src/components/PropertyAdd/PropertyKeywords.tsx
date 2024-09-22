@@ -9,10 +9,14 @@ import GuaranteedInputField from './KeywordInputField/GuaranteedInputField';
 import CashInputField from './KeywordInputField/CashInputField';
 import BalanceInputField from './KeywordInputField/BalanceInputField';
 import DiscountInputField from './KeywordInputField/DiscountInputField';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 const PropertyKeywords = () => {
-  const { control, getValues } = useFormContext<FormValues>();
+  const {
+    control,
+    getValues,
+    formState: { errors },
+  } = useFormContext<FormValues>();
 
   const {
     fields: keywordFields,
@@ -23,6 +27,19 @@ const PropertyKeywords = () => {
     control,
     name: 'keywords',
   });
+
+  useEffect(() => {
+    keywordFields.forEach((field, index) => {
+      const inputFieldValue = getValues(`keywords.${index}.input`);
+      if (inputFieldValue !== field.input) {
+        updateKeyword(index, {
+          ...field,
+          input: inputFieldValue,
+        });
+      }
+    });
+  }, [keywordFields, getValues, updateKeyword]);
+
   const benefitComponentMap: Record<string, (props: any) => ReactNode> = {
     DISCOUNT_SALE: DiscountInputField,
     BALANCE_DEFERRAL: BalanceInputField,
@@ -81,6 +98,9 @@ const PropertyKeywords = () => {
       }
     });
   };
+
+  console.log(errors);
+  console.log(keywordFields);
 
   return (
     <div className="flex flex-col w-[720px] h-full m-auto">

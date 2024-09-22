@@ -25,14 +25,14 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
     formState: { errors },
   } = useFormContext<FormValues>();
   const [discountSystem, setDiscountSystem] = useState<boolean>(getValues('discountSystem') || false);
-  const [discountInfo, setDiscountInfo] = useState<{ percent: number; price: number }[]>([]);
+  const [discountInfo, setDiscountInfo] = useState<{ percent: number | null; price: number | null }[]>([]);
 
   useEffect(() => {
     const areas = getValues('areas') || [];
 
     const initialDiscountInfo = areas.map((_: any, index: number) => ({
-      percent: getValues(`areas.${index}.discountPercent`) || 0,
-      price: getValues(`areas.${index}.discountPrice`) || 0,
+      percent: getValues(`areas.${index}.discountPercent`) || null,
+      price: getValues(`areas.${index}.discountPrice`) || null,
     }));
 
     setDiscountInfo(initialDiscountInfo);
@@ -45,8 +45,8 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
 
   const toggleDiscountSystem = (system: boolean) => {
     areaFields.forEach((_, index) => {
-      setValue(`areas.${index}.discountPrice`, 0);
-      setValue(`areas.${index}.discountPercent`, 0);
+      setValue(`areas.${index}.discountPrice`, null);
+      setValue(`areas.${index}.discountPercent`, null);
     });
 
     const newDiscountSystem = system;
@@ -59,14 +59,14 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
     const price = getValues(`areas.${index}.price`);
     let discountPercent = getValues(`areas.${index}.discountPercent`);
     let discountPrice = getValues(`areas.${index}.discountPrice`);
+    console.log(1);
 
     if (discountSystem) {
       // 할인가
-      if (discountPrice === 0) {
-        setValue(`areas.${index}.discountPercent`, 0);
-        setValue(`areas.${index}.discountPrice`, price);
-      } else {
-        // @ts-ignore: Unreachable code error
+      if (discountPrice === null && discountPercent === null) {
+        setValue(`areas.${index}.discountPercent`, null);
+        setValue(`areas.${index}.discountPrice`, null);
+      } else if (discountPrice !== null) {
         const calculatedPercent = Math.floor(parseFloat(((1 - discountPrice / price) * 100).toFixed(1)));
         setValue(`areas.${index}.discountPercent`, calculatedPercent);
         setValue(`areas.${index}.discountPrice`, discountPrice);
@@ -74,11 +74,10 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
       }
     } else {
       // 퍼센트
-      if (discountPercent === 0) {
-        setValue(`areas.${index}.discountPercent`, 0);
-        setValue(`areas.${index}.discountPrice`, price);
-      } else {
-        // @ts-ignore: Unreachable code error
+      if (discountPrice === null && discountPercent === null) {
+        setValue(`areas.${index}.discountPercent`, null);
+        setValue(`areas.${index}.discountPrice`, null);
+      } else if (discountPercent !== null) {
         const calculatedPrice = Math.floor(price * (1 - discountPercent / 100));
         setValue(`areas.${index}.discountPrice`, calculatedPrice);
         setValue(`areas.${index}.discountPercent`, discountPercent);
@@ -88,23 +87,31 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
 
     // discountInfo 배열 업데이트
     const updatedDiscountInfo = [...discountInfo];
-    // @ts-ignore: Unreachable code error
     updatedDiscountInfo[index] = { percent: discountPercent, price: discountPrice };
     setDiscountInfo(updatedDiscountInfo);
   };
 
+  const handleClearDiscount = () => {
+    areaFields.forEach((_, index) => {
+      setValue(`areas.${index}.discountPrice`, null);
+      setValue(`areas.${index}.discountPercent`, null);
+    });
+    setDiscountInfo([]);
+    onClick();
+  };
+
   const displayCalculateInfo = (index: number) => {
-    const discountPercent = discountInfo[index]?.percent || 0;
-    const discountPrice = discountInfo[index]?.price || 0;
+    const discountPercent = discountInfo[index]?.percent || null;
+    const discountPrice = discountInfo[index]?.price || null;
     return discountSystem
-      ? discountPrice !== 0 && (
+      ? discountPrice !== null && (
           <div className="flex items-center gap-3 text-label-lg text-accent-strong ">
             <span>할인율</span>
             <div className="w-[1px] h-5 bg-assistive-divider"></div>
             <span>{discountPercent}%</span>
           </div>
         )
-      : discountPercent !== 0 && (
+      : discountPercent !== null && (
           <div className="flex items-center gap-3 text-label-lg text-accent-strong">
             <span>할인 분양가</span>
             <div className="w-[1px] h-5 bg-assistive-divider"></div>
@@ -112,6 +119,8 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
           </div>
         );
   };
+
+  console.log(areaFields);
   return (
     <>
       <div className="flex mt-4 mb-7">
@@ -129,7 +138,7 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
               %
             </div>
           </div>
-          <div className="size-8" onClick={onClick}>
+          <div className="size-8" onClick={handleClearDiscount}>
             <X weight="light" className="size-8 cursor-pointer text-assistive-default" />
           </div>
         </div>

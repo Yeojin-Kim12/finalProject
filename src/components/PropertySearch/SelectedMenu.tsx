@@ -52,29 +52,23 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
       React.SetStateAction<{ min: number | undefined | null; max: number | undefined | null }>
     >;
     let selectedIdsSetter: React.Dispatch<React.SetStateAction<number[]>> = setPriceSelectedIds;
-    let maxTabValue = 0;
 
     if (activeTab === 'price') {
       rangeSetter = setPriceRange;
       selectedIdsSetter = setPriceSelectedIds;
-      maxTabValue = 70000;
     } else if (activeTab === 'squareMeter') {
       rangeSetter = setSquareMeterRange;
       selectedIdsSetter = setSquareMeterSelectedIds;
-      maxTabValue = 80;
     } else if (activeTab === 'householdNumber') {
       rangeSetter = setHouseholdNumberRange;
       selectedIdsSetter = setHouseholdNumberSelectedIds;
-      maxTabValue = 6000;
     }
 
     selectedIdsSetter((prevIds) => {
-      // 전체 버튼 클릭 시 : 0 ~ Tab의 Max값
       if (id === 1) {
-        rangeSetter({ min: 0, max: maxTabValue });
+        rangeSetter({ min: undefined, max: undefined });
         return [1];
       }
-      // id = 2 버튼 클릭 시 : 0 ~ id = 2의 값
       if (id === 2) {
         rangeSetter({ min: 0, max: value });
         return [2];
@@ -83,17 +77,14 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
         rangeSetter({ min: value, max: null });
         return [10];
       }
-      // 이미 선택된 버튼을 다시 클릭 불가
       if (prevIds.includes(id)) {
         return prevIds;
       }
 
-      // 첫 번째 클릭 (id = 1 or 2 선택 후 버튼 클릭 시 포함) : min 설정
       if (prevIds.length === 0 || prevIds.includes(1) || prevIds.includes(2) || prevIds.includes(10)) {
-        rangeSetter({ min: value, max: null });
+        rangeSetter({ min: value, max: undefined });
         return [id];
       }
-      // 두 번째 클릭: min, max 설정
       if (prevIds.length === 1) {
         rangeSetter((prevRange) => {
           if (value < prevRange.min!) {
@@ -105,8 +96,7 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
         return [...prevIds, id];
       }
 
-      // 이미 두 개의 버튼이 선택된 경우: 새로 클릭된 버튼을 min으로 설정
-      rangeSetter({ min: value, max: null });
+      rangeSetter({ min: value, max: undefined });
       return [id];
     });
   };
@@ -142,7 +132,6 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
   };
 
   const handleSquareMeterToggle = () => {
-    // 제곱미터 토글 버튼을 눌렀을 때 input 값 변환
     setIsSquareMeterToggle((prevToggle) => {
       const newToggle = !prevToggle;
       setSquareMeterRange((prevRange) => {
@@ -167,7 +156,7 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
     if (activeTab === 'price') return priceRange;
     if (activeTab === 'squareMeter') return squareMeterRange;
     if (activeTab === 'householdNumber') return householdNumberRange;
-    return { min: null, max: null };
+    return { min: undefined, max: undefined };
   };
 
   const getCurrentSelectedIds = () => {
@@ -177,16 +166,16 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
     return [];
   };
 
-  const currentRange = getCurrentRange(); // 현재 선택된 Tab의 범위 값
-  const selectedIds = getCurrentSelectedIds(); // 현재 선택된 Tab의 button Id
+  const currentRange = getCurrentRange();
+  const selectedIds = getCurrentSelectedIds();
 
   const handleReset = () => {
-    setPriceRange({ min: 0, max: 70000 });
+    setPriceRange({ min: undefined, max: undefined });
     setPriceSelectedIds([1]);
-    setSquareMeterRange({ min: 0, max: 80 });
+    setSquareMeterRange({ min: undefined, max: undefined });
     setSquareMeterSelectedIds([1]);
     setIsSquareMeterToggle(false);
-    setHouseholdNumberRange({ min: 0, max: 6000 });
+    setHouseholdNumberRange({ min: undefined, max: undefined });
     setHouseholdNumberSelectedIds([1]);
   };
 
@@ -195,13 +184,11 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
     const validSquareMeterSelections = squareMeterSelectedIds.filter((id) => ![1, 2, 10].includes(id));
     const validHouseholdSelections = householdNumberSelectedIds.filter((id) => ![1, 2, 10].includes(id));
 
-    // 최소 또는 최대값이 입력되었는지 확인
-    const isPriceRangeValid = priceRange.min !== undefined || priceRange.max !== undefined;
-    const isSquareMeterRangeValid = squareMeterRange.min !== undefined || squareMeterRange.max !== undefined;
+    const isPriceRangeValid = priceRange.min !== undefined && priceRange.max !== undefined;
+    const isSquareMeterRangeValid = squareMeterRange.min !== undefined && squareMeterRange.max !== undefined;
     const isHouseholdNumberRangeValid =
-      householdNumberRange.min !== undefined || householdNumberRange.max !== undefined;
+      householdNumberRange.min !== undefined && householdNumberRange.max !== undefined;
 
-    // ID가 2개 이상 선택되었거나, 값이 입력되었을 때 유효한 선택으로 간주
     const isValidPrice =
       validPriceSelections.length >= 2 ||
       isPriceRangeValid ||
@@ -221,7 +208,6 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
       householdNumberSelectedIds.includes(2) ||
       householdNumberSelectedIds.includes(10);
 
-    // 각 탭에서 조건을 만족하는지 확인
     return isValidPrice && isValidSquareMeter && isValidHousehold;
   };
   const handleSubmit = () => {
@@ -319,7 +305,7 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
                   ? ''
                   : selectedIds.includes(2)
                     ? ''
-                    : currentRange.min !== null
+                    : currentRange.min
                       ? currentRange.min
                       : ''
               }
@@ -340,7 +326,7 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
                   ? ''
                   : selectedIds.includes(10)
                     ? ''
-                    : currentRange.max !== null
+                    : currentRange.max
                       ? currentRange.max
                       : ''
               }

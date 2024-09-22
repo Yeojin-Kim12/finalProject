@@ -21,6 +21,7 @@ const steps = ['매물정보 입력', '추가사항 입력', '키워드 선택',
 
 const postProperty = async (property: any) => {
   const response = await axios.post('/api/admin/properties', property);
+  console.log(response.data);
   return response.data.property;
 };
 
@@ -50,26 +51,6 @@ const PropertyAdd = () => {
     step3: ['keywords', 'areas'],
     step4: [],
   };
-
-  // const handleNextStep = async (nextStep: string) => {
-  //   const stepIndex = steps.indexOf(nextStep);
-  //   const fieldsToValidate = validationFields[`step${stepIndex}` as keyof typeof validationFields];
-  //   const isValid = await methods.trigger(fieldsToValidate);
-  //   step1: [
-  //   'propertyName',
-  //   'propertyConstructor',
-  //   'propertyCompanyName',
-  //   'propertyTotalNumber',
-  //   'propertyRecruitmentDate',
-  //   'areas',
-  //   'propertyAreaAddr',
-  //   'propertyModelhouseAddr',
-  //   ],
-  //   step2: ['phoneNumber', 'homepage', 'contactChannel'],
-  //   step3: ['keywords', 'areas'],
-  //   step4: [],
-  // };
-
   const nextStep = useCallback(async () => {
     let isValid = true;
 
@@ -78,10 +59,13 @@ const PropertyAdd = () => {
     if (fieldsToValidate && fieldsToValidate.length > 0) {
       isValid = await methods.trigger(fieldsToValidate);
     }
-
     if (isValid) {
-      setStep(step + 1);
-      scrollToTop();
+      if (step === 3) {
+        methods.handleSubmit(onSubmit)();
+      } else {
+        setStep(step + 1);
+        scrollToTop();
+      }
     }
   }, [step, methods]);
 
@@ -104,7 +88,7 @@ const PropertyAdd = () => {
 
       mutate(formattedData, {
         onSuccess: () => {
-          setStep(3);
+          setStep(4);
         },
         onError: (error) => {
           console.log('실패:', error);
@@ -122,67 +106,7 @@ const PropertyAdd = () => {
     }
   }, [step, navigate]);
 
-  // const handleNextStep = async (currentStep: string, nextStep: string) => {
-  //   const stepIndex = steps.indexOf(currentStep);
-  //   const fieldsToValidate = validationFields[`step${stepIndex + 1}` as keyof typeof validationFields] || [];
-
-  //   const isValid = await methods.trigger(fieldsToValidate);
-
-  //   if (isValid) {
-  //     setStep(nextStep);
-  //   } else {
-  //     console.log('Validation failed');
-  //   }
-  // };
-
   return (
-    // <FormProvider {...methods}>
-    //   <form onSubmit={methods.handleSubmit(onSubmit)} className="w-[1200px] m-auto">
-    //     <Funnel>
-    //       <Step name="매물정보 입력">
-    //         <PropertyInformation onNext={() => handleNextStep(steps[1])} />
-    //       </Step>
-
-    //       <Step name="추가사항 입력">
-    //         <AdditionalInformation />
-    //         <div className="flex items-center justify-center w-full gap-5">
-    //           <Button
-    //             type="button"
-    //             variant="assistive"
-    //             className="w-[220px]"
-    //             onClick={() => setStep(steps[0])}>
-    //             이전
-    //           </Button>
-    //           <Button type="submit" className="w-[220px]" onClick={() => handleNextStep(steps[2])}>
-    //             다음
-    //           </Button>
-    //         </div>
-    //       </Step>
-    //       <Step name="키워드 선택">
-    //         <PropertyKeywords />
-    //         <Button type="button" onClick={() => setStep(steps[1])}>
-    //           이전
-    //         </Button>
-    //         <Button type="submit">등록하기</Button>
-    //       </Step>
-    //       <Step name="등록 완료">
-    //         <PropertyComplete />
-    //         <Button type="button" onClick={() => setStep(steps[2])}>
-    //           이전(삭제예정)
-    //         </Button>
-    //         <Link to="/" className="flex justify-center">
-    //           <Button
-    //             type="button"
-    //             variant="outline"
-    //             size="xl"
-    //             className="w-[400px] !text-static-default border-assistive-default">
-    //             매물 관리로 이동
-    //           </Button>
-    //         </Link>
-    //       </Step>
-    //     </Funnel>
-    //   </form>
-    // </FormProvider>
     <div className="flex justify-center">
       <section className="w-[1200px] flex flex-col items-center gap-11 py-12 tablet:w-full tablet:px-7 mobile:gap-9 mobile:w-full mobile:pt-0 mobile:pb-9 mobile:px-5">
         <PageHeader title="매물등록" />
