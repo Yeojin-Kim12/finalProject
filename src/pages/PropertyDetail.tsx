@@ -3,6 +3,7 @@ import Toast from '@/components/common/Toast';
 import AreaList from '@/components/Property/AreaList';
 import { CounselDialog, CounselDrawer } from '@/components/Property/CounselFormContent';
 import MarketingViewer from '@/components/Property/MarketingViewer';
+import NaverMap from '@/components/Property/NaverMap';
 import PhoneDialog from '@/components/Property/PhoneDialog';
 import PropertyKeyword from '@/components/Property/PropertyKeyword';
 import PropertyTopContent from '@/components/Property/PropertyTopContent';
@@ -13,6 +14,7 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useFunnel } from '@/hooks/useFunnel';
 import useLike from '@/hooks/useLike';
 import useResponsive from '@/hooks/useResponsive';
+import useScrollToTopOnClick from '@/hooks/useScrollToTopOnClick';
 import { BASE_URL } from '@/lib/constants';
 import { removePhoneNumberHyphens } from '@/lib/utils';
 import { loginState } from '@/recoilstate/login/atoms';
@@ -55,6 +57,10 @@ const PropertyDetail = () => {
   const { Funnel, Step, setStep } = useFunnel(steps[0]);
 
   const [loginData] = useRecoilState(loginState);
+  const scrollToTop = useScrollToTopOnClick();
+  useEffect(() => {
+    scrollToTop();
+  }, []);
 
   const fetchSalesInformation = async (): Promise<SalesInformation> => {
     const url =
@@ -289,8 +295,7 @@ const PropertyDetail = () => {
             <p className="text-detail-lg tablet:text-detail-base mobile:text-detail-base-m text-assistive-detail mb-8">
               {data?.areaAddr}
             </p>
-            {/* 지도 활성화하기 */}
-            {/* <NaverMap address={data?.areaAddr || ''} buildingName={data?.buildingName || ''} /> */}
+            <NaverMap address={data?.areaAddr || ''} buildingName={data?.buildingName || ''} />
           </div>
         </div>
       </div>

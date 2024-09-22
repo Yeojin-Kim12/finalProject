@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 interface DiscountInputFieldProps {
+  name: string;
   keyword:
     | {
         name: string;
@@ -17,7 +18,7 @@ interface DiscountInputFieldProps {
   onClick: () => void;
 }
 
-const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
+const DiscountInputField = ({ onClick, name }: DiscountInputFieldProps) => {
   const {
     control,
     getValues,
@@ -59,7 +60,6 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
     const price = getValues(`areas.${index}.price`);
     let discountPercent = getValues(`areas.${index}.discountPercent`);
     let discountPrice = getValues(`areas.${index}.discountPrice`);
-    console.log(1);
 
     if (discountSystem) {
       // 할인가
@@ -89,6 +89,18 @@ const DiscountInputField = ({ onClick }: DiscountInputFieldProps) => {
     const updatedDiscountInfo = [...discountInfo];
     updatedDiscountInfo[index] = { percent: discountPercent, price: discountPrice };
     setDiscountInfo(updatedDiscountInfo);
+
+    const allPercents = areaFields.map((_, idx) => getValues(`areas.${idx}.discountPercent`) || 0);
+    const minPercent = Math.min(...allPercents);
+    const maxPercent = Math.max(...allPercents);
+
+    // name을 사용해 keyword.input에 최소값과 최대값 저장
+    if (name) {
+      console.log(name);
+
+      (setValue as any)(`${name}.input1`, Number(minPercent));
+      (setValue as any)(`${name}.input2`, Number(maxPercent));
+    }
   };
 
   const handleClearDiscount = () => {

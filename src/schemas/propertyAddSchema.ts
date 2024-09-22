@@ -119,20 +119,30 @@ export const propertyAddSchema = z.object({
     ),
   homepage: z.string().optional(),
   contactChannel: z.string().optional(),
-  keywords: z.array(
-    z.object({
-      searchEnabled: z.boolean(),
-      name: z.string(),
-      type: z.string(),
-      input: z.union([
-        z.string().nonempty('입력해주세요'), // 단순 string일 경우
-        z
-          .object({
-            input1: z.union([z.string(), z.number()]), // input1은 string 또는 number
-            input2: z.union([z.string(), z.number()]), // input2도 string 또는 number
-          })
-          .optional(), // object로 들어올 경우
-      ]),
-    }),
-  ),
+  keywords: z
+    .array(
+      z.object({
+        searchEnabled: z.boolean(),
+        name: z.string(),
+        type: z.string(),
+        input: z.union([
+          z.string().nonempty('입력해주세요'),
+          z.object({
+            input1: z.union([z.string(), z.number()]),
+            input2: z.union([z.string(), z.number()]),
+            input3: z.union([z.string(), z.number()]).optional(),
+          }),
+          z
+            .array(
+              z.object({
+                input1: z.union([z.string(), z.number()]),
+                input2: z.union([z.string(), z.number()]),
+                input3: z.union([z.string(), z.number()]).optional(),
+              }),
+            )
+            .optional(),
+        ]),
+      }),
+    )
+    .min(3, { message: '최소 3개의 키워드를 입력해주세요' }),
 });

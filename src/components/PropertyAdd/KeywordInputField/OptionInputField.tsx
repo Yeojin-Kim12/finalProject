@@ -32,7 +32,10 @@ interface OptionInputFieldProps {
   onClick: () => void;
 }
 interface KeywordDataArray extends KeywordData {
-  input: { input1: string; input2: string; input3?: string }[];
+  input:
+    | string
+    | { input1: string | number; input2: string | number; input3?: string | number }[]
+    | Record<string | number, unknown>;
   searchEnabled: boolean;
 }
 const OptionInputField = ({ keyword, onClick }: OptionInputFieldProps) => {
@@ -96,6 +99,14 @@ const OptionInputField = ({ keyword, onClick }: OptionInputFieldProps) => {
       }
     }
   };
+
+  if (!keyword) {
+    return null; // keyword가 없으면 아무것도 렌더링하지 않음
+  }
+
+  const keywordInput = getValues('keywords')?.find(
+    (field) => field.name === keyword.value,
+  ) as KeywordDataArray;
   return (
     <>
       {keyword !== undefined && (
@@ -125,13 +136,8 @@ const OptionInputField = ({ keyword, onClick }: OptionInputFieldProps) => {
             </div>
           </div>
           <div className="flex flex-wrap gap-2 ml-[150px]">
-            {Array.isArray(
-              (getValues('keywords')?.find((field) => field.name === keyword.value) as KeywordDataArray)
-                ?.input,
-            ) &&
-              (
-                getValues('keywords')?.find((field) => field.name === keyword.value) as KeywordDataArray
-              )?.input.map((input, index) => (
+            {Array.isArray(keywordInput?.input) &&
+              keywordInput.input.map((input, index) => (
                 <Tag
                   key={index}
                   label={`${input.input1} ${input.input2} ${input.input3 ?? ''}`}

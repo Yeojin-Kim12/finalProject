@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import buildingImg from '../../assets/buildings.svg';
 import { Button } from '@/components/ui/button';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -13,7 +13,6 @@ import Cookies from 'js-cookie';
 
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -64,7 +63,7 @@ export default function Login() {
         setCookie('refreshToken', refreshToken, 2);
         Cookies.remove('accessToken');
         Cookies.remove('refreshToken');
-        navigate('/');
+        window.location.replace('/');
       } else {
         setError('root', {
           type: 'manual',

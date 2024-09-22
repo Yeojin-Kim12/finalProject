@@ -110,6 +110,7 @@ const PropertyKeywords = () => {
             등록하는 매물에 해당하는 키워드를 선택해주세요
           </h3>
           <p className="text-detail-lg text-assistive-strong">우선 선택된 3가지가 메인 키워드로 노출됩니다</p>
+          {errors.keywords && <p className="text-accent-error text-detail-base">{errors.keywords.message}</p>}
         </article>
         <article className="flex flex-col gap-3">
           <h4 className="text-title-xl text-static-default font-bold">혜택 줍줍</h4>

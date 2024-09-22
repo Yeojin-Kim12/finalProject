@@ -2,6 +2,7 @@ import { X } from '@phosphor-icons/react';
 import { useFormContext } from 'react-hook-form';
 import { FormValues } from '@/types/types';
 import PropertyInputValidation from '@/components/common/PropertyInputValidation';
+import { useEffect } from 'react';
 
 interface BalanceInputFieldProps {
   name: string;
@@ -16,8 +17,22 @@ interface BalanceInputFieldProps {
 }
 const BalanceInputField = ({ name, keyword, onClick }: BalanceInputFieldProps) => {
   const {
+    setValue,
     formState: { errors },
   } = useFormContext<FormValues>();
+
+  useEffect(() => {
+    if (keyword !== undefined) {
+      (setValue as any)(`${name}.input1`, null);
+      (setValue as any)(`${name}.input2`, null);
+    }
+  }, [keyword, name, setValue]);
+
+  const handleRemove = () => {
+    (setValue as any)(`${name}.input1`, null);
+    (setValue as any)(`${name}.input2`, null);
+    onClick();
+  };
 
   return (
     <>
@@ -43,7 +58,7 @@ const BalanceInputField = ({ name, keyword, onClick }: BalanceInputFieldProps) =
               />
               <span className="text-body-lg text-static-default text-nowrap">동안 유예</span>
             </PropertyInputValidation>
-            <div className="size-8" onClick={onClick}>
+            <div className="size-8" onClick={handleRemove}>
               <X weight="light" className="size-8 cursor-pointer text-assistive-default" />
             </div>
           </div>

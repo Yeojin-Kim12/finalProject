@@ -44,12 +44,6 @@ const GNB = () => {
     setIsLnbMenuOpen(false);
   };
 
-  // useEffect(() => {
-  //   if (loginData.isLoggedIn === null) {
-  //     console.log('gnb: ', loginData);
-  //   }
-  // }, [loginData.isLoggedIn]);
-
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -57,7 +51,6 @@ const GNB = () => {
         {},
         {
           withCredentials: true,
-          maxRedirects: 0,
         },
       );
       setLoginData({
@@ -68,7 +61,7 @@ const GNB = () => {
       console.error('Logout failed', error);
     }
 
-    // window.location.replace('/');
+    window.location.replace('/');
   };
 
   const adminLinks = [

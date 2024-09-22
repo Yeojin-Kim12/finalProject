@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import PropertyInputValidation from '../common/PropertyInputValidation';
 import { useFileUpload } from '@/hooks/useFileUpload';
+import { getUsableFileUrl } from '@/lib/utils';
 
 export const PdfUpload = () => {
   const {
@@ -39,10 +40,10 @@ export const PdfUpload = () => {
       const uploadedUrls = await uploadToServer([file], 'SUPPLY_INFORMATION');
 
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-        console.log('업로드된 파일 URL:', uploadedUrls[0]);
+        console.log('업로드된 파일 URL:', getUsableFileUrl(uploadedUrls[0], 'SUPPLY_INFORMATION', file.name));
         appendFile({
           name: file.name,
-          url: decodeURI(uploadedUrls[0]),
+          url: getUsableFileUrl(uploadedUrls[0], 'SUPPLY_INFORMATION', file.name),
           type: 'SUPPLY_INFORMATION',
         });
       }

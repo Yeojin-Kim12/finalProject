@@ -81,7 +81,7 @@ const PropertyInputValidation = React.forwardRef<HTMLInputElement, PropertyInput
                     {...field}
                     ref={ref}
                     type={type}
-                    value={field.value === 0 ? '' : field.value}
+                    value={field.value ? field.value : ''}
                     placeholder={placeholder}
                     onChange={handleInputChange}
                     onBlur={onBlur}

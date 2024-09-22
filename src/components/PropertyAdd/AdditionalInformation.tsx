@@ -3,6 +3,7 @@ import PropertyInputValidation from '../common/PropertyInputValidation';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { FormValues } from '@/types/types';
 import { useFileUpload } from '@/hooks/useFileUpload';
+import { getUsableFileUrl } from '@/lib/utils';
 
 const AdditionalInformation = () => {
   const {
@@ -35,10 +36,10 @@ const AdditionalInformation = () => {
       const uploadedUrls = await uploadToServer([file], 'MARKETING');
 
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-        console.log('업로드된 파일 URL:', uploadedUrls[0]);
+        console.log('업로드된 파일 URL:', getUsableFileUrl(uploadedUrls[0], 'MARKETING', file.name));
         appendFile({
           name: file.name,
-          url: decodeURI(uploadedUrls[0]),
+          url: getUsableFileUrl(uploadedUrls[0], 'MARKETING', file.name),
           type: 'MARKETING',
         });
       }
@@ -73,9 +74,8 @@ const AdditionalInformation = () => {
   });
 
   return (
-    <div className="flex flex-col w-[720px] h-full mx-auto my-11">
+    <div className="flex flex-col w-[720px] h-full mx-auto">
       <div className="flex flex-col w-full gap-8">
-        {/* 백엔드에 보낼 때 하이픈 제거하기 */}
         <PropertyInputValidation
           name="phoneNumber"
           label="분양 문의 번호"

@@ -16,13 +16,26 @@ import Stepper from '@/components/Stepper';
 import { useCallback, useState } from 'react';
 import useScrollToTopOnClick from '@/hooks/useScrollToTopOnClick';
 import StepNavigation from '@/components/common/StepNavigation';
+import { BASE_URL } from '@/lib/constants';
 
 const steps = ['매물정보 입력', '추가사항 입력', '키워드 선택', '등록 완료'];
 
 const postProperty = async (property: any) => {
-  const response = await axios.post('/api/admin/properties', property);
-  console.log(response.data);
-  return response.data.property;
+  console.log('전송할 데이터 (JSON):', JSON.stringify(property, null, 2));
+  try {
+    const response = await axios.post(`${BASE_URL}/api/admin/properties`, property, {
+      withCredentials: true,
+    });
+    console.log('서버 응답:', response.data);
+    return response.data.property;
+  } catch (error: any) {
+    if (error.response) {
+      console.error('서버 응답 에러:', error.response.data);
+    } else {
+      console.error('네트워크 에러:', error.message);
+    }
+    throw error;
+  }
 };
 
 const PropertyAdd = () => {

@@ -81,7 +81,7 @@ export const PropertyInformation = () => {
   };
 
   return (
-    <div className="flex flex-col w-[720px] h-full mx-auto my-11">
+    <div className="flex flex-col w-[720px] h-full mx-auto">
       <div className="flex flex-col w-full gap-8">
         <ImageUpload />
 

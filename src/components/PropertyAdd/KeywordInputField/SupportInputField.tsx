@@ -40,7 +40,16 @@ const SupportInputField = ({ name, keyword, onClick }: SupportInputFieldProps) =
 
   useEffect(() => {
     setValue(`${name}.input1` as keyof FormValues, input1);
+    if (keyword !== undefined) {
+      (setValue as any)(`${name}.input2`, null);
+    }
   }, [name, input1, setValue]);
+
+  const handleRemove = () => {
+    (setValue as any)(`${name}.input1` as keyof FormValues, input1);
+    (setValue as any)(`${name}.input2`, null);
+    onClick();
+  };
 
   const getTrailingExtra = (value: string): string => {
     const foundItem = keywordInput1.find((item) => item.value === value);
@@ -75,7 +84,7 @@ const SupportInputField = ({ name, keyword, onClick }: SupportInputFieldProps) =
               numberOnly={true}>
               <span className="text-body-lg text-static-default text-nowrap">{getTrailingExtra(input1)}</span>
             </PropertyInputValidation>
-            <div className="size-8" onClick={onClick}>
+            <div className="size-8" onClick={handleRemove}>
               <X weight="light" className="size-8 cursor-pointer text-assistive-default" />
             </div>
           </div>

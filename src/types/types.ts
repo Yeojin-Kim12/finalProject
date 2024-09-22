@@ -24,7 +24,10 @@ export type KeywordData = {
   searchEnabled: boolean;
   name: string;
   type: 'BENEFIT' | 'INFRA';
-  input: { input1: string; input2: string; input3?: string }[] | string;
+  input:
+    | string
+    | { input1: string | number; input2: string | number; input3?: string | number }[]
+    | Record<string | number, unknown>;
   id?: string;
 };
 export type FormValues = {

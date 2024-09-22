@@ -25,11 +25,11 @@ export const formatPropertyData = (data: any) => {
     addrDo: data.addrDo, // 도/시
     addrGu: data.addrGu, // 시/군/구
     addrDong: data.addrDong, // 동
-    buildingName: data.buildingName, // 건물 이름
+    buildingName: data.buildingName || data.name, // 건물 이름
     modelhouseAddr: data.modelhouseAddr, // 모델하우스 주소
     phoneNumber: removePhoneNumberHyphens(data.phoneNumber), // 분양 문의 번호
-    homepage: data.homepage, // 홈페이지 링크
-    contactChannel: data.contactChannel, // 채널 링크
+    homepage: data.homepage || null, // 홈페이지 링크
+    contactChannel: data.contactChannel || null, // 채널 링크
     keywords: data.keywords.map((keyword: any) => ({
       searchEnabled: keyword.searchEnabled,
       name: keyword.name,

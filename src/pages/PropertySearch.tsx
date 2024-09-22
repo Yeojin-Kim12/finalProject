@@ -240,17 +240,19 @@ const PropertySearch = () => {
       {isLoading ? (
         <SkeletonSelectedList />
       ) : (
-        <section>
+        <section className="w-full max-w-[1200px]">
           <div id="list" className="mb-5">
-            <p className="text-title-2xl font-bold">전체 목록</p>
-            <p className="text-detail-lg">표시되는 가격은 최소 평형 기준 최저가입니다</p>
+            <p className="text-title-2xl tablet:text-title-lg mobile:text-title-lg-m font-bold">전체 목록</p>
+            <p className="text-detail-lg tablet:text-detail-base mobile:text-detail-base-m">
+              표시되는 가격은 최소 평형 기준 최저가입니다
+            </p>
           </div>
           <div className="relative flex items-center justify-between mb-6">
             <p className="inline text-detail-lg mobile:text-detail-base-m text-assistive-strong">
               총 <span className="text-primary-default">{data?.contents[0]?.totalProperties}</span>
               건의 매물이 있습니다
             </p>
-            <Button variant="assistive" size="sm" onClick={handleSelectMenu}>
+            <Button variant="assistive" size={isMobile ? 'xs' : 'sm'} onClick={handleSelectMenu}>
               세부조건
               <CaretUpDown size={16} className="ml-3 text-assistive-strong" />
             </Button>

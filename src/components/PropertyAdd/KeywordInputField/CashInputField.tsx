@@ -2,6 +2,7 @@ import { X } from '@phosphor-icons/react';
 import { useFormContext } from 'react-hook-form';
 import { FormValues } from '@/types/types';
 import PropertyInputValidation from '@/components/common/PropertyInputValidation';
+import { useEffect } from 'react';
 
 interface CashInputFieldProps {
   name: string;
@@ -16,8 +17,20 @@ interface CashInputFieldProps {
 }
 const CashInputField = ({ name, keyword, onClick }: CashInputFieldProps) => {
   const {
+    setValue,
     formState: { errors },
   } = useFormContext<FormValues>();
+
+  useEffect(() => {
+    if (keyword !== undefined) {
+      (setValue as any)(`${name}`, null);
+    }
+  }, [keyword, name, setValue]);
+
+  const handleRemove = () => {
+    (setValue as any)(`${name}`, null);
+    onClick();
+  };
 
   return (
     <>
@@ -35,7 +48,7 @@ const CashInputField = ({ name, keyword, onClick }: CashInputFieldProps) => {
               numberOnly={true}>
               <span className="text-body-lg text-static-default text-nowrap">지급</span>
             </PropertyInputValidation>
-            <div className="size-8" onClick={onClick}>
+            <div className="size-8" onClick={handleRemove}>
               <X weight="light" className="size-8 cursor-pointer text-assistive-default" />
             </div>
           </div>
