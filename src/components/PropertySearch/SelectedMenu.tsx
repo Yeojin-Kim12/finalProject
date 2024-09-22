@@ -180,36 +180,32 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
   };
 
   const isValidSelection = () => {
-    const validPriceSelections = priceSelectedIds.filter((id) => ![1, 2, 10].includes(id));
-    const validSquareMeterSelections = squareMeterSelectedIds.filter((id) => ![1, 2, 10].includes(id));
-    const validHouseholdSelections = householdNumberSelectedIds.filter((id) => ![1, 2, 10].includes(id));
+    const isPriceRangeValid =
+      priceRange.min !== undefined &&
+      priceRange.min !== null &&
+      (priceRange.max === undefined || priceRange.max === null || priceRange.max >= priceRange.min);
 
-    const isPriceRangeValid = priceRange.min !== undefined && priceRange.max !== undefined;
-    const isSquareMeterRangeValid = squareMeterRange.min !== undefined && squareMeterRange.max !== undefined;
+    const isSquareMeterRangeValid =
+      squareMeterRange.min !== undefined &&
+      squareMeterRange.min !== null &&
+      (squareMeterRange.max === undefined ||
+        squareMeterRange.max === null ||
+        squareMeterRange.max >= squareMeterRange.min);
+
     const isHouseholdNumberRangeValid =
-      householdNumberRange.min !== undefined && householdNumberRange.max !== undefined;
+      householdNumberRange.min !== undefined &&
+      householdNumberRange.min !== null &&
+      (householdNumberRange.max === undefined ||
+        householdNumberRange.max === null ||
+        householdNumberRange.max >= householdNumberRange.min);
 
-    const isValidPrice =
-      validPriceSelections.length >= 2 ||
-      isPriceRangeValid ||
-      priceSelectedIds.includes(1) ||
-      priceSelectedIds.includes(2) ||
-      priceSelectedIds.includes(10);
-    const isValidSquareMeter =
-      validSquareMeterSelections.length >= 2 ||
-      isSquareMeterRangeValid ||
-      squareMeterSelectedIds.includes(1) ||
-      squareMeterSelectedIds.includes(2) ||
-      squareMeterSelectedIds.includes(10);
-    const isValidHousehold =
-      validHouseholdSelections.length >= 2 ||
-      isHouseholdNumberRangeValid ||
-      householdNumberSelectedIds.includes(1) ||
-      householdNumberSelectedIds.includes(2) ||
-      householdNumberSelectedIds.includes(10);
+    const isValidPrice = priceSelectedIds.length > 0 || isPriceRangeValid;
+    const isValidSquareMeter = squareMeterSelectedIds.length > 0 || isSquareMeterRangeValid;
+    const isValidHousehold = householdNumberSelectedIds.length > 0 || isHouseholdNumberRangeValid;
 
     return isValidPrice && isValidSquareMeter && isValidHousehold;
   };
+
   const handleSubmit = () => {
     if (isValidSelection()) {
       const adjustedFilters = {
@@ -224,7 +220,7 @@ const SelectedMenu = ({ isOpen, onClose, onSubmitFilters, filters }: SelectedMen
       onSubmitFilters(adjustedFilters);
       onClose();
     } else {
-      console.log('2개이상 선택');
+      console.log('세부조건 값 요청 확인 바람');
     }
   };
 

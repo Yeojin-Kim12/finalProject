@@ -140,7 +140,9 @@ const GNB = () => {
                 {loginData.isLoggedIn && (
                   <div
                     className={`block w-[193px] px-5 py-8 text-center cursor-pointer relative group ${location.pathname === '/favorite' || location.pathname === '/counsel-list' || location.pathname === '/dashboard' || location.pathname === '/customer-service' || location.pathname === '/property-management' ? 'text-primary-default' : ''}`}
-                    onClick={() => navigate('/favorite')}>
+                    onClick={() =>
+                      loginData.userInfo?.role === 'MEMBER' ? navigate('/favorite') : navigate('/dashboard')
+                    }>
                     <p>마이페이지</p>
                     <div className="hidden absolute left-0 top-[93px] w-full bg-white shadow-lg text-assistive-detail group-hover:flex flex-col items-start font-normal z-40">
                       <ul className="w-full">

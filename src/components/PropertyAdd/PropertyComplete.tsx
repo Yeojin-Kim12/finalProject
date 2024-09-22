@@ -1,6 +1,10 @@
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../ui/button';
+
 const PropertyComplete = () => {
+  const navigate = useNavigate();
   return (
-    <div className="flex flex-col items-center  ">
+    <div className="h-[50vh] flex flex-col items-center justify-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="64"
@@ -14,6 +18,14 @@ const PropertyComplete = () => {
         />
       </svg>
       <p className="text-heading-base font-bold mb-[60px]">매물 등록이 완료되었어요</p>
+      <Button
+        type="button"
+        variant="assistive"
+        size="xl"
+        className="w-[400px]"
+        onClick={() => navigate('/property-management')}>
+        매물 관리로 이동
+      </Button>
     </div>
   );
 };

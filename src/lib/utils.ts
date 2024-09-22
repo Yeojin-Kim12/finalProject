@@ -82,9 +82,11 @@ export interface BenefitItemProps {
 export function formatBenefitText(item: BenefitItemProps): string {
   switch (item.name) {
     case 'DISCOUNT_SALE':
-      if (Array.isArray(item.input)) {
-        const i = item.input[0];
-        return `분양가 대비 ${i.input1}~${i.input2}% 할인`;
+      if (!Array.isArray(item.input) && typeof item.input === 'object') {
+        if (item.input.input1 === item.input.input2) {
+          return `분양가 대비 ${item.input.input1}% 할인`;
+        }
+        return `분양가 대비 ${item.input.input1}~${item.input.input2}% 할인`;
       }
       return `${item.input}`;
     case 'BALANCE_DEFERRAL':
@@ -98,9 +100,8 @@ export function formatBenefitText(item: BenefitItemProps): string {
     case 'GUARANTEED_PAYMENT':
       return `계약금 ${item.input}% 안심보장`;
     case 'SUPPORT_PAYMENT':
-      if (Array.isArray(item.input)) {
-        const i = item.input[0];
-        return `중도금 ${i.input2}% ${i.input1} 지원`;
+      if (!Array.isArray(item.input) && typeof item.input === 'object') {
+        return `중도금 ${item.input.input2}% ${item.input.input1} 지원`;
       }
       return `${item.input}`;
 

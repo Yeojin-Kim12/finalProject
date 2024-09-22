@@ -4,11 +4,13 @@ import ItemCard from '@/components/common/ItemCard';
 import SearchBar from '@/components/common/SearchBar';
 import useResponsive from '@/hooks/useResponsive';
 import { BASE_URL } from '@/lib/constants';
+import { loginState } from '@/recoilstate/login/atoms';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 
 const Search = () => {
   const { isDesktop, isMobile } = useResponsive();
@@ -18,9 +20,14 @@ const Search = () => {
   const [inputValue, setInputValue] = useState(searchQuery);
   const navigate = useNavigate();
   const size = isDesktop ? 9 : 6;
+  const [loginData] = useRecoilState(loginState);
 
   const fetchSearch = async (page: number, size: number, search: string) => {
-    const res = await axios.get(`${BASE_URL}/api/common/properties`, {
+    const url =
+      loginData.userInfo?.role === 'MEMBER'
+        ? `${BASE_URL}/api/member/properties`
+        : `${BASE_URL}/api/common/properties`;
+    const res = await axios.get(url, {
       params: {
         page: page,
         size: size,

@@ -85,6 +85,7 @@ const Favorite = () => {
                     benefit={property.benefit}
                     price={property.price}
                     discountPrice={property.salesPrice}
+                    discountPercent={property.discountPercent}
                     like={true}
                     onLikeToggle={refetch} // like상태 변경 시 다시 가져오기
                   />

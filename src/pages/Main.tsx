@@ -25,7 +25,8 @@ const Main = () => {
   const navigate = useNavigate();
 
   const fetchProperties = async (page: any) => {
-    const res = await axios.get(`${BASE_URL}/api/common/home`, {
+    const url = userInfo?.role === 'MEMBER' ? `${BASE_URL}/api/member/home` : `${BASE_URL}/api/common/home`;
+    const res = await axios.get(url, {
       params: {
         page,
       },

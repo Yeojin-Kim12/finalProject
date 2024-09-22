@@ -26,7 +26,7 @@ const postProperty = async (property: any) => {
     const response = await axios.post(`${BASE_URL}/api/admin/properties`, property, {
       withCredentials: true,
     });
-    console.log('서버 응답:', response.data);
+    console.log('서버 응답:', response.data.property);
     return response.data.property;
   } catch (error: any) {
     if (error.response) {
@@ -122,15 +122,21 @@ const PropertyAdd = () => {
   return (
     <div className="flex justify-center">
       <section className="w-[1200px] flex flex-col items-center gap-11 py-12 tablet:w-full tablet:px-7 mobile:gap-9 mobile:w-full mobile:pt-0 mobile:pb-9 mobile:px-5">
-        <PageHeader title="매물등록" />
-        <Stepper currentStep={step} stepLabel={steps}></Stepper>
+        {step !== 4 && (
+          <>
+            <PageHeader title="매물등록" />
+            <Stepper currentStep={step} stepLabel={steps}></Stepper>
+          </>
+        )}
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="w-[720px] m-auto" noValidate>
             {step === 1 && <PropertyInformation />}
             {step === 2 && <AdditionalInformation />}
             {step === 3 && <PropertyKeywords />}
             {step === 4 && <PropertyComplete />}
-            <StepNavigation next={nextStep} back={prevStep} isLastStep={step === 3} lastLabel="등록하기" />
+            {step !== 4 && (
+              <StepNavigation next={nextStep} back={prevStep} isLastStep={step === 3} lastLabel="등록하기" />
+            )}
           </form>
         </FormProvider>
       </section>

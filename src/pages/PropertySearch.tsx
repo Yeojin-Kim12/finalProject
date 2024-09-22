@@ -17,6 +17,8 @@ import DefaultPagination from '@/components/common/DefaultPagination';
 import SelectedMenu from '@/components/PropertySearch/SelectedMenu';
 import SkeletonSelectedList from '@/components/PropertySearch/SkeletonSelectedList';
 import { Link } from 'react-scroll';
+import { useRecoilState } from 'recoil';
+import { loginState } from '@/recoilstate/login/atoms';
 
 const areasMap = [
   { label: '서울', value: '서울' },
@@ -60,12 +62,15 @@ const PropertySearch = () => {
     squareMeterSelectedIds: [1],
     householdNumberSelectedIds: [1],
   });
-
-  console.log('1', selectedFilters);
+  const [loginData] = useRecoilState(loginState);
 
   const fetchPropertySearch = async (page: number, size: number) => {
+    const url =
+      loginData.userInfo?.role === 'MEMBER'
+        ? `${BASE_URL}/api/member/properties/filter`
+        : `${BASE_URL}/api/common/properties/filter`;
     const keyword = [...benefit, ...infra].join(',');
-    const res = await axios.get(`${BASE_URL}/api/common/properties/filter`, {
+    const res = await axios.get(url, {
       params: {
         page: page,
         size: size,
