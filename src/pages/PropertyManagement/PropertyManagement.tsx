@@ -33,7 +33,6 @@ export default function PropertyManagement() {
         <section className="container mx-auto py-10 ">
           <h1 className="w-full py-3 px-6 mb-11 text-center text-heading-lg font-bold ">매물관리</h1>
 
-          {/* 이 위치에 매물 카드 들어갑니다. */}
           {myPropertyData.length === 0 ? (
             <div className="flex h-[412px] items-center">
               <NoProperty />

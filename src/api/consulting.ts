@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAuthHeaders } from './login';
+// import { getAuthHeaders } from './login';
 import { BASE_URL } from '@/lib/constants';
 
 const getStoredCookie = () => {
@@ -43,10 +43,6 @@ export const fetchPendingConsultations = async ({
       page,
       size: 5,
     },
-    // headers: {
-    //   'Content-Type': 'application/json',
-    //   ...getAuthHeaders(),
-    // },
     withCredentials: true,
   });
   const { contents } = response.data;
@@ -98,14 +94,13 @@ export const fetchCompletedConsultations = async ({
   };
 };
 
-export const fetchAddNewCustomer = async (propertyId: number, customerData: any) => {
+export const addNewCustomer = async (propertyId: number, customerData: any) => {
   const response = await axios.post(
     `${BASE_URL}/api/admin/properties/${propertyId}/consultations`,
     customerData,
     {
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeaders(),
       },
       withCredentials: true,
     },

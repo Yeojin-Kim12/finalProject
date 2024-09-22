@@ -1,21 +1,24 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { Button } from '../ui/button';
 import { X } from '@phosphor-icons/react';
 import { Input } from '../ui/input';
 import Dropdown from '../common/Dropdown';
 import { operatorId, consultingStatus } from '../../lib/dropdownItems';
 import { ToggleSmall } from '../ui/toggleSmall';
-import { useMutation } from '@tanstack/react-query';
+// import { useMutation } from '@tanstack/react-query';
 import { CustomerData } from '@/types/types';
 import { DialogClose, DialogTitle } from '@/components/ui/dialogNewCustomer';
 import SingleDatePicker from '../common/SingleDatePicker';
+// import { addNewCustomer } from '@/api/consulting';
+import axios from 'axios';
+import { BASE_URL } from '@/lib/constants';
 
-export default function NewCustomer({
-  onAddCustomer,
-}: {
-  onAddCustomer: (newCustomer: CustomerData) => void;
-}) {
+interface NewCustomerProps {
+  onAddCustomer: (customerData: CustomerData) => void;
+  propertyId: string;
+}
+
+export default function NewCustomer({ onAddCustomer, propertyId }: NewCustomerProps) {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedConsultant, setSelectedConsultant] = useState<string>('a1-1');
@@ -37,33 +40,26 @@ export default function NewCustomer({
     console.log(item);
   };
 
-  const mutation = useMutation({
-    mutationFn: async (newCustomer: CustomerData) => {
-      const response = await axios.post('/api/admin/properties/{propertyId}/consultations', newCustomer, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.status !== 200 && response.status !== 201) {
-        throw new Error('에러가 발생했습니다 ');
-      }
-      return response.data;
-    },
-  });
-
-  const handleSubmit = () => {
-    const customerData = {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const customerData: CustomerData = {
       name,
       phoneNumber,
-      status: selectedConsultingStatus === '상담대기' ? 'pending' : 'complete',
+      status: selectedConsultingStatus === '상담대기' ? 'PENDING' : 'COMPLETED',
       consultant: selectedConsultant,
       consultingMessage,
       preferredAt,
       tier: selectedRating || '',
-      medium: 'phone',
+      medium: 'PHONE',
     };
+    try {
+      await axios.post(`${BASE_URL}/api/admin/properties/${propertyId}/consultations`, customerData, {
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.error('정상적으로 등록되지 않았습니다:', error);
+    }
     onAddCustomer(customerData);
-    mutation.mutate(customerData);
     console.log(customerData);
   };
 
@@ -76,10 +72,10 @@ export default function NewCustomer({
       </DialogClose>
       <form
         className="flex flex-col w-[424px] relative"
-        onSubmit={(event) => {
-          event.preventDefault();
-          handleSubmit();
-        }}>
+        // onSubmit={(event) => {
+        //   event.preventDefault();
+        //   handleSubmit(event);}}
+      >
         <DialogTitle>신규 고객 등록</DialogTitle>
         <label className="py-3">성함</label>
         <Input
@@ -126,8 +122,8 @@ export default function NewCustomer({
                 if (date) {
                   const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
                     .toISOString()
-                    .split('T')[0]
-                    .replace(/-/g, '.');
+                    .split('T')[0];
+                  // .replace(/-/g, '.');
                   setPreferredAt(localDate);
                 } else {
                   setPreferredAt('');
@@ -164,7 +160,7 @@ export default function NewCustomer({
           onChange={(event) => setConsultingMessage(event.target.value)}></textarea>
         <DialogClose asChild>
           <div className="bg-static-white sticky bottom-0 w-full py-8 px-8">
-            <Button variant="primary" size="xl" className="flex mx-auto">
+            <Button onClick={handleSubmit} variant="primary" size="xl" className="flex mx-auto">
               등록하기
             </Button>
           </div>

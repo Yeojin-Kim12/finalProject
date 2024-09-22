@@ -21,37 +21,31 @@ import { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogTrigger, DialogDescription } from '@/components/ui/dialogNewCustomer';
 import NoProperty from '../../components/CustomerService/NoProperty';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
-import {
-  fetchSidebarData,
-  fetchPendingConsultations,
-  fetchCompletedConsultations,
-  fetchAddNewCustomer,
-} from '@/api/consulting';
-
-// const queryClient = new QueryClient();
+import { fetchSidebarData, fetchPendingConsultations, fetchCompletedConsultations } from '@/api/consulting';
 
 export default function CustomerService() {
   const [isOpen, setIsOpen] = useState(false);
   const [customers, setCustomers] = useState<CustomerData[]>([]);
   const [selectedProperty, setSelectedProperty] = useState({
-    id: 892,
-    image: 'https://cdn.smarttoday.co.kr/news/photo/202312/40471_34270_5157.jpg',
-    propertyName: '내포신도시모아미래도메가시티2',
-    companyName: '(주)성찬',
-    constructor: '미래도건설',
-    totalNumber: 836,
-    startDate: '2024-09-04',
-    endDate: '2024-10-10',
+    id: 49,
+    image: 'https://www.sjsori.com/news/photo/202011/46528_56925_4153.jpg',
+    propertyName: '한림풀에버',
+    companyName: '(주)건설개발',
+    constructor: '쌍용건설',
+    totalNumber: 100,
+    startDate: '2024-06-22',
+    endDate: '2024-10-30',
     propertyType: 'APARTMENT',
   });
   const popupWindowRef = useRef<Window | null>(null);
 
-  const [selectedConsultant, setSelectedConsultant] = useState<string>('a1-1');
+  const [selectedConsultant, setSelectedConsultant] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [date, setDate] = useState<Date | undefined>();
+  // @ts-ignore: Unused variable
+  const [pageSize, setPageSize] = useState(10);
 
   const queryClient = useQueryClient();
-  console.log(customers);
 
   const results = useQueries({
     queries: [
@@ -59,11 +53,11 @@ export default function CustomerService() {
         queryKey: [
           'pendingConsultations',
           {
-            propertyId: selectedProperty.id || 892,
+            propertyId: selectedProperty.id || 49,
             search: '',
             consultant: selectedConsultant,
             preferredAt: date,
-            page: currentPage,
+            page: 0,
           },
         ],
         queryFn: fetchPendingConsultations,
@@ -72,7 +66,7 @@ export default function CustomerService() {
         queryKey: [
           'completedConsultations',
           {
-            propertyId: selectedProperty.id || 892,
+            propertyId: selectedProperty.id || 49,
             search: '',
             tier: '',
             consultant: '',
@@ -83,7 +77,7 @@ export default function CustomerService() {
         queryFn: fetchCompletedConsultations,
       },
       {
-        queryKey: ['sidebarData', { propertyId: selectedProperty.id || 892 }],
+        queryKey: ['sidebarData', { propertyId: selectedProperty.id || 49 }],
         queryFn: fetchSidebarData,
       },
     ],
@@ -98,29 +92,20 @@ export default function CustomerService() {
   const error =
     pendingConsultationsResult.error || completedConsultationsResult.error || sidebarDataResult.error;
 
-  const pendingConsultationsData = pendingConsultationsResult.data?.consultCompletedSummaries || [];
+  const pendingConsultationsData = pendingConsultationsResult.data?.consultPendingSummaries || [];
   const completedConsultationsData = completedConsultationsResult.data?.consultCompletedSummaries || [];
   const sidebarData = sidebarDataResult.data;
 
   const pendingCustomersData = pendingConsultationsData;
   const completedCustomersData = completedConsultationsData;
 
-  console.log(pendingCustomersData); // Debug log
+  // console.log(pendingCustomersData); // Debug log
 
-  const addNewCustomer = async (newCustomer: CustomerData) => {
-    const customerWithPropertyId = { ...newCustomer, id: selectedProperty.id };
-
-    try {
-      const response = await fetchAddNewCustomer(selectedProperty.id, customerWithPropertyId);
-      setCustomers((prevCustomers) => {
-        const updatedCustomers = prevCustomers.filter(
-          (customer) => customer.phoneNumber !== newCustomer.phoneNumber,
-        );
-        return [...updatedCustomers, response];
-      });
-    } catch (error) {
-      console.error('Failed to add new customer:', error);
-    }
+  const handleAddNewCustomer = (newCustomer: CustomerData) => {
+    setCustomers((prevCustomers) => [...prevCustomers, newCustomer]);
+    setIsOpen(false);
+    console.log(customers);
+    console.log(pendingCustomersData);
   };
 
   // const pendingCustomers = customers.filter((customer) => customer.status === 'pending');
@@ -156,34 +141,38 @@ export default function CustomerService() {
       const selected = selectedFromPending || selectedFromCompleted;
 
       if (selected) {
-        const selectedPropertyDetails = sidebarData.sideBarSelectedPropertyResponse;
-        console.log('Selected property details:', selectedPropertyDetails); // Debug log
-        setSelectedProperty({
+        setSelectedProperty((prevState) => ({
+          ...prevState,
           id: selected.id,
-          image: selectedPropertyDetails.image,
-          propertyName: selectedPropertyDetails.name,
-          companyName: selectedPropertyDetails.companyName,
-          constructor: selectedPropertyDetails.constructor,
-          totalNumber: selectedPropertyDetails.totalNumber,
-          startDate: selectedPropertyDetails.startDate,
-          endDate: selectedPropertyDetails.endDate,
-          propertyType: selectedPropertyDetails.propertyType,
-        });
+        }));
       }
     }
   };
 
   useEffect(() => {
     if (selectedProperty.id) {
-      queryClient.invalidateQueries({ queryKey: ['sidebarData', { propertyId: selectedProperty.id }] });
-      queryClient.invalidateQueries({
-        queryKey: ['pendingConsultations', { propertyId: selectedProperty.id }],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['completedConsultations', { propertyId: selectedProperty.id }],
-      });
+      queryClient.invalidateQueries({ queryKey: ['sidebarData'] });
+      queryClient.invalidateQueries({ queryKey: ['pendingConsultations'] });
+      queryClient.invalidateQueries({ queryKey: ['completedConsultations'] });
     }
-  }, [selectedProperty, queryClient]);
+  }, [selectedProperty.id, queryClient]);
+
+  useEffect(() => {
+    if (sidebarData?.sideBarSelectedPropertyResponse) {
+      const selectedPropertyDetails = sidebarData.sideBarSelectedPropertyResponse;
+      setSelectedProperty((prevState) => ({
+        ...prevState,
+        image: selectedPropertyDetails.image,
+        propertyName: selectedPropertyDetails.name,
+        companyName: selectedPropertyDetails.companyName,
+        constructor: selectedPropertyDetails.constructor,
+        totalNumber: selectedPropertyDetails.totalNumber,
+        startDate: selectedPropertyDetails.startDate,
+        endDate: selectedPropertyDetails.endDate,
+        propertyType: selectedPropertyDetails.propertyType,
+      }));
+    }
+  }, [sidebarData]);
 
   // const filteredPendingCustomers = pendingCustomers.filter((customer) => customer.id === selectedProperty.id);
   // const filteredCompletedCustomers = completedCustomers.filter(
@@ -250,7 +239,7 @@ export default function CustomerService() {
                     onBackClick={handleBackToInquiry}
                     closePopup={handleClosePopup}
                     // @ts-ignore: Unreachable code error
-                    onAddCustomer={addNewCustomer}
+                    onAddCustomer={handleAddNewCustomer}
                   />
                 ) : (
                   <Component
@@ -331,7 +320,10 @@ export default function CustomerService() {
                   </DialogTrigger>
                 </div>
                 <DialogContent>
-                  <NewCustomer onAddCustomer={addNewCustomer} />
+                  <NewCustomer
+                    onAddCustomer={handleAddNewCustomer}
+                    propertyId={selectedProperty.id.toString()}
+                  />
                   <DialogDescription />
                 </DialogContent>
               </Dialog>
@@ -367,6 +359,8 @@ export default function CustomerService() {
                 setCurrentPage={setCurrentPage}
                 date={date}
                 setDate={setDate}
+                totalPages={completedConsultationsResult.data?.totalPages || 1}
+                pageSize={pageSize}
               />
             </TabsContent>
           </Tabs>

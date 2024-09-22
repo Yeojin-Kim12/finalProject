@@ -22,6 +22,7 @@ const setCookie = (name: string, value: string, days: number) => {
     secure: true,
     sameSite: 'None',
   });
+  // console.log(`Cookie saved: ${name} = ${value}`);
 };
 
 export const login = async (email: string, password: string) => {

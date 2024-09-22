@@ -14,6 +14,10 @@ export interface ConsultingPending {
   addConsultation: boolean;
 }
 
+export function formatDate(dateString: string): string {
+  return dateString.split('T')[0].replace(/-/g, '.');
+}
+
 export const columnsPending = (
   handleViewClick: (props: CustomerInquiryProps) => void,
 ): ColumnDef<ConsultingPending>[] => [

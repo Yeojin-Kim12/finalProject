@@ -9,10 +9,6 @@ export const fetchPropertyTable = async ({
 }) => {
   const [_key, { page, size }] = queryKey;
   const { data } = await axios.get(`${BASE_URL}/api/admin/my-properties/table?page=${page}&size=${size}`, {
-    // headers: {
-    //   'Content-Type': 'application/json',
-    //   ...getAuthHeaders(),
-    // },
     withCredentials: true,
   });
   return data.contents || [];

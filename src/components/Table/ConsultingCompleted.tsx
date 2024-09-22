@@ -31,6 +31,8 @@ interface DataTableProps<TData, TValue> {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  totalPages: number;
+  pageSize: number;
 }
 
 export function ConsultingCompleted<TData, TValue>({
@@ -42,14 +44,16 @@ export function ConsultingCompleted<TData, TValue>({
   setCurrentPage,
   date,
   setDate,
+  totalPages,
+  pageSize,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const [selectedRating, setSelectedRating] = useState<string>('고객등급');
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0, //초기 인덱스
-    pageSize: 5, //페이지 길이
+    pageIndex: currentPage - 1,
+    pageSize: pageSize,
   });
 
   const table = useReactTable({
@@ -60,15 +64,14 @@ export function ConsultingCompleted<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onPaginationChange: setPagination,
+    pageCount: totalPages,
     state: {
       columnFilters,
       pagination,
     },
   });
 
-  const totalPages = table.getPageCount();
   const pagesToShow = 5;
-
   const startPage = Math.max(1, currentPage - Math.floor(pagesToShow / 2));
   const endPage = Math.min(totalPages, startPage + pagesToShow - 1);
 
@@ -112,7 +115,7 @@ export function ConsultingCompleted<TData, TValue>({
 
   const handlePageClick = (page: number) => {
     setCurrentPage(page);
-    table.setPageIndex(page - 1); // Adjust based on your pagination logic
+    setPagination((prev) => ({ ...prev, pageIndex: page - 1 }));
   };
 
   return (
@@ -196,22 +199,13 @@ export function ConsultingCompleted<TData, TValue>({
         </TableBody>
       </Table>
       <section className="flex items-center justify-center space-x-3 py-4 mt-11">
-        <button
-          className="border-none p-1"
-          onClick={() => {
-            table.setPageIndex(0);
-            setCurrentPage(1);
-          }}
-          disabled={!table.getCanPreviousPage()}>
+        <button className="border-none p-1" onClick={() => handlePageClick(1)} disabled={currentPage === 1}>
           <CaretDoubleLeft size={32} weight="light" className="text-assistive-divider" />
         </button>
         <button
           className="border-none p-1"
-          onClick={() => {
-            table.previousPage();
-            setCurrentPage((prev) => Math.max(prev - 1, 1));
-          }}
-          disabled={!table.getCanPreviousPage()}>
+          onClick={() => handlePageClick(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}>
           <CaretLeft size={32} weight="light" className="text-assistive-divider" />
         </button>
         {Array.from({ length: endPage - startPage + 1 }, (_, i) => {
@@ -231,20 +225,14 @@ export function ConsultingCompleted<TData, TValue>({
         })}
         <button
           className="border-none p-1"
-          onClick={() => {
-            table.nextPage();
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-          }}
-          disabled={!table.getCanNextPage()}>
+          onClick={() => handlePageClick(Math.min(currentPage + 1, totalPages))}
+          disabled={currentPage === totalPages}>
           <CaretRight size={32} weight="light" className="text-assistive-divider" />
         </button>
         <button
           className="border-none p-1"
-          onClick={() => {
-            table.setPageIndex(totalPages - 1);
-            setCurrentPage(totalPages);
-          }}
-          disabled={!table.getCanNextPage()}>
+          onClick={() => handlePageClick(totalPages)}
+          disabled={currentPage === totalPages}>
           <CaretDoubleRight size={32} weight="light" className="text-assistive-divider" />
         </button>
       </section>
