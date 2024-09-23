@@ -206,9 +206,22 @@ export default function CustomerService() {
 			<head>
 				<title>${title}</title>
 				<link href="/src/index.css" rel="stylesheet">
+            <style>
+            #popup-root {
+             width: 125%;
+              height: 125%;
+              transform: scale(0.8);
+              transform-origin: center;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%) scale(0.8);
+            }
+          </style>
 			</head>
 			<body>
 				<div id="popup-root"></div>
+        <script src="/index.js"></script>
 			</body>
 		</html>
 	`);

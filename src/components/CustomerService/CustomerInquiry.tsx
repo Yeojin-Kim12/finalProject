@@ -29,7 +29,7 @@ export default function CustomerInquiry({
       <div className="flex w-full justify-end py-2 h-[32px]">
         <X size={32} weight="light" className="text-assistive-strong cursor-pointer" onClick={closePopup} />
       </div>
-      <section className="w-[424px]">
+      <section className="w-full px-4">
         <div className="flex items-center gap-5">
           <h1 className="py-6 text-title-2xl font-bold text-static-default">{name} 님</h1>
           <span className="flex justify-center bg-primary-base text-primary-default text-label-base px-4 py-1 rounded-6">
