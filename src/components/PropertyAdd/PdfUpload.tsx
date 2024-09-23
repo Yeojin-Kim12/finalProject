@@ -40,10 +40,10 @@ export const PdfUpload = () => {
       const uploadedUrls = await uploadToServer([file], 'SUPPLY_INFORMATION');
 
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-        console.log('업로드된 파일 URL:', getUsableFileUrl(uploadedUrls[0], 'SUPPLY_INFORMATION', file.name));
+        console.log('업로드된 파일 URL:', getUsableFileUrl(uploadedUrls[0], 'SUPPLY_INFORMATION'));
         appendFile({
           name: file.name,
-          url: getUsableFileUrl(uploadedUrls[0], 'SUPPLY_INFORMATION', file.name),
+          url: getUsableFileUrl(uploadedUrls[0], 'SUPPLY_INFORMATION'),
           type: 'SUPPLY_INFORMATION',
         });
       }

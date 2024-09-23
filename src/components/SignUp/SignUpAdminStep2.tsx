@@ -106,7 +106,7 @@ const SignUpAdminStep2 = () => {
       }
       const uploadedUrls = await uploadToServer([file], fileType);
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-        const url = getUsableFileUrl(uploadedUrls[0], fileType, file.name);
+        const url = getUsableFileUrl(uploadedUrls[0], fileType);
         appendRegistrationFile({
           name: file.name,
           url: url,

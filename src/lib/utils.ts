@@ -148,15 +148,15 @@ export function removePhoneNumberHyphens(phoneNumber: string | undefined): strin
 }
 
 // preview URL 변환 함수
-export function getUsableImageUrl(url: string): string {
-  const regex = /(PROPERTY_IMAGE\/[^]+)/;
-  const imagePath = url.match(regex);
-  return imagePath ? `https://delivery183.org/${imagePath[0]}` : '';
-}
-export function getUsableFileUrl(url: string, type: string, name: string): string {
-  const regex = new RegExp(`(${type}/[^%]+)`);
+// export function getUsableImageUrl(url: string): string {
+//   const regex = /(PROPERTY_IMAGE\/[^]+)/;
+//   const imagePath = url.match(regex);
+//   return imagePath ? `https://delivery183.org/${imagePath[0]}` : '';
+// }
+export function getUsableFileUrl(url: string, type: string): string {
+  const regex = new RegExp(`(${type}/[^?]+)`);
   const filePath = url.match(regex);
-  return filePath ? `https://delivery183.org/${filePath[0]}${name}` : '';
+  return filePath ? `https://delivery183.org/${filePath[0]}` : '';
 }
 
 // 프로퍼티 유형 변환

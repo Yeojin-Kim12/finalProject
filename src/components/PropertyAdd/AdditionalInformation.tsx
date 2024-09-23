@@ -36,10 +36,10 @@ const AdditionalInformation = () => {
       const uploadedUrls = await uploadToServer([file], 'MARKETING');
 
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-        console.log('업로드된 파일 URL:', getUsableFileUrl(uploadedUrls[0], 'MARKETING', file.name));
+        console.log('업로드된 파일 URL:', getUsableFileUrl(uploadedUrls[0], 'MARKETING'));
         appendFile({
           name: file.name,
-          url: getUsableFileUrl(uploadedUrls[0], 'MARKETING', file.name),
+          url: getUsableFileUrl(uploadedUrls[0], 'MARKETING'),
           type: 'MARKETING',
         });
       }

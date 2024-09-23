@@ -44,7 +44,7 @@ const SignUpAdminStep3 = () => {
       // 새로운 파일 업로드
       const uploadedUrls = await uploadToServer([file], fileType);
       if (uploadedUrls !== undefined && uploadedUrls.length > 0) {
-        const url = getUsableFileUrl(uploadedUrls[0], fileType, file.name);
+        const url = getUsableFileUrl(uploadedUrls[0], fileType);
         appendHousingFile({
           name: file.name,
           url: url,
