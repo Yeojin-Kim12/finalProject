@@ -87,8 +87,8 @@ export default function CustomerConsulting({
   });
 
   return (
-    <main className="flex flex-col z-50 items-center py-9 w-[517px] h-[830px]">
-      <div className="flex w-full justify-end py-2 px-8 h-[32px]">
+    <main className="flex flex-col z-50 items-center mx-auto py-9 w-[420px] h-[665px]">
+      <div className="flex w-full justify-end py-2 h-[32px]">
         <X size={32} weight="light" className="text-assistive-strong cursor-pointer" onClick={closePopup} />
       </div>
       <form
