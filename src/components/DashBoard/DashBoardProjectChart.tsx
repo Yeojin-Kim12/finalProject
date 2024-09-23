@@ -72,10 +72,8 @@ const DashBoardProjectChart = () => {
     plotOptions: {
       bar: {
         dataLabels: {
-          hideOverflowingLabels: true,
           position: 'top',
         },
-        horizontal: false,
         columnWidth: '15%',
         rangeBarGroupRows: true,
         borderRadius: 10,
@@ -88,11 +86,12 @@ const DashBoardProjectChart = () => {
     },
     dataLabels: {
       enabled: true,
-      offsetY: -15,
+      offsetY: -20,
       offsetX: 5,
       style: {
         colors: ['#778292'],
         fontSize: '13px',
+        fontFamily: 'Pretendard, sans-serif',
       },
     },
 
@@ -110,7 +109,6 @@ const DashBoardProjectChart = () => {
               5,
             ),
       labels: {
-        offsetY: 10,
         style: {
           fontSize: '17px',
           fontFamily: 'Pretendard, sans-serif',
@@ -126,7 +124,6 @@ const DashBoardProjectChart = () => {
       forceNiceScale: true,
       labels: {
         minWidth: 0,
-
         style: {
           fontSize: '13px',
           fontFamily: 'Pretendard, sans-serif',

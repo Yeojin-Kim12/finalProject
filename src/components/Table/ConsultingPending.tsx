@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '../ui/input';
 import { operatorIdAll } from '../../lib/dropdownItems';
 import SingleDatePicker from '@/components/common/SingleDatePicker';
+import { formatDashDate } from '@/lib/utils';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -91,8 +92,8 @@ export function ConsultingPending<TData, TValue>({
 
   useEffect(() => {
     if (date) {
-      const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-      const formattedDate = localDate.toISOString().split('T')[0].replace(/-/g, '.'); // Format date to YYYY.MM.DD
+      const localDate = new Date(date);
+      const formattedDate = formatDashDate(localDate);
       setColumnFilters((filters) => [
         ...filters.filter((filter) => filter.id !== 'preferredAt'),
         { id: 'preferredAt', value: formattedDate },
@@ -126,6 +127,7 @@ export function ConsultingPending<TData, TValue>({
             value={selectedConsultant}
             onSelect={handleSelect}
             buttonWidth="w-[122px]"
+            reset
           />
         </div>
         <div className="flex py-4 px-6 gap-3 absolute right-0 cursor-pointer">

@@ -11,6 +11,7 @@ interface DropdownProps {
   buttonWidth?: string;
   value?: string;
   buttonClassName?: string;
+  reset?: boolean;
 }
 
 export default function DropdownWithReset({
@@ -20,6 +21,7 @@ export default function DropdownWithReset({
   buttonWidth,
   value,
   buttonClassName,
+  reset = false,
 }: DropdownProps) {
   const [open, setOpen] = React.useState(false);
   // const [value, setValue] = React.useState('');
@@ -63,7 +65,12 @@ export default function DropdownWithReset({
               <CommandItem
                 className="flex items-center text-label-s gap-3 bg-assistive-base border-t-2 cursor-pointer"
                 onSelect={() => {
-                  onSelect(items[0].value); // Reset the value
+                  if (reset) {
+                    onSelect('');
+                  } else {
+                    onSelect(items[0].value);
+                  }
+                  // Reset the value
                   setOpen(false);
                 }}>
                 <ArrowClockwise size={16} weight="light" />

@@ -6,7 +6,7 @@ import DropdownWithReset from '../common/DropdownWithReset';
 import DateNavigator from './DateNavigator';
 import { BASE_URL } from '@/lib/constants';
 import { initializeGraphRequirements, recruitmentStatus, timePeriods } from './constants';
-import { formatFetchDate } from '@/lib/utils';
+import { formatDashDate } from '@/lib/utils';
 import ReactApexChart from 'react-apexcharts';
 
 interface PropertyItem {
@@ -67,11 +67,11 @@ const DashBoardPropertyGraph = () => {
     const end = (() => {
       switch (graphInterval) {
         case 'DAILY':
-          return formatFetchDate(selectedDaily);
+          return formatDashDate(selectedDaily);
         case 'WEEKLY':
-          return formatFetchDate(selectedWeekly);
+          return formatDashDate(selectedWeekly);
         case 'MONTHLY':
-          return formatFetchDate(selectedMonthly);
+          return formatDashDate(selectedMonthly);
         default:
           return '';
       }
@@ -146,7 +146,7 @@ const DashBoardPropertyGraph = () => {
         for (let i = 6; i >= 0; i--) {
           const date = new Date(startDate);
           date.setDate(startDate.getDate() - i);
-          categories.push(formatFetchDate(date));
+          categories.push(formatDashDate(date));
         }
         return categories;
       }
@@ -173,7 +173,6 @@ const DashBoardPropertyGraph = () => {
   const options: ApexCharts.ApexOptions = {
     chart: {
       type: 'area',
-      height: 350,
       toolbar: { show: false },
       zoom: {
         enabled: false,
@@ -196,7 +195,7 @@ const DashBoardPropertyGraph = () => {
       curve: 'smooth',
       width: 1,
     },
-    tooltip: { style: { fontSize: '13px', fontFamily: 'Pretendard' }, x: { show: false } },
+    tooltip: { style: { fontSize: '13px', fontFamily: 'Pretendard, sans-serif' }, x: { show: false } },
     xaxis: {
       categories: generateXAxisCategories(),
       tooltip: {
@@ -207,7 +206,7 @@ const DashBoardPropertyGraph = () => {
         show: true,
       },
     },
-    yaxis: { labels: { style: { fontSize: '13px', fontFamily: 'Pretendard' } } },
+    yaxis: { labels: { style: { fontSize: '13px', fontFamily: 'Pretendard, sans-serif' } } },
     legend: {
       show: false,
     },

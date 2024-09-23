@@ -34,12 +34,10 @@ export const fetchPendingConsultations = async ({
     { propertyId: number; search: string; consultant: string; preferredAt: Date | undefined; page: number },
   ];
 }) => {
-  const [_key, { propertyId, search, consultant, preferredAt, page }] = queryKey;
+  const [_key, { propertyId, search, page }] = queryKey;
   const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/pending`, {
     params: {
       search,
-      consultant,
-      preferred_at: preferredAt,
       page,
       size: 5,
     },
@@ -69,13 +67,10 @@ export const fetchCompletedConsultations = async ({
     },
   ];
 }) => {
-  const [_key, { propertyId, search, tier, consultant, preferredAt, page }] = queryKey;
+  const [_key, { propertyId, search, page }] = queryKey;
   const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/completed`, {
     params: {
       search,
-      tier,
-      consultant,
-      preferred_at: preferredAt,
       page,
       size: 5,
     },
