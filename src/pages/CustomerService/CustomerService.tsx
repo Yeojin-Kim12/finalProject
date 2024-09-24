@@ -350,7 +350,7 @@ export default function CustomerService() {
             </TabsList>
             <TabsContent value="pending">
               <ConsultingPending
-                columns={columnsPending(handleInquiryClick)}
+                columns={columnsPending(handleInquiryClick, selectedProperty.id)}
                 data={pendingCustomersData}
                 isLoading={isLoading}
                 error={error}

@@ -1,26 +1,14 @@
 import axios from 'axios';
-// import { getAuthHeaders } from './login';
 import { BASE_URL } from '@/lib/constants';
-
-const getStoredCookie = () => {
-  return document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('accessToken='))
-    ?.split('=')[1];
-};
+import { getAuthHeaders } from '@/pages/LoginSignup/Login';
 
 export const fetchSidebarData = async ({ queryKey }: { queryKey: [string, { propertyId: number }] }) => {
   const [_key, { propertyId }] = queryKey;
   const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/sidebar`, {
-    // headers: {
-    //   'Content-Type': 'application/json',
-    //   ...getAuthHeaders(),
-    // },
     headers: {
       'Content-Type': 'application/json',
-      Cookie: `accessToken=${getStoredCookie()}`,
+      ...getAuthHeaders(),
     },
-    withCredentials: true,
   });
   console.log('Fetched sidebar data:', response); // Debug log
   return response.data;
@@ -41,7 +29,10 @@ export const fetchPendingConsultations = async ({
       page,
       size: 5,
     },
-    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
   });
   const { contents } = response.data;
   const consultPendingSummaries = contents[0]?.consultPendingSummaries || [];
@@ -74,11 +65,11 @@ export const fetchCompletedConsultations = async ({
       page,
       size: 5,
     },
-    // headers: {
-    //   'Content-Type': 'application/json',
-    //   ...getAuthHeaders(),
-    // },
-    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    // withCredentials: true,
   });
   const { contents } = response.data;
   const consultCompletedSummaries = contents[0]?.consultCompletedSummaries || [];
@@ -96,8 +87,9 @@ export const addNewCustomer = async (propertyId: number, customerData: any) => {
     {
       headers: {
         'Content-Type': 'application/json',
+        ...getAuthHeaders(),
       },
-      withCredentials: true,
+      // withCredentials: true,
     },
   );
   return response.data;

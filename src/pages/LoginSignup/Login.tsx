@@ -10,6 +10,11 @@ import PageHeader from '@/components/common/PageHeader';
 import { BASE_URL } from '@/lib/constants';
 import axios from 'axios';
 
+export const getAuthHeaders = () => {
+  const token = sessionStorage.getItem('accessToken');
+  return token ? { Authorization: token } : {};
+};
+
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
 
@@ -20,7 +25,7 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    setError,
+    // setError,
     clearErrors,
     trigger,
     formState: { errors, isSubmitting },
@@ -34,28 +39,19 @@ export default function Login() {
     console.log(isValid);
     if (isValid) {
       const { email, password } = data;
-      const res = await axios.post(
-        `${BASE_URL}/api/auth/login`,
-        {
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      console.log(res);
-      if (res.data.body !== null) {
+      const res = await axios.post(`${BASE_URL}/api/auth/login`, {
+        email,
+        password,
+      });
+
+      const accessToken = res.headers['authorization'];
+      if (accessToken) {
+        sessionStorage.setItem('accessToken', accessToken);
+        console.log('Access token saved to sessionStorage:', accessToken);
         window.location.replace('/');
+        return { accessToken };
       } else {
-        setError('root', {
-          type: 'manual',
-          message: res.data.result.resultMessage || '로그인에 실패했습니다. 다시 시도해주세요.',
-        });
-        console.error(res.data.result.resultMessage);
+        throw new Error('No access token in response headers');
       }
     }
   };

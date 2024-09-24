@@ -9,6 +9,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
 import { loginState } from '@/recoilstate/login/atoms';
 import { useRecoilState } from 'recoil';
+import { getAuthHeaders } from '@/pages/LoginSignup/Login';
 
 const GNB = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,13 +51,17 @@ const GNB = () => {
         `${BASE_URL}/api/auth/logout`,
         {},
         {
-          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders(),
+          },
         },
       );
       setLoginData({
         isLoggedIn: false,
         userInfo: null,
       });
+      sessionStorage.removeItem('accessToken');
     } catch (error) {
       console.error('Logout failed', error);
     }

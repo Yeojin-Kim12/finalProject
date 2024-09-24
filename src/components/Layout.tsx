@@ -5,6 +5,7 @@ import { useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { BASE_URL } from '@/lib/constants';
 import axios from 'axios';
+import { getAuthHeaders } from '@/pages/LoginSignup/Login';
 
 function Layout() {
   const setLoginData = useSetRecoilState(loginState);
@@ -14,7 +15,10 @@ function Layout() {
     const fetchGnb = async () => {
       try {
         const adminRes = await axios.get(`${BASE_URL}/api/admin/my-information`, {
-          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders(),
+          },
         });
         setLoginData({
           isLoggedIn: true,
@@ -27,7 +31,10 @@ function Layout() {
       } catch (adminError) {
         try {
           const memberRes = await axios.get(`${BASE_URL}/api/member/my-information`, {
-            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+              ...getAuthHeaders(),
+            },
           });
           setLoginData({
             isLoggedIn: true,

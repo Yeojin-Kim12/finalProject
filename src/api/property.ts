@@ -1,6 +1,6 @@
 import { BASE_URL } from '@/lib/constants';
 import axios from 'axios';
-// import { getAuthHeaders } from './login';
+import { getAuthHeaders } from '@/pages/LoginSignup/Login';
 
 export const fetchPropertyTable = async ({
   queryKey,
@@ -9,7 +9,10 @@ export const fetchPropertyTable = async ({
 }) => {
   const [_key, { page, size }] = queryKey;
   const { data } = await axios.get(`${BASE_URL}/api/admin/my-properties/table?page=${page}&size=${size}`, {
-    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
   });
   return data.contents || [];
 };

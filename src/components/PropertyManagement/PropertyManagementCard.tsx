@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { BASE_URL } from '@/lib/constants';
 import SkeletonCard from './SkeletonCard';
+import { getAuthHeaders } from '@/pages/LoginSignup/Login';
 
 const PropertyManagementCard = () => {
   const [currentPage, setCurrentPage] = React.useState(0);
@@ -17,7 +18,10 @@ const PropertyManagementCard = () => {
         page: page,
         size: 4,
       },
-      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
     });
     return res.data;
   };
