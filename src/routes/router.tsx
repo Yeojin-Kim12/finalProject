@@ -5,12 +5,11 @@ import Footer from '@/components/common/Footer';
 import FAB from '@/components/common/FAB';
 import ServiceOverview from '@/pages/ServiceOverview';
 import ProtectedRoute from './ProtectedRoute';
-const TestMS = lazy(() => import('@/pages/TestMS'));
 const TestHY = lazy(() => import('@/pages/TestHY'));
 const TestYJ = lazy(() => import('@/pages/TestYJ'));
 const PropertyKeywords = lazy(() => import('@/components/PropertyAdd/PropertyKeywords'));
 const CustomerService = lazy(() => import('@/pages/CustomerService/CustomerService'));
-const PropertyManagement = lazy(() => import('@/pages/PropertyManagement/PropertyManagement'));
+const PropertyManagement = lazy(() => import('@/pages/PropertyManagement'));
 const Favorite = lazy(() => import('@/pages/Favorite'));
 const CounselList = lazy(() => import('@/pages/CounselList'));
 const Login = lazy(() => import('@/pages/LoginSignup/Login'));
@@ -55,15 +54,6 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={''}>
             <Main />
-            <Footer />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/test-ms',
-        element: (
-          <Suspense fallback={<ProgressBar />}>
-            <TestMS />
             <Footer />
           </Suspense>
         ),

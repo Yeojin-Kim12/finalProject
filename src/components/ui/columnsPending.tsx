@@ -24,7 +24,7 @@ export function formatDate(dateString: string): string {
 
 export const columnsPending = (
   handleViewClick: (props: CustomerInquiryProps) => void,
-  propertyId: number,
+  propertyId: number | undefined,
 ): ColumnDef<ConsultingPending>[] => [
   {
     accessorKey: 'name',

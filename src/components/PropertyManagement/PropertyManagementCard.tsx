@@ -1,13 +1,13 @@
 import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
 import ItemCard from '../common/ItemCard';
 import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { BASE_URL } from '@/lib/constants';
 import SkeletonCard from './SkeletonCard';
-import { getAuthHeaders } from '@/pages/LoginSignup/Login';
+import { getAuthHeaders } from '@/utils/auth';
+import { Link } from 'react-router-dom';
+import NoProperty from '../CustomerService/NoProperty';
 
 const PropertyManagementCard = () => {
   const [currentPage, setCurrentPage] = React.useState(0);
@@ -22,6 +22,7 @@ const PropertyManagementCard = () => {
         'Content-Type': 'application/json',
         ...getAuthHeaders(),
       },
+      withCredentials: true,
     });
     return res.data;
   };
@@ -29,11 +30,8 @@ const PropertyManagementCard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['propertyCard', currentPage],
     queryFn: () => fetchPropertyCard(currentPage),
+    placeholderData: keepPreviousData,
   });
-  // TODO: 데이터가 없을 때 표시 교체할 것.
-  if (!data) {
-    return <div>No data available</div>;
-  }
   const totalPages = data?.totalPages;
   const handlePrevPage = () => {
     if (currentPage !== 0) {
@@ -50,37 +48,23 @@ const PropertyManagementCard = () => {
     <section className="w-full flex flex-col items-center gap-5">
       {isLoading ? (
         <SkeletonCard />
+      ) : data && data?.totalCount === 0 ? (
+        <NoProperty />
       ) : (
         <>
-          <div className="relative w-[1290px] flex items-center gap-6">
-            <div className="swiper-button-prev h-full pl-3 cursor-pointer" onClick={handlePrevPage}>
+          <div className="relative w-full flex justify-center items-center gap-6">
+            <div
+              className="absolute inset-y-0 h-full flex items-center -left-10 cursor-pointer"
+              onClick={handlePrevPage}>
               <CaretLeft
                 size={24}
                 weight="bold"
                 className="text-static-default hover:text-assistive-strong"
               />
             </div>
-
-            <Swiper
-              effect={'slide'}
-              modules={[Navigation]}
-              grabCursor
-              initialSlide={4}
-              speed={500}
-              slidesPerView={4} // 한 번에 4개의 슬라이드
-              slidesPerGroup={4}
-              navigation={{
-                // 네비게이션 설정
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-              }}
-              onSlideChange={(swiper) => {
-                const newIndex = swiper.activeIndex / 4;
-                setCurrentPage(newIndex);
-              }}
-              className="flex items-center">
+            <div className="flex w-full">
               {data?.contents?.map((item: any) => (
-                <SwiperSlide key={item.id}>
+                <Link to={`/property/${item.id}`} key={item.id}>
                   <ItemCard
                     size="default"
                     id={item.id}
@@ -89,11 +73,13 @@ const PropertyManagementCard = () => {
                     address={`${item.addrDo} ${item.addrGu}`}
                     status={item.pending}
                   />
-                </SwiperSlide>
+                </Link>
               ))}
-            </Swiper>
+            </div>
 
-            <div className="swiper-button-next pr-3 cursor-pointer" onClick={handleNextPage}>
+            <div
+              className="absolute inset-y-0 h-full flex items-center -right-10 cursor-pointer"
+              onClick={handleNextPage}>
               <CaretRight
                 size={24}
                 weight="bold"
@@ -104,7 +90,7 @@ const PropertyManagementCard = () => {
           <div className="flex gap-3 cursor-pointer">
             {Array.from({ length: totalPages }).map((_, index) => (
               <span
-                key={index}
+                key={`pagination-${index}`}
                 className={`swiper-pagination-bullet ${
                   index === currentPage ? 'swiper-pagination-bullet-active' : ''
                 }`}

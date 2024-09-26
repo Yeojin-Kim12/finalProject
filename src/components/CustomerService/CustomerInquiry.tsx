@@ -4,7 +4,7 @@ import { X } from '@phosphor-icons/react';
 
 export interface CustomerInquiryProps {
   name: string;
-  phoneNumber: string;
+  phoneNumber: string | undefined;
   createdAt: string;
   preferredAt?: string;
   completedAt?: string;

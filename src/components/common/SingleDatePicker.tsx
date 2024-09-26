@@ -7,10 +7,11 @@ import { CalendarDots } from '@phosphor-icons/react';
 
 interface SingleDatePickerProps {
   defaultLabel: string;
+  value?: Date;
   onChange: (date: Date | undefined) => void;
 }
-const SingleDatePicker = ({ defaultLabel, onChange }: SingleDatePickerProps) => {
-  const [date, setDate] = React.useState<Date | undefined>();
+const SingleDatePicker = ({ defaultLabel, value, onChange }: SingleDatePickerProps) => {
+  const [date, setDate] = React.useState<Date | undefined>(value);
   const [isActive, setIsActive] = React.useState<boolean>(false);
   const handleToggle = () => {
     setIsActive((prevState) => !prevState);

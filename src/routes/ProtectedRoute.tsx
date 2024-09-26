@@ -10,8 +10,6 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
   const { isLoggedIn, userInfo } = useRecoilValue(loginState);
 
-  console.log(isLoggedIn, userInfo);
-
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }

@@ -8,9 +8,10 @@ interface AccordionSection {
 interface AccordionMenuProps {
   sections: AccordionSection[];
   onItemSelect: (id: number) => void;
+  selectedProperty: number | undefined;
 }
 
-export default function AccordionMenu({ sections, onItemSelect }: AccordionMenuProps) {
+export default function AccordionMenu({ sections, onItemSelect, selectedProperty }: AccordionMenuProps) {
   return (
     <Accordion type="multiple">
       {sections.map((section, index) => (
@@ -19,13 +20,11 @@ export default function AccordionMenu({ sections, onItemSelect }: AccordionMenuP
             {section.title}
           </AccordionTrigger>
           {section.items.map((item, itemIndex) => (
-            <AccordionContent key={itemIndex} className="px-6 py-4">
-              <div
-                className="cursor-pointer text-label-sm font-normal text-static-default"
-                onClick={() => onItemSelect(item.id)} // Trigger onItemSelect when item is clicked
-              >
-                {item.name}
-              </div>
+            <AccordionContent
+              key={itemIndex}
+              className={`px-6 py-4 cursor-pointer ${selectedProperty === item.id && 'bg-primary-base'}`}
+              onClick={() => onItemSelect(item.id)}>
+              <div className="cursor-pointer text-label-sm font-normal text-static-default">{item.name}</div>
             </AccordionContent>
           ))}
         </AccordionItem>

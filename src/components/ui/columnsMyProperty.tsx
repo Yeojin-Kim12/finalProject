@@ -8,7 +8,7 @@ export interface MyProperty {
   createdAt: string;
   endDate: string;
   totalCount: number;
-  pending: boolean;
+  pending: boolean | string;
   consultationPendingCount: number;
 }
 
@@ -29,7 +29,9 @@ export const columnsMyProperty: ColumnDef<MyProperty>[] = [
     accessorKey: 'pending',
     header: '모집상태',
     cell: ({ row }) => {
-      return row.original.pending === true ? (
+      return row.original.pending === '-' ? (
+        '-'
+      ) : row.original.pending === true ? (
         <Label size="m" variant="highlight">
           모집중
         </Label>
@@ -51,23 +53,23 @@ export const columnsMyProperty: ColumnDef<MyProperty>[] = [
   {
     id: 'customColumn1',
     header: '', // No header for this column
-    cell: () => {
-      return (
-        <div className="flex relative w-[150px] items-center">
+    cell: ({ row }) => {
+      return typeof row.original.id === 'number' ? (
+        <div className="flex relative w-[50px] items-center">
           <PencilSimple size={24} weight="light" className="absolute right-0 cursor-pointer" />
         </div>
-      );
+      ) : null;
     },
   },
   {
     id: 'customColumn2',
     header: '', // No header for this column
-    cell: () => {
-      return (
+    cell: ({ row }) => {
+      return typeof row.original.id === 'number' ? (
         <div className="flex relative w-[150px] items-center">
           <TrashSimple size={24} weight="light" className="absolute left-0 cursor-pointer" />
         </div>
-      );
+      ) : null;
     },
   },
 ];

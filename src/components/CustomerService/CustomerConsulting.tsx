@@ -33,8 +33,6 @@ export default function CustomerConsulting({
   closePopup,
   onAddCustomer,
 }: CustomerConsultingProps) {
-  console.log('Consultant:', consultant);
-
   const [selectedRating, setSelectedRating] = useState<string | null>(null);
   const [selectedConsultingStatus, setSelectedConsultingStatus] = useState<string>('상담완료');
   const [consultingMemo, setConsultingMemo] = useState(consultingMessage);
@@ -45,7 +43,6 @@ export default function CustomerConsulting({
 
   const handleToggle = (item: string) => {
     setSelectedRating((prevItem) => (prevItem === item ? null : item));
-    console.log(item);
   };
 
   const handleMemoChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -63,7 +60,6 @@ export default function CustomerConsulting({
       tier: selectedRating || '',
       medium: 'Phone',
     };
-    console.log(consultingData);
 
     if (onAddCustomer) {
       onAddCustomer(consultingData);

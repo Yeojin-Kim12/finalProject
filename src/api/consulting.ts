@@ -1,16 +1,41 @@
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
 import { getAuthHeaders } from '@/pages/LoginSignup/Login';
+// import { constSelector } from 'recoil';
+import { formatDashDate } from '@/lib/utils';
 
-export const fetchSidebarData = async ({ queryKey }: { queryKey: [string, { propertyId: number }] }) => {
-  const [_key, { propertyId }] = queryKey;
-  const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/sidebar`, {
+// const getStoredCookie = () => {
+//   return document.cookie
+//     .split('; ')
+//     .find((row) => row.startsWith('accessToken='))
+//     ?.split('=')[1];
+// };
+
+export const fetchSidebarData = async () => {
+  const response = await axios.get(`${BASE_URL}/api/admin/properties/sidebar`, {
     headers: {
       'Content-Type': 'application/json',
       ...getAuthHeaders(),
     },
+    // headers: {
+    //   'Content-Type': 'application/json',
+    //   Cookie: `accessToken=${getStoredCookie()}`,
+    // },
+    withCredentials: true,
   });
-  console.log('Fetched sidebar data:', response); // Debug log
+  return response.data;
+};
+export const fetchSidebarDetailData = async (selectedProperty: number) => {
+  const response = await axios.get(
+    `${BASE_URL}/api/admin/properties/${selectedProperty}/consultations/sidebar`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+      withCredentials: true,
+    },
+  );
   return response.data;
 };
 
@@ -22,25 +47,25 @@ export const fetchPendingConsultations = async ({
     { propertyId: number; search: string; consultant: string; preferredAt: Date | undefined; page: number },
   ];
 }) => {
-  const [_key, { propertyId, search, page }] = queryKey;
+  const [_key, { propertyId, search, consultant, preferredAt, page }] = queryKey;
+  const formatDate = preferredAt ? formatDashDate(preferredAt) : undefined;
+
   const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/pending`, {
     params: {
       search,
-      page,
+      page: page - 1,
       size: 5,
+      consultant,
+      preferredAt: formatDate,
     },
     headers: {
       'Content-Type': 'application/json',
       ...getAuthHeaders(),
     },
   });
-  const { contents } = response.data;
-  const consultPendingSummaries = contents[0]?.consultPendingSummaries || [];
+  console.log(response);
 
-  return {
-    ...response.data,
-    consultPendingSummaries,
-  };
+  return response.data;
 };
 
 export const fetchCompletedConsultations = async ({
@@ -58,18 +83,21 @@ export const fetchCompletedConsultations = async ({
     },
   ];
 }) => {
-  const [_key, { propertyId, search, page }] = queryKey;
+  const [_key, { propertyId, search, tier, consultant, preferredAt, page }] = queryKey;
   const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/completed`, {
     params: {
       search,
-      page,
+      tier,
       size: 5,
+      consultant,
+      preferredAt,
+      page: page - 1,
     },
     headers: {
       'Content-Type': 'application/json',
       ...getAuthHeaders(),
     },
-    // withCredentials: true,
+    withCredentials: true,
   });
   const { contents } = response.data;
   const consultCompletedSummaries = contents[0]?.consultCompletedSummaries || [];

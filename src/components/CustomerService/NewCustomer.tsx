@@ -15,7 +15,7 @@ import { BASE_URL } from '@/lib/constants';
 
 interface NewCustomerProps {
   onAddCustomer: (customerData: CustomerData) => void;
-  propertyId: string;
+  propertyId: number;
 }
 
 export default function NewCustomer({ onAddCustomer, propertyId }: NewCustomerProps) {
@@ -37,7 +37,6 @@ export default function NewCustomer({ onAddCustomer, propertyId }: NewCustomerPr
 
   const handleToggle = (item: string) => {
     setSelectedRating((prevItem) => (prevItem === item ? null : item));
-    console.log(item);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,7 +59,6 @@ export default function NewCustomer({ onAddCustomer, propertyId }: NewCustomerPr
       console.error('정상적으로 등록되지 않았습니다:', error);
     }
     onAddCustomer(customerData);
-    console.log(customerData);
   };
 
   return (
