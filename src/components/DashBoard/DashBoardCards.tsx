@@ -7,6 +7,7 @@ import DashBoardConsultation from './DashBoardConsultation';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
+import { getAuthHeaders } from '@/utils/auth';
 
 const DashBoardCards = () => {
   const [time, setTime] = React.useState<string>('');
@@ -19,7 +20,12 @@ const DashBoardCards = () => {
   }, []);
 
   const fetchDashBoardCards = async () => {
-    const res = await axios.get(`${BASE_URL}/api/admin/dashboard/cards`, { withCredentials: true });
+    const res = await axios.get(`${BASE_URL}/api/admin/dashboard/cards`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+    });
     return res.data;
   };
   const { data } = useQuery({

@@ -22,7 +22,6 @@ const PropertyManagementCard = () => {
         'Content-Type': 'application/json',
         ...getAuthHeaders(),
       },
-      withCredentials: true,
     });
     return res.data;
   };

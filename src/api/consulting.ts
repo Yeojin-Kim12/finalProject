@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
-import { getAuthHeaders } from '@/pages/LoginSignup/Login';
-// import { constSelector } from 'recoil';
+import { getAuthHeaders } from '@/utils/auth';
 import { formatDashDate } from '@/lib/utils';
 
 // const getStoredCookie = () => {
@@ -17,11 +16,6 @@ export const fetchSidebarData = async () => {
       'Content-Type': 'application/json',
       ...getAuthHeaders(),
     },
-    // headers: {
-    //   'Content-Type': 'application/json',
-    //   Cookie: `accessToken=${getStoredCookie()}`,
-    // },
-    withCredentials: true,
   });
   return response.data;
 };
@@ -33,7 +27,6 @@ export const fetchSidebarDetailData = async (selectedProperty: number) => {
         'Content-Type': 'application/json',
         ...getAuthHeaders(),
       },
-      withCredentials: true,
     },
   );
   return response.data;
@@ -97,7 +90,6 @@ export const fetchCompletedConsultations = async ({
       'Content-Type': 'application/json',
       ...getAuthHeaders(),
     },
-    withCredentials: true,
   });
   const { contents } = response.data;
   const consultCompletedSummaries = contents[0]?.consultCompletedSummaries || [];
@@ -117,7 +109,6 @@ export const addNewCustomer = async (propertyId: number, customerData: any) => {
         'Content-Type': 'application/json',
         ...getAuthHeaders(),
       },
-      // withCredentials: true,
     },
   );
   return response.data;

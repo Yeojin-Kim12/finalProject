@@ -6,7 +6,7 @@ import { CustomerInquiryProps } from '../CustomerService/CustomerInquiry';
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
 import { useQuery } from '@tanstack/react-query';
-import { getAuthHeaders } from '@/pages/LoginSignup/Login';
+import { getAuthHeaders } from '@/utils/auth';
 
 export interface ConsultingPending {
   name: string;

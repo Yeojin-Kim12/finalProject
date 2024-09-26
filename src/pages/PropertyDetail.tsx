@@ -27,6 +27,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
+import { getAuthHeaders } from '@/utils/auth';
 
 const steps = ['희망 상담 일자', '추가 사항'];
 
@@ -68,7 +69,12 @@ const PropertyDetail = () => {
         ? `${BASE_URL}/api/member/properties/${id}`
         : `${BASE_URL}/api/common/properties/${id}`;
 
-    const res = await axios.get<SalesInformation>(url, { withCredentials: true });
+    const res = await axios.get<SalesInformation>(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+    });
 
     return res.data;
   };
@@ -88,7 +94,12 @@ const PropertyDetail = () => {
         ? `${BASE_URL}/api/member/properties/${id}/consultation`
         : `${BASE_URL}/api/common/properties/${id}/consultation`;
 
-    const res = await axios.post(url, formData, { withCredentials: true });
+    const res = await axios.post(url, formData, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+    });
     return res.data;
   };
 

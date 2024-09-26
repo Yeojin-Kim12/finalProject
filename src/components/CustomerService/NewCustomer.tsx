@@ -5,13 +5,12 @@ import { Input } from '../ui/input';
 import Dropdown from '../common/Dropdown';
 import { operatorId, consultingStatus } from '../../lib/dropdownItems';
 import { ToggleSmall } from '../ui/toggleSmall';
-// import { useMutation } from '@tanstack/react-query';
 import { CustomerData } from '@/types/types';
 import { DialogClose, DialogTitle } from '@/components/ui/dialogNewCustomer';
 import SingleDatePicker from '../common/SingleDatePicker';
-// import { addNewCustomer } from '@/api/consulting';
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
+import { getAuthHeaders } from '@/utils/auth';
 
 interface NewCustomerProps {
   onAddCustomer: (customerData: CustomerData) => void;
@@ -53,7 +52,10 @@ export default function NewCustomer({ onAddCustomer, propertyId }: NewCustomerPr
     };
     try {
       await axios.post(`${BASE_URL}/api/admin/properties/${propertyId}/consultations`, customerData, {
-        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
       });
     } catch (error) {
       console.error('정상적으로 등록되지 않았습니다:', error);
@@ -68,12 +70,7 @@ export default function NewCustomer({ onAddCustomer, propertyId }: NewCustomerPr
           <X size={32} weight="light" className="text-assistive-strong cursor-pointer" />
         </div>
       </DialogClose>
-      <form
-        className="flex flex-col w-[424px] relative"
-        // onSubmit={(event) => {
-        //   event.preventDefault();
-        //   handleSubmit(event);}}
-      >
+      <form className="flex flex-col w-[424px] relative">
         <DialogTitle>신규 고객 등록</DialogTitle>
         <label className="py-3">성함</label>
         <Input
@@ -128,12 +125,6 @@ export default function NewCustomer({ onAddCustomer, propertyId }: NewCustomerPr
                 }
               }}
             />
-            {/* <Input
-              type="date"
-              className="w-[187px] py-4 px-5 rounded-5"
-              value={preferredAt}
-              onChange={(event) => setPreferredAt(event.target.value)}
-            /> */}
           </>
         ) : (
           <>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
+import { getAuthHeaders } from '@/utils/auth';
 
 const useLike = (initialLikeStatus: boolean, propertyId: number) => {
   const [liked, setLiked] = useState(initialLikeStatus);
@@ -11,7 +12,10 @@ const useLike = (initialLikeStatus: boolean, propertyId: number) => {
         `${BASE_URL}/api/member/properties/${propertyId}/like`,
         {},
         {
-          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders(),
+          },
         },
       );
       setLiked(!liked);

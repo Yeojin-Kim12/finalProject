@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getAuthHeaders } from '@/utils/auth';
 
 const Favorite = () => {
   const { isDesktop, isMobile } = useResponsive();
@@ -24,7 +25,10 @@ const Favorite = () => {
         page: page,
         size: size,
       },
-      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
     });
 
     return res.data;

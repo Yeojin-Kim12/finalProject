@@ -26,7 +26,6 @@ const MyPropertyTable = () => {
           'Content-Type': 'application/json',
           ...getAuthHeaders(),
         },
-        withCredentials: true,
       });
       return res.data;
     } catch (error) {

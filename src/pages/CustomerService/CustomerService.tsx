@@ -95,7 +95,7 @@ function CustomerService() {
 
   const isSidebarDataEmpty =
     !sidebarData ||
-    (!sidebarData.sideBarPendingResponseList.length && !sidebarData.sideBarCompletedResponseList.length);
+    (!sidebarData.sideBarPendingResponseList?.length && !sidebarData.sideBarCompletedResponseList?.length);
 
   // popup 윈도우
   const openPopupWindow = <P extends {}>(

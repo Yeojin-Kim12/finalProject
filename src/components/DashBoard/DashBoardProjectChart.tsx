@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 import ReactApexChart from 'react-apexcharts';
+import { getAuthHeaders } from '@/utils/auth';
 
 const DashBoardProjectChart = () => {
   const [currentPage, setCurrentPage] = React.useState(0);
@@ -15,7 +16,10 @@ const DashBoardProjectChart = () => {
         page: page,
         size: 5,
       },
-      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
     });
 
     return res.data;

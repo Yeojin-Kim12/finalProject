@@ -5,7 +5,7 @@ import { useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { BASE_URL } from '@/lib/constants';
 import axios from 'axios';
-import { getAuthHeaders } from '@/pages/LoginSignup/Login';
+import { getAuthHeaders } from '@/utils/auth';
 
 function Layout() {
   const setLoginData = useSetRecoilState(loginState);

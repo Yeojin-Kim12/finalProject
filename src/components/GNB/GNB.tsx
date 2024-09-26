@@ -9,7 +9,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
 import { loginState } from '@/recoilstate/login/atoms';
 import { useRecoilState } from 'recoil';
-import { getAuthHeaders } from '@/pages/LoginSignup/Login';
+import { getAuthHeaders } from '@/utils/auth';
 
 const GNB = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

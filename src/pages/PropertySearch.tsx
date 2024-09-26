@@ -19,6 +19,7 @@ import SkeletonSelectedList from '@/components/PropertySearch/SkeletonSelectedLi
 import { Link } from 'react-scroll';
 import { useRecoilState } from 'recoil';
 import { loginState } from '@/recoilstate/login/atoms';
+import { getAuthHeaders } from '@/utils/auth';
 
 const areasMap = [
   { label: '서울', value: '서울' },
@@ -89,7 +90,10 @@ const PropertySearch = () => {
           totalMax: selectedFilters.householdNumber.max,
         }),
       },
-      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
     });
 
     return res.data;

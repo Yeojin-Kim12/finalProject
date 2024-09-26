@@ -1,5 +1,6 @@
 import { BASE_URL } from '@/lib/constants';
 import axios, { AxiosError } from 'axios';
+import { getAuthHeaders } from '@/utils/auth';
 
 export const useFileUpload = () => {
   const uploadToServer = async (files: File[], fileType: string) => {
@@ -15,8 +16,8 @@ export const useFileUpload = () => {
       const res = await axios.post(`${BASE_URL}/api/common/presigned-url`, fileData, {
         headers: {
           'Content-Type': 'application/json',
+          ...getAuthHeaders(),
         },
-        withCredentials: true,
       });
 
       const presignedUrls: string[] = res.data;

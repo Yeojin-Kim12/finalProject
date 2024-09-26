@@ -10,11 +10,6 @@ import PageHeader from '@/components/common/PageHeader';
 import { BASE_URL } from '@/lib/constants';
 import axios from 'axios';
 
-export const getAuthHeaders = () => {
-  const token = sessionStorage.getItem('accessToken');
-  return token ? { Authorization: token } : {};
-};
-
 export default function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
 

@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
+import { getAuthHeaders } from '@/utils/auth';
 
 const Search = () => {
   const { isDesktop, isMobile } = useResponsive();
@@ -33,7 +34,10 @@ const Search = () => {
         size: size,
         ...(search !== '' && { search: search }),
       },
-      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
     });
 
     return res.data;

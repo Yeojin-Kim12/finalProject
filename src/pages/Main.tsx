@@ -16,6 +16,7 @@ import { useRecoilValue } from 'recoil';
 import { loginState } from '@/recoilstate/login/atoms';
 import SkeletonPropertyList from '@/components/Main/SkeletonPropertyList';
 import { Link } from 'react-scroll';
+import { getAuthHeaders } from '@/utils/auth';
 
 const Main = () => {
   const { isDesktop, isTablet, isMobile } = useResponsive();
@@ -30,7 +31,10 @@ const Main = () => {
       params: {
         page,
       },
-      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
     });
 
     return res.data;
@@ -64,7 +68,7 @@ const Main = () => {
         {isLoading ? (
           <SkeletonSwiper />
         ) : (
-          data?.contents[0]?.homeImagesUrl.length > 0 && (
+          data?.contents[0]?.homeImagesUrl?.length > 0 && (
             <BannerSwiper data={data?.contents[0]?.homeImagesUrl} />
           )
         )}
@@ -170,7 +174,7 @@ const Main = () => {
           <SkeletonPropertyList />
         ) : (
           Array.isArray(data?.contents[0]?.properties) &&
-          data.contents[0].properties.length !== 0 && (
+          data.contents[0].properties?.length !== 0 && (
             <div className="">
               <div className="mb-12 tablet:mb-11 mobile:mb-9">
                 <div id="list" className="mb-6 mobile:mb-9">

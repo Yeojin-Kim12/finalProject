@@ -8,6 +8,7 @@ import { BASE_URL } from '@/lib/constants';
 import { initializeGraphRequirements, recruitmentStatus, timePeriods } from './constants';
 import { formatDashDate } from '@/lib/utils';
 import ReactApexChart from 'react-apexcharts';
+import { getAuthHeaders } from '@/utils/auth';
 
 interface PropertyItem {
   propertyId: number;
@@ -36,7 +37,10 @@ const DashBoardPropertyGraph = () => {
   // 매물 Dropdown axios
   const fetchDropdownSelect = async () => {
     const res = await axios.get(`${BASE_URL}/api/admin/dashboard/dropdown-selects`, {
-      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
     });
     const transformedData = {
       openList: res.data.openList.map((item: PropertyItem) => ({
@@ -81,7 +85,10 @@ const DashBoardPropertyGraph = () => {
         end: end,
         graphInterval: graphInterval,
       },
-      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
     });
     return res.data;
   };
