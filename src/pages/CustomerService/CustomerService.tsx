@@ -2,15 +2,15 @@ import React, { ComponentType } from 'react';
 import { ConsultingPending } from '@/components/CustomerService/ConsultingPending';
 import { CustomerData } from '@/types/types';
 import { ConsultingCompleted } from '@/components/CustomerService/ConsultingCompleted';
-import { columnsPending } from '@/components/ui/columnsPending';
-import { columnsCompleted } from '@/components/ui/columnsCompleted';
+import { columnsPending } from '@/components/CustomerService/columnsPending';
+import { columnsCompleted } from '@/components/CustomerService/columnsCompleted';
 import CustomerInquiry from '@/components/CustomerService/CustomerInquiry';
 import CustomerConsulting, { CustomerConsultingProps } from '@/components/CustomerService/CustomerConsulting';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CustomerCompleted from '@/components/CustomerService/CustomerCompleted';
 import { ListDashes, Plus, X } from '@phosphor-icons/react';
 import AccordionMenu from '@/components/CustomerService/AccordionMenu';
-import { propertyTypeMapping } from '@/lib/utils';
+import { formatDateWithDots, propertyTypeMapping } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import NewCustomer from '@/components/CustomerService/NewCustomer';
 import { keepPreviousData, QueryClientProvider, useQuery } from '@tanstack/react-query';
@@ -23,6 +23,7 @@ import Draggable from 'react-draggable';
 import { getAuthHeaders } from '@/utils/auth';
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
+import SkeletonDetail from '@/components/CustomerService/SkeletonDetail';
 
 function CustomerService() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +44,7 @@ function CustomerService() {
   });
 
   // 매물 상세(상단) fetch
-  const { data: sidebarDetailData } = useQuery({
+  const { data: sidebarDetailData, isLoading } = useQuery({
     queryKey: ['sidebarDetail', selectedProperty!],
     queryFn: () => fetchSidebarDetailData(selectedProperty!),
     placeholderData: keepPreviousData,
@@ -237,53 +238,57 @@ function CustomerService() {
         <NoProperty />
       ) : (
         <section className="container mx-auto py-10 ">
-          <article className="flex flex-col mb-10 gap-7">
-            <div>
-              <p className="ml-3 text-body-lg font-normal text-assistive-strong">
-                {propertyTypeMapping[sidebarDetailData?.propertyType]}
-              </p>
-              <h1 className="ml-3 text-title-2xl font-bold">{sidebarDetailData?.propertyName}</h1>
-            </div>
-            <div className="flex justify-between">
-              <div className="flex gap-10">
-                <img
-                  src={sidebarDetailData?.image}
-                  className="flex-none object-cover w-[320px] h-[180px] rounded-5"
-                />
-                <div className="flex gap-4">
-                  <div className="flex flex-col self-center w-[64px] gap-3 text-detail-base text-assistive-strong">
-                    <p>시행사</p>
-                    <p>시공사</p>
-                    <p>세대수</p>
-                    <p>모집기간</p>
-                  </div>
-                  <div className="flex flex-col self-center w-[542px] gap-3 text-detail-base text-static-default">
-                    <p>{sidebarDetailData?.companyName}</p>
-                    <p>{sidebarDetailData?.constructor}</p>
-                    <p>{sidebarDetailData?.totalNumber}</p>
-                    <p>
-                      {sidebarDetailData?.startDate} - {sidebarDetailData?.endDate}
-                    </p>
-                  </div>
-                </div>
+          {isLoading ? (
+            <SkeletonDetail />
+          ) : (
+            <article className="flex flex-col mb-10 gap-7">
+              <div>
+                <p className="ml-3 text-body-lg font-normal text-assistive-strong">
+                  {propertyTypeMapping[sidebarDetailData?.propertyType]}
+                </p>
+                <h1 className="ml-3 text-title-2xl font-bold">{sidebarDetailData?.propertyName}</h1>
               </div>
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <div className="self-end mr-11">
-                  <DialogTrigger asChild>
-                    <Button variant="primary" size="lg" className="gap-4">
-                      고객추가
-                      <Plus size={24} weight="bold" />
-                    </Button>
-                  </DialogTrigger>
+              <div className="flex justify-between">
+                <div className="flex gap-10">
+                  <img
+                    src={sidebarDetailData?.image}
+                    className="flex-none object-cover w-[320px] h-[180px] rounded-5"
+                  />
+                  <div className="flex gap-4">
+                    <div className="flex flex-col self-center w-[64px] gap-3 text-detail-base text-assistive-strong">
+                      <p>시행사</p>
+                      <p>시공사</p>
+                      <p>세대수</p>
+                      <p>모집기간</p>
+                    </div>
+                    <div className="flex flex-col self-center w-[542px] gap-3 text-detail-base text-static-default">
+                      <p>{sidebarDetailData?.companyName}</p>
+                      <p>{sidebarDetailData?.constructor}</p>
+                      <p>{sidebarDetailData?.totalNumber}</p>
+                      <p>
+                        {`${sidebarDetailData?.startDate ? formatDateWithDots(sidebarDetailData.startDate) : ''} -
+    ${sidebarDetailData?.endDate ? formatDateWithDots(sidebarDetailData.endDate) : ''}`}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <DialogContent>
-                  <NewCustomer onAddCustomer={handleAddNewCustomer} propertyId={sidebarDetailData?.id} />
-                  <DialogDescription />
-                </DialogContent>
-              </Dialog>
-            </div>
-          </article>
-
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <div className="self-end mr-11">
+                    <DialogTrigger asChild>
+                      <Button variant="primary" size="lg" className="gap-4">
+                        고객추가
+                        <Plus size={24} weight="bold" />
+                      </Button>
+                    </DialogTrigger>
+                  </div>
+                  <DialogContent>
+                    <NewCustomer onAddCustomer={handleAddNewCustomer} propertyId={sidebarDetailData?.id} />
+                    <DialogDescription />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </article>
+          )}
           <Tabs defaultValue="pending" className="w-full">
             <TabsList className="flex">
               <TabsTrigger value="pending">상담대기</TabsTrigger>

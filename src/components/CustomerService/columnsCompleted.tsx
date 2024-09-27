@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
-import { LabelCustomerRating } from './labelCustomerRating';
+import { LabelCustomerRating } from '../ui/labelCustomerRating';
+import { formatDateWithDots, formatPhoneNumber } from '@/lib/utils';
 
 export interface ConsultingCompleted {
   adminConsultationId: number;
@@ -43,21 +44,24 @@ export const columnsCompleted = (
   {
     accessorKey: 'phoneNumber',
     header: '전화번호',
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">{formatPhoneNumber(row.original.phoneNumber)}</div>
+      );
+    },
   },
   {
     accessorKey: 'createdAt',
     header: '상담신청일자',
     cell: ({ row }) => {
-      const createdAt = row.getValue('createdAt') as string;
-      return <div className="text-center font-medium">{formatDate(createdAt)}</div>;
+      return <span>{formatDateWithDots(row.original.createdAt)}</span>;
     },
   },
   {
     accessorKey: 'completedAt',
     header: '처리일자',
     cell: ({ row }) => {
-      const completedAt = row.getValue('completedAt') as string;
-      return <div className="text-center font-medium">{formatDate(completedAt)}</div>;
+      return <span>{formatDateWithDots(row.original.completedAt)}</span>;
     },
   },
   {

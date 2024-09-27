@@ -10,7 +10,7 @@ import DefaultPagination from '../common/DefaultPagination';
 import { BASE_URL } from '@/lib/constants';
 import { getAuthHeaders } from '@/utils/auth';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { columnsMyProperty } from '../ui/columnsMyProperty';
+import { columnsMyProperty } from './columnsMyProperty';
 
 const MyPropertyTable = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -147,13 +147,15 @@ const MyPropertyTable = () => {
           </TableBody>
         </Table>
       </div>
-      <div>
-        <DefaultPagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </div>
+      {data && data?.contents?.length === 0 && (
+        <div>
+          <DefaultPagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
     </section>
   );
 };

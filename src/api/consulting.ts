@@ -76,27 +76,25 @@ export const fetchCompletedConsultations = async ({
   ];
 }) => {
   const [_key, { propertyId, search, tier, consultant, preferredAt, page }] = queryKey;
+  const formatDate = preferredAt ? formatDashDate(preferredAt) : undefined;
+
   const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/completed`, {
     params: {
       ...(search !== '' && { search }),
       ...(tier !== '' && { tier }),
       size: 5,
       ...(consultant !== '' && { consultant }),
-      preferredAt,
+      preferredAt: formatDate,
       page: page - 1,
     },
     headers: {
       'Content-Type': 'application/json',
       ...getAuthHeaders(),
     },
+    withCredentials: true,
   });
-  const { contents } = response.data;
-  const consultCompletedSummaries = contents[0]?.consultCompletedSummaries || [];
-
-  return {
-    ...response.data,
-    consultCompletedSummaries,
-  };
+  console.log(response);
+  return response.data;
 };
 
 export const addNewCustomer = async (propertyId: number, customerData: any) => {

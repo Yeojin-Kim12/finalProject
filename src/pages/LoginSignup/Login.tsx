@@ -31,7 +31,6 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const isValid = await trigger(['email', 'password']);
-    console.log(isValid);
     if (isValid) {
       const { email, password } = data;
       const res = await axios.post(`${BASE_URL}/api/auth/login`, {

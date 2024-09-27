@@ -23,6 +23,7 @@ const PropertyManagementCard = () => {
         ...getAuthHeaders(),
       },
     });
+    console.log(res.data);
     return res.data;
   };
 
@@ -47,7 +48,7 @@ const PropertyManagementCard = () => {
     <section className="w-full flex flex-col items-center gap-5">
       {isLoading ? (
         <SkeletonCard />
-      ) : data && data?.totalCount === 0 ? (
+      ) : data && Array.isArray(data.contents) && data.contents?.length === 0 ? (
         <NoProperty />
       ) : (
         <>

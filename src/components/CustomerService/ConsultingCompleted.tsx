@@ -2,14 +2,7 @@ import React from 'react';
 import DropdownWithReset from '../common/DropdownWithReset';
 import { KeyReturn, MagnifyingGlass } from '@phosphor-icons/react';
 import { ArrowClockwise } from '@phosphor-icons/react';
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  ColumnFiltersState,
-  getFilteredRowModel,
-} from '@tanstack/react-table';
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '../ui/input';
 import { operatorIdAll, customerRating } from '../../lib/dropdownItems';
@@ -27,10 +20,9 @@ export function ConsultingCompleted<TData, TValue>({ columns, propertyId }: Data
   const [page, setPage] = React.useState(1);
   const [search, setSearch] = React.useState<string>('');
   const [inputValue, setInputValue] = React.useState<string>('');
-  const [date, setDate] = React.useState<Date | undefined>();
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
   const [tier, setTier] = React.useState<string>('');
   const [selectedConsultant, setSelectedConsultant] = React.useState<string>('');
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const { data: completedData } = useQuery({
     queryKey: [
@@ -53,30 +45,32 @@ export function ConsultingCompleted<TData, TValue>({ columns, propertyId }: Data
     data: completedData?.contents[0].consultCompletedSummaries || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      columnFilters,
-    },
   });
 
   const resetFilters = () => {
-    table.setGlobalFilter('');
     setSearch('');
+    setInputValue('');
     setDate(undefined);
-    setColumnFilters([]);
     setSelectedConsultant('');
     setTier('');
+    setPage(1);
   };
 
+  // 입력값 업데이트
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value); // 입력값 업데이트
+    setInputValue(e.target.value);
   };
+
+  // Enter 입력 시 search 업데이트
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      setSearch(inputValue); // Enter 입력 시 search 업데이트
+      setSearch(inputValue);
     }
   };
+  // page 초기화
+  React.useEffect(() => {
+    setPage(1);
+  }, [search, date, tier, selectedConsultant]);
 
   return (
     <>
@@ -96,8 +90,8 @@ export function ConsultingCompleted<TData, TValue>({ columns, propertyId }: Data
             Enter
           </div>
         </div>
-        <div className="space-x-3">
-          <SingleDatePicker defaultLabel="상담날짜 선택" onChange={setDate} />
+        <div className="flex gap-3">
+          <SingleDatePicker defaultLabel="상담날짜 선택" value={date} onChange={setDate} />
           <DropdownWithReset
             items={customerRating}
             defaultLabel={tier || '고객등급'}
@@ -115,18 +109,17 @@ export function ConsultingCompleted<TData, TValue>({ columns, propertyId }: Data
             reset
           />
         </div>
-        <div className="flex py-4 px-6 gap-3 absolute right-0 cursor-pointer">
-          <span className="cursor-pointer text-label-lg text-assistive-strong" onClick={resetFilters}>
-            조건 초기화
-          </span>
+        <div
+          className="flex items-center py-4 px-6 gap-3 absolute right-0 cursor-pointer"
+          onClick={resetFilters}>
+          <span className="text-label-lg text-assistive-strong">조건 초기화</span>
           <ArrowClockwise size={24} weight="light" className="text-assistive-strong" />
         </div>
       </div>
-      <div className="flex">
-        <h1 className="py-[10px] pl-6 pr-3 text-title-sm font-bold text-static-default">총 상담완료</h1>
-        <span className="py-[10px] text-title-sm font-bold text-primary-default">
-          {completedData?.totalCount}
-        </span>
+      <div className="flex gap-3 py-4 px-6">
+        <h1 className="text-title-sm font-bold text-static-default">총 상담완료</h1>
+
+        <span className="text-title-sm font-bold text-primary-default">{completedData?.totalCount}</span>
       </div>
       <Table>
         <TableHeader>
@@ -146,8 +139,8 @@ export function ConsultingCompleted<TData, TValue>({ columns, propertyId }: Data
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+            table.getRowModel().rows.map((row, index) => (
+              <TableRow key={`table-${row.id}-${index}`} data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

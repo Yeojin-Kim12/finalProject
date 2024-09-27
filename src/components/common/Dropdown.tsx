@@ -47,7 +47,8 @@ export default function Dropdown({ items, defaultLabel, onSelect, buttonWidth }:
                     setValue(currentValue === value ? '' : currentValue);
                     setOpen(false);
                     onSelect(currentValue);
-                  }}>
+                  }}
+                  className="cursor-pointer">
                   {item.label}
                 </CommandItem>
               ))}

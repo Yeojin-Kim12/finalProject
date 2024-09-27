@@ -1,14 +1,7 @@
 import React from 'react';
 import DropdownWithReset from '../common/DropdownWithReset';
 import { MagnifyingGlass, ArrowClockwise, KeyReturn } from '@phosphor-icons/react';
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  ColumnFiltersState,
-  getFilteredRowModel,
-} from '@tanstack/react-table';
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '../ui/input';
 import { operatorIdAll } from '../../lib/dropdownItems';
@@ -28,7 +21,6 @@ export function ConsultingPending<TData, TValue>({ columns, propertyId }: DataTa
   const [inputValue, setInputValue] = React.useState<string>('');
   const [date, setDate] = React.useState<Date | undefined>();
   const [selectedConsultant, setSelectedConsultant] = React.useState<string>('');
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const { data: pendingData } = useQuery({
     queryKey: [
@@ -50,36 +42,39 @@ export function ConsultingPending<TData, TValue>({ columns, propertyId }: DataTa
     data: pendingData?.contents[0].consultPendingSummaries || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      columnFilters,
-    },
   });
 
   const resetFilters = () => {
     table.setGlobalFilter('');
     setSearch('');
+    setInputValue('');
     setDate(undefined);
-    setColumnFilters([]);
     setSelectedConsultant('');
     setPage(1);
   };
+
+  // 입력값 업데이트
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value); // 입력값 업데이트
+    setInputValue(e.target.value);
   };
+
+  // Enter 입력 시 search 업데이트
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      setSearch(inputValue); // Enter 입력 시 search 업데이트
+      setSearch(inputValue);
     }
   };
+  // page 초기화
+  React.useEffect(() => {
+    setPage(1);
+  }, [search, date, selectedConsultant]);
   return (
     <>
       <section className="flex mb-8 mt-10 relative items-center">
         <div className="relative">
           <MagnifyingGlass size={24} className={'text-assistive-divider absolute left-7 inset-y-0 my-auto'} />
           <Input
-            type="input-base text"
+            type="input-base"
             placeholder="이름, 전화번호를 입력해주세요"
             value={inputValue}
             onChange={handleInputChange}
@@ -92,7 +87,7 @@ export function ConsultingPending<TData, TValue>({ columns, propertyId }: DataTa
           </div>
         </div>
         <div className="flex gap-3">
-          <SingleDatePicker defaultLabel={!date ? '상담날짜 선택' : ''} onChange={setDate} />
+          <SingleDatePicker defaultLabel={'상담날짜 선택'} value={date} onChange={setDate} />
           <DropdownWithReset
             items={operatorIdAll}
             defaultLabel={selectedConsultant || '상담사'}
@@ -102,19 +97,17 @@ export function ConsultingPending<TData, TValue>({ columns, propertyId }: DataTa
             reset
           />
         </div>
-        <div className="flex py-4 px-6 gap-3 absolute right-0 cursor-pointer" onClick={resetFilters}>
+        <div
+          className="flex items-center py-4 px-6 gap-3 absolute right-0 cursor-pointer"
+          onClick={resetFilters}>
           <span className="text-label-lg text-assistive-strong">조건 초기화</span>
           <ArrowClockwise size={24} weight="light" className="text-assistive-strong" />
         </div>
       </section>
-      <div className="flex">
-        <h1 className="py-[10px] pl-6 pr-3 text-title-sm font-bold text-static-default">총 상담대기</h1>
-        <span className="py-[10px] text-title-sm font-bold text-primary-default">
-          {pendingData?.totalCount}
-        </span>
+      <div className="flex gap-3 py-4 px-6">
+        <h1 className="text-title-sm font-bold text-static-default">총 상담대기</h1>
+        <span className="text-title-sm font-bold text-primary-default">{pendingData?.totalCount}</span>
       </div>
-
-      {/* ... existing JSX ... */}
 
       <Table>
         <TableHeader>

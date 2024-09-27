@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
 import { useQuery } from '@tanstack/react-query';
 import { getAuthHeaders } from '@/utils/auth';
+import { formatPhoneNumber, formatDateWithDots } from '@/lib/utils';
 
 export interface ConsultingPending {
   memberConsultationId: number;
@@ -18,10 +19,6 @@ export interface ConsultingPending {
   addConsultation: boolean;
 }
 
-export function formatDate(dateString: string): string {
-  return dateString.split('T')[0].replace(/-/g, '.');
-}
-
 export const columnsPending = (
   handleViewClick: (memberConsultationId: number) => void,
   propertyId: number,
@@ -31,9 +28,9 @@ export const columnsPending = (
     header: '고객명',
     cell: ({ row }) => {
       return (
-        <div className="flex items-center">
+        <div className="relative flex items-center pl-11">
           {row.original.addConsultation && (
-            <span className="flex text-center justify-center mb-7 bg-primary-base text-primary-default text-label-xs px-3 py-1 rounded-6 mr-2">
+            <span className="absolute left-6 -top-6 flex text-center justify-center mb-7 bg-primary-base text-primary-default text-label-xs px-3 py-1 rounded-6 mr-2 ">
               추가
             </span>
           )}
@@ -45,14 +42,25 @@ export const columnsPending = (
   {
     accessorKey: 'phoneNumber',
     header: '전화번호',
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">{formatPhoneNumber(row.original.phoneNumber)}</div>
+      );
+    },
   },
   {
     accessorKey: 'createdAt',
     header: '상담신청일자',
+    cell: ({ row }) => {
+      return <span>{formatDateWithDots(row.original.createdAt)}</span>;
+    },
   },
   {
     accessorKey: 'preferredAt',
     header: '희망상담일자',
+    cell: ({ row }) => {
+      return <span>{formatDateWithDots(row.original.preferredAt)}</span>;
+    },
   },
   {
     accessorKey: 'consultant',

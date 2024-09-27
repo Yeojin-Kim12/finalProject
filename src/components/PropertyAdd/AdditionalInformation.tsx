@@ -14,8 +14,6 @@ const AdditionalInformation = () => {
     formState: { errors },
   } = useFormContext<FormValues>();
 
-  console.log(errors);
-
   const [pdfName, setPdfName] = useState<string | null>(null); // PDF 파일명
   const { uploadToServer } = useFileUpload();
 
@@ -29,7 +27,6 @@ const AdditionalInformation = () => {
   const handlePdfFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     handleRemovePdf();
     const file = e.target.files?.[0];
-    console.log(file);
 
     if (file && file.type === 'application/pdf') {
       setPdfName(file.name);

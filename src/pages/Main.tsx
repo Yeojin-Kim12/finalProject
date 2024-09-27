@@ -15,7 +15,6 @@ import SearchBar from '@/components/common/SearchBar';
 import { useRecoilValue } from 'recoil';
 import { loginState } from '@/recoilstate/login/atoms';
 import SkeletonPropertyList from '@/components/Main/SkeletonPropertyList';
-import { Link } from 'react-scroll';
 import { getAuthHeaders } from '@/utils/auth';
 
 const Main = () => {
@@ -57,6 +56,12 @@ const Main = () => {
       }
     } else {
       navigate('/login');
+    }
+  };
+  const handleScrollToList = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -220,13 +225,15 @@ const Main = () => {
                   })}
                 </div>
               </div>
-              <Link to="list" spy={true} smooth={true} duration={300}>
+              <div onClick={() => handleScrollToList('list')}>
+                {/* <Link to="list" spy={true} smooth={true} duration={300}>
+              </Link> */}
                 <DefaultPagination
                   totalPages={totalPages}
                   currentPage={currentPage}
                   onPageChange={setCurrentPage}
                 />
-              </Link>
+              </div>
             </div>
           )
         )}

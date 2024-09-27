@@ -7,7 +7,7 @@ import { CalendarDots } from '@phosphor-icons/react';
 
 interface SingleDatePickerProps {
   defaultLabel: string;
-  value?: Date;
+  value?: Date | undefined;
   onChange: (date: Date | undefined) => void;
 }
 const SingleDatePicker = ({ defaultLabel, value, onChange }: SingleDatePickerProps) => {
@@ -20,6 +20,10 @@ const SingleDatePicker = ({ defaultLabel, value, onChange }: SingleDatePickerPro
     setDate(date);
     onChange(date);
   };
+  // value prop이 변경될 때마다 date 상태를 업데이트
+  React.useEffect(() => {
+    setDate(value);
+  }, [value]);
   const handleReset = () => {
     setDate(undefined);
     onChange(undefined);
