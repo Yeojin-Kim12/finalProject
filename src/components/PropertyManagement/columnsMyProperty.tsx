@@ -55,8 +55,8 @@ export const columnsMyProperty: ColumnDef<MyProperty>[] = [
     header: '', // No header for this column
     cell: ({ row }) => {
       return typeof row.original.id === 'number' ? (
-        <div className="flex relative w-[50px] items-center">
-          <PencilSimple size={24} weight="light" className="absolute right-0 cursor-pointer" />
+        <div className="flex relative items-center justify-end cursor-pointer">
+          <PencilSimple size={24} weight="light" />
         </div>
       ) : null;
     },

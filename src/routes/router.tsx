@@ -5,8 +5,7 @@ import Footer from '@/components/common/Footer';
 import FAB from '@/components/common/FAB';
 import ServiceOverview from '@/pages/ServiceOverview';
 import ProtectedRoute from './ProtectedRoute';
-const TestHY = lazy(() => import('@/pages/TestHY'));
-const TestYJ = lazy(() => import('@/pages/TestYJ'));
+
 const PropertyKeywords = lazy(() => import('@/components/PropertyAdd/PropertyKeywords'));
 const CustomerService = lazy(() => import('@/pages/CustomerService/CustomerService'));
 const PropertyManagement = lazy(() => import('@/pages/PropertyManagement'));
@@ -52,26 +51,8 @@ export const router = createBrowserRouter([
       {
         path: '/',
         element: (
-          <Suspense fallback={''}>
+          <Suspense fallback={<ProgressBar />}>
             <Main />
-            <Footer />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/test-hy',
-        element: (
-          <Suspense fallback={<ProgressBar />}>
-            <TestHY />
-            <Footer />
-          </Suspense>
-        ),
-      },
-      {
-        path: '/test-yj',
-        element: (
-          <Suspense fallback={<ProgressBar />}>
-            <TestYJ />
             <Footer />
           </Suspense>
         ),

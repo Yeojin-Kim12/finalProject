@@ -58,13 +58,8 @@ const MyPropertyTable = () => {
           ...column,
           cell: ({ row }: any) =>
             typeof row.original.id === 'number' ? (
-              <div className="flex relative w-[50px] items-center">
-                <TrashSimple
-                  size={24}
-                  weight="light"
-                  className="absolute left-0 cursor-pointer"
-                  onClick={() => handleDelete(row.original.id)}
-                />
+              <div className="flex relative items-center  cursor-pointer">
+                <TrashSimple size={24} weight="light" onClick={() => handleDelete(row.original.id)} />
               </div>
             ) : null,
         };

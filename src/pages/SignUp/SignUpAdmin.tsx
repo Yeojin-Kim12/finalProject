@@ -19,7 +19,7 @@ const SignUpAdmin = () => {
   const [step, setStep] = React.useState(1);
   const methods = useForm({
     resolver: zodResolver(SignUpAdminSchema),
-    mode: 'onChange',
+    mode: 'onSubmit',
     criteriaMode: 'all',
     defaultValues: {
       agree1: 'false',
@@ -129,7 +129,8 @@ const SignUpAdmin = () => {
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
-            className="w-full max-w-[720px] flex flex-col gap-11 mobile:gap-9">
+            className="w-full max-w-[720px] flex flex-col gap-11 mobile:gap-9"
+            noValidate>
             {step === 1 && <SignUpCommonStep1 />}
             {step === 2 && <SignUpAdminStep2 />}
             {step === 3 && <SignUpAdminStep3 />}

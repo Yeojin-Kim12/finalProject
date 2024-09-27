@@ -18,7 +18,7 @@ const SignUpMember = () => {
   const [step, setStep] = useState(1);
   const methods = useForm({
     resolver: zodResolver(SignUpMemberSchema),
-    mode: 'onChange',
+    mode: 'onSubmit',
     criteriaMode: 'all',
     defaultValues: {
       agree1: 'false',
@@ -95,7 +95,8 @@ const SignUpMember = () => {
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
-            className="w-full max-w-[720px] flex flex-col gap-11 mobile:gap-9">
+            className="w-full max-w-[720px] flex flex-col gap-11 mobile:gap-9"
+            noValidate>
             {step === 1 && <SignUpCommonStep1 />}
             {step === 2 && <SignUpMemberStep2 />}
             <StepNavigation

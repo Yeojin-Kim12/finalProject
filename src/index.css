@@ -2,6 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --neutral-0: rgba(255, 255, 255, 1);
+    --neutral-5: rgba(247, 247, 247, 1);
+    --neutral-10: rgba(232, 234, 238, 1);
+    --neutral-20: rgba(203, 208, 215, 1);
+    --neutral-30: rgba(178, 182, 190, 1);
+    --neutral-40: rgba(148, 156, 168, 1);
+    --neutral-50: rgba(119, 130, 146, 1);
+    --neutral-60: rgba(96, 104, 119, 1);
+    --neutral-70: rgba(73, 80, 90, 1);
+    --neutral-80: rgba(50, 55, 62, 1);
+    --neutral-90: rgba(50, 55, 62, 1);
+    --neutral-100: rgba(0, 0, 0, 1);
+    --blue-5: rgba(237, 240, 253, 1);
+    --green-5: rgba(224, 250, 242, 1);
+    --green-10: rgba(202, 247, 233, 1);
+    --green-20: rgba(158, 240, 215, 1);
+    --green-30: rgba(114, 233, 197, 1);
+    --green-40: rgba(70, 225, 179, 1);
+    --green-50: rgba(34, 211, 158, 1);
+    --green-60: rgba(27, 167, 125, 1);
+    --green-70: rgba(23, 140, 105, 1);
+    --green-80: rgba(14, 89, 67, 1);
+    --green-90: rgba(13, 60, 46, 1);
+    --system-color-red-5: rgba(254, 236, 240, 1);
+    --system-color-red-10: rgba(252, 212, 222, 1);
+    --system-color-red-20: rgba(250, 163, 185, 1);
+    --system-color-red-30: rgba(247, 115, 148, 1);
+    --system-color-red-40: rgba(244, 67, 111, 1);
+    --system-color-red-50: rgba(241, 19, 75, 1);
+    --system-color-red-60: rgba(198, 12, 58, 1);
+    --system-color-red-70: rgba(149, 9, 44, 1);
+    --system-color-red-80: rgba(101, 6, 30, 1);
+    --system-color-red-90: rgba(53, 3, 16, 1);
+    --system-color-orange-5: rgba(255, 248, 235, 1);
+    --system-color-blue-5: rgba(245, 252, 254, 1);
+    --system-color-blue-10: rgba(222, 244, 253, 1);
+    --system-color-blue-20: rgba(174, 229, 249, 1);
+    --system-color-blue-30: rgba(125, 214, 246, 1);
+    --system-color-blue-40: rgba(79, 199, 243, 1);
+    --system-color-blue-50: rgba(31, 184, 239, 1);
+    --system-color-blue-60: rgba(17, 154, 203, 1);
+    --system-color-blue-70: rgba(11, 119, 157, 1);
+    --system-color-blue-80: rgba(8, 83, 110, 1);
+    --system-color-orange-10: rgba(255, 240, 209, 1);
+    --system-color-orange-20: rgba(255, 223, 158, 1);
+    --system-color-orange-30: rgba(255, 206, 107, 1);
+    --system-color-orange-40: rgba(255, 189, 56, 1);
+    --system-color-orange-50: rgba(255, 173, 5, 1);
+    --system-color-orange-60: rgba(209, 140, 0, 1);
+    --system-color-orange-70: rgba(163, 109, 0, 1);
+    --system-color-orange-80: rgba(112, 75, 0, 1);
+    --system-color-orange-90: rgba(61, 41, 0, 1);
+    --blue-10: rgba(214, 222, 250, 1);
+    --blue-20: rgba(168, 185, 245, 1);
+    --blue-30: rgba(123, 147, 240, 1);
+    --blue-40: rgba(77, 110, 234, 1);
+    --blue-50: rgba(32, 74, 229, 1);
+    --blue-60: rgba(22, 57, 187, 1);
+    --blue-70: rgba(17, 43, 142, 1);
+    --blue-80: rgba(11, 29, 96, 1);
+    --blue-90: rgba(6, 15, 50, 1);
+    --system-color-blue-90: rgba(11, 60, 78, 1);
+  }
+}
+@layer base {
+  ::-webkit-scrollbar {
+    @apply w-[6px] h-2;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-10 bg-assistive-alternative cursor-pointer hover:bg-assistive-divider;
+  }
+}
+
 body {
   font-family: 'Pretendard', sans-serif;
 }
@@ -65,17 +143,7 @@ body {
     display: none;
   }
 }
-@layer base {
-  ::-webkit-scrollbar {
-    @apply w-[6px] h-2;
-  }
-  ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0);
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply rounded-10 bg-assistive-alternative cursor-pointer hover:bg-assistive-divider;
-  }
-}
+
 .swiper-pagination {
   @apply !absolute !bottom-0 flex justify-center gap-3;
 }
