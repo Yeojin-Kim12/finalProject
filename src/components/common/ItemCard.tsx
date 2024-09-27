@@ -49,14 +49,14 @@ const ItemCard = ({
   const loginData = useRecoilValue(loginState);
   const navigate = useNavigate();
 
-  const handleLikeToggle = () => {
+  const handleLikeToggle = async () => {
     if (!loginData.isLoggedIn || loginData.userInfo?.role !== 'MEMBER') {
       navigate('/login');
       return;
     }
 
+    await toggleLike();
     if (onLikeToggle) {
-      toggleLike();
       onLikeToggle();
     }
   };

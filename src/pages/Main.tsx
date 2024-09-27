@@ -9,7 +9,7 @@ import { BASE_URL } from '@/lib/constants';
 import { CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '@/components/common/SearchBar';
 import { useRecoilValue } from 'recoil';
@@ -40,12 +40,10 @@ const Main = () => {
     return res.data;
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['properties', currentPage],
     queryFn: () => fetchProperties(currentPage - 1),
-    staleTime: 600000,
-    gcTime: 900000,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   const totalPages = data?.totalPages || 1;
@@ -61,6 +59,13 @@ const Main = () => {
       navigate('/login');
     }
   };
+
+  const handleLikeToggle = async () => {
+    await refetch();
+  };
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <div className="py-12 mobile:py-9">
@@ -200,13 +205,17 @@ const Main = () => {
                       discountPrice: property.discountPrice,
                       discountPercent: property.discountPercent,
                       like: property.like,
-                      onLikeToggle: () => property.id,
                       rank: index + 1 + (currentPage - 1) * 5,
                     };
                     return isMobile ? (
-                      <ItemCard key={property.id} size="s" {...commonProps} />
+                      <ItemCard key={property.id} size="s" {...commonProps} onLikeToggle={handleLikeToggle} />
                     ) : (
-                      <ItemList key={property.id} size={isTablet ? 'm' : 'l'} {...commonProps} />
+                      <ItemList
+                        key={property.id}
+                        size={isTablet ? 'm' : 'l'}
+                        {...commonProps}
+                        onLikeToggle={handleLikeToggle}
+                      />
                     );
                   })}
                 </div>

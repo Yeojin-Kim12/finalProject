@@ -45,10 +45,10 @@ export const fetchPendingConsultations = async ({
 
   const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/pending`, {
     params: {
-      search,
+      ...(search !== '' && { search }),
       page: page - 1,
       size: 5,
-      consultant,
+      ...(consultant !== '' && { consultant }),
       preferredAt: formatDate,
     },
     headers: {
@@ -56,7 +56,6 @@ export const fetchPendingConsultations = async ({
       ...getAuthHeaders(),
     },
   });
-  console.log(response);
 
   return response.data;
 };
@@ -79,10 +78,10 @@ export const fetchCompletedConsultations = async ({
   const [_key, { propertyId, search, tier, consultant, preferredAt, page }] = queryKey;
   const response = await axios.get(`${BASE_URL}/api/admin/properties/${propertyId}/consultations/completed`, {
     params: {
-      search,
-      tier,
+      ...(search !== '' && { search }),
+      ...(tier !== '' && { tier }),
       size: 5,
-      consultant,
+      ...(consultant !== '' && { consultant }),
       preferredAt,
       page: page - 1,
     },

@@ -1,40 +1,39 @@
 // import { consultingPending } from '@/lib/tableItems';
 import { Button } from '../ui/button';
-import { X } from '@phosphor-icons/react';
 
 export interface CustomerInquiryProps {
+  addConsultation: boolean;
+  memberConsultationId: number;
   name: string;
-  phoneNumber: string | undefined;
+  phoneNumber: string;
   createdAt: string;
   preferredAt?: string;
   completedAt?: string;
-  consultant?: string;
   consultingMessage: string;
-  closePopup: () => void;
+  memberMessage: string;
   onConsultingClick: () => void;
 }
 
 export default function CustomerInquiry({
+  addConsultation,
   name,
   phoneNumber,
   createdAt,
   preferredAt,
-  // consultant,
   consultingMessage,
+  memberMessage,
   onConsultingClick,
-  closePopup,
 }: CustomerInquiryProps & { onConsultingClick: () => void }) {
   return (
-    <main className="flex flex-col z-50 items-center mx-auto py-9 w-[420px] h-[665px]">
-      <div className="flex w-full justify-end py-2 h-[32px]">
-        <X size={32} weight="light" className="text-assistive-strong cursor-pointer" onClick={closePopup} />
-      </div>
+    <main className="flex flex-col z-50 items-center mx-auto pb-9 w-[420px] h-[665px]">
       <section className="w-full px-4">
         <div className="flex items-center gap-5">
           <h1 className="py-6 text-title-2xl font-bold text-static-default">{name} 님</h1>
-          <span className="flex justify-center bg-primary-base text-primary-default text-label-base px-4 py-1 rounded-6">
-            추가상담
-          </span>
+          {addConsultation && (
+            <span className="flex justify-center bg-primary-base text-primary-default text-label-base px-4 py-1 rounded-6">
+              추가상담
+            </span>
+          )}
         </div>
         <article className="flex gap-10">
           <div className="flex flex-col">
@@ -51,8 +50,12 @@ export default function CustomerInquiry({
           </div>
         </article>
         <div className="h-[1px] bg-assistive-divider w-full my-10"></div>
-        <p className="py-5 text-title-base font-bold text-static-default">상담원 상담 메모</p>
-        <textarea className="w-[424px] h-[214px] p-6 border rounded-6 mb-6">{consultingMessage}</textarea>
+        <p className="py-5 text-title-base font-bold text-static-default">
+          {addConsultation ? '상담원 상담 메모' : '문의사항'}
+        </p>
+        <textarea className="w-full h-[214px] p-6 border rounded-6 mb-6">
+          {addConsultation ? consultingMessage : memberMessage}
+        </textarea>
         <Button variant="primary" size="xl" className="flex mx-auto" onClick={onConsultingClick}>
           상담하기
         </Button>
@@ -60,15 +63,3 @@ export default function CustomerInquiry({
     </main>
   );
 }
-
-// 추가뱃지 유
-// {
-//     "memberName": "test error",
-//     "propertyName": "Example Property Name",
-//     "phoneNumber": "01012389999",
-//     "createdAt": "2024-08-21",
-//     "preferredAt": "2025-01-01",
-//     "counsultMesssage" : "상담원 메세지",
-//     "memberMessage": null,
-//     "addConsultation": "true"
-// }

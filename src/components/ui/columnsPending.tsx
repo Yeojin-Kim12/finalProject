@@ -2,13 +2,13 @@ import { ColumnDef } from '@tanstack/react-table';
 // import { operatorId } from '../../lib/dropdownItems';
 import Dropdown from '../common/Dropdown';
 import { Button } from '@/components/ui/button';
-import { CustomerInquiryProps } from '../CustomerService/CustomerInquiry';
 import axios from 'axios';
 import { BASE_URL } from '@/lib/constants';
 import { useQuery } from '@tanstack/react-query';
 import { getAuthHeaders } from '@/utils/auth';
 
 export interface ConsultingPending {
+  memberConsultationId: number;
   name: string;
   phoneNumber: string;
   createdAt: string;
@@ -23,8 +23,8 @@ export function formatDate(dateString: string): string {
 }
 
 export const columnsPending = (
-  handleViewClick: (props: CustomerInquiryProps) => void,
-  propertyId: number | undefined,
+  handleViewClick: (memberConsultationId: number) => void,
+  propertyId: number,
 ): ColumnDef<ConsultingPending>[] => [
   {
     accessorKey: 'name',
@@ -58,30 +58,36 @@ export const columnsPending = (
     accessorKey: 'consultant',
     header: '상담사',
     cell: ({ row }) => {
-      const fetchConsultants = async () => {
+      const fetchConsultants = async (propertyId: number) => {
         const res = await axios.get(`${BASE_URL}/api/admin/consultations/${propertyId}`, {
           headers: {
             'Content-Type': 'application/json',
             ...getAuthHeaders(),
           },
         });
-        return res.data;
+        return res.data.consultantResponses;
       };
-      const { data } = useQuery({
-        queryKey: ['Consultants'],
-        queryFn: fetchConsultants,
+      const { data, isLoading } = useQuery({
+        queryKey: ['Consultants', propertyId],
+        queryFn: () => fetchConsultants(propertyId!),
+        enabled: !!propertyId,
       });
 
+      // ui에 빈 값이 보이지 않게 하기 위함
+      if (isLoading) {
+        return;
+      }
       const handleSelect = (value: string) => {
         row.original.consultant = value;
       };
+      const consultants =
+        data?.map((consultant: { consultant: string }) => ({
+          value: consultant.consultant,
+          label: consultant.consultant,
+        })) || [];
+
       return row.original.consultant === null ? (
-        <Dropdown
-          items={data.consultantResponses}
-          defaultLabel="a1-1"
-          onSelect={handleSelect}
-          buttonWidth="w-[99px]"
-        />
+        <Dropdown items={consultants} defaultLabel="" onSelect={handleSelect} buttonWidth="w-[99px]" />
       ) : (
         <span>{row.original.consultant}</span>
       );
@@ -91,22 +97,9 @@ export const columnsPending = (
     accessorKey: 'contents',
     header: '문의내역',
     cell: ({ row }) => {
-      const { name, phoneNumber, createdAt, preferredAt, consultingMessage } = row.original;
+      const { memberConsultationId } = row.original;
       return (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            handleViewClick({
-              name,
-              phoneNumber,
-              createdAt,
-              preferredAt,
-              consultingMessage,
-              closePopup: () => {},
-              onConsultingClick: () => {},
-            })
-          }>
+        <Button variant="outline" size="sm" onClick={() => handleViewClick(memberConsultationId)}>
           보기
         </Button>
       );

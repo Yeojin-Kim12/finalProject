@@ -22,7 +22,6 @@ import { getAuthHeaders } from '@/utils/auth';
 const steps = ['매물정보 입력', '추가사항 입력', '키워드 선택', '등록 완료'];
 
 const postProperty = async (property: any) => {
-  console.log('전송할 데이터 (JSON):', JSON.stringify(property, null, 2));
   try {
     const response = await axios.post(`${BASE_URL}/api/admin/properties`, property, {
       headers: {

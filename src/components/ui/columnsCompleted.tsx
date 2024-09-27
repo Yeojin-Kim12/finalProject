@@ -1,9 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { LabelCustomerRating } from './labelCustomerRating';
-import { CustomerCompletedProps } from '../CustomerService/CustomerCompleted';
 
 export interface ConsultingCompleted {
+  adminConsultationId: number;
   name: string;
   tier: string;
   phoneNumber: string;
@@ -11,7 +11,8 @@ export interface ConsultingCompleted {
   completedAt: string;
   consultant: string;
   contents: string;
-  consultingMessage: string;
+  consultMessage: string;
+  memberMessage: string;
 }
 
 export function formatDate(dateString: string): string {
@@ -19,7 +20,7 @@ export function formatDate(dateString: string): string {
 }
 
 export const columnsCompleted = (
-  handleCompletedClick: (props: CustomerCompletedProps) => void,
+  handleCompletedClick: (adminConsultationId: number) => void,
 ): ColumnDef<ConsultingCompleted>[] => [
   {
     accessorKey: 'name',
@@ -71,14 +72,9 @@ export const columnsCompleted = (
     accessorKey: 'contents',
     header: '문의내역',
     cell: ({ row }) => {
-      const { name, phoneNumber, createdAt, completedAt, consultant, consultingMessage } = row.original;
+      const { adminConsultationId } = row.original;
       return (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() =>
-            handleCompletedClick({ name, phoneNumber, createdAt, completedAt, consultant, consultingMessage })
-          }>
+        <Button variant="outline" size="sm" onClick={() => handleCompletedClick(adminConsultationId)}>
           보기
         </Button>
       );

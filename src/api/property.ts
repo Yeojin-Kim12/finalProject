@@ -1,6 +1,6 @@
 import { BASE_URL } from '@/lib/constants';
-import axios from 'axios';
 import { getAuthHeaders } from '@/utils/auth';
+import axios from 'axios';
 
 export const fetchPropertyTable = async ({
   queryKey,

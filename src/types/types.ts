@@ -134,16 +134,16 @@ export interface CustomerData {
 }
 export interface ConsultingData {
   id?: number;
-  name: string;
-  phoneNumber: string;
+  name?: string;
+  phoneNumber?: string;
   status: string;
   consultant?: string;
-  consultingMessage: string;
+  consultantMessage: string;
   preferredAt?: string;
   createdAt?: string;
   addConsultation?: boolean;
   tier: string;
-  medium: string;
+  medium?: string;
 }
 
 export interface ConsultPendingSummary {

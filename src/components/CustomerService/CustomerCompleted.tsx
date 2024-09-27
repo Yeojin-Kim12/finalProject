@@ -1,43 +1,48 @@
 import { useState } from 'react';
-import { X, PencilSimpleLine } from '@phosphor-icons/react';
-import { useMutation } from '@tanstack/react-query';
+import { PencilSimpleLine } from '@phosphor-icons/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { LabelCustomerRating } from '../ui/labelCustomerRating';
+import { BASE_URL } from '@/lib/constants';
+import { Button } from '../ui/button';
+import { getAuthHeaders } from '@/utils/auth';
 
 export interface CustomerCompletedProps {
+  adminConsultationId: number;
   name: string;
   phoneNumber: string;
   createdAt: string;
-  preferredAt?: string;
   completedAt?: string;
-  consultingMessage: string;
+  memberMessage: string;
+  consultMessage: string;
   closePopup?: () => void;
   tier?: string;
-  consultant: string;
 }
 
 export default function CustomerCompleted({
+  adminConsultationId,
   name,
   phoneNumber,
   createdAt,
   completedAt,
-  consultingMessage,
+  memberMessage,
+  consultMessage,
   closePopup,
   tier,
 }: CustomerCompletedProps) {
-  const [message, setMessage] = useState(consultingMessage);
+  const [message, setMessage] = useState(consultMessage);
   const [isEditing, setIsEditing] = useState(false);
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (updatedMessage: string) => {
       const response = await axios.put(
-        'https://entj.site/api/admin/consultations/{adminConsultationId}/completed',
-        {
-          consultingMessage: updatedMessage,
-        },
+        `${BASE_URL}/api/admin/consultations/${adminConsultationId}/completed?consultantMessage=${updatedMessage}`,
+        {},
         {
           headers: {
             'Content-Type': 'application/json',
+            ...getAuthHeaders(),
           },
         },
       );
@@ -58,24 +63,18 @@ export default function CustomerCompleted({
   const handleSubmit = () => {
     if (message) {
       mutation.mutate(message);
-    }
-  };
-
-  const handleClose = () => {
-    handleSubmit();
-    if (closePopup) {
-      closePopup();
+      if (closePopup) {
+        queryClient.invalidateQueries({ queryKey: ['completedData', adminConsultationId] });
+        closePopup();
+      }
     }
   };
 
   return (
-    <main className="flex flex-col z-50 items-center py-9 w-[517px] h-[830px]">
-      <div className="flex w-full justify-end py-2 px-8 h-[32px]">
-        <X size={32} weight="light" className="text-assistive-strong cursor-pointer" onClick={handleClose} />
-      </div>
-      <form className="w-[424px]">
+    <main className="flex flex-col z-50 items-center w-[500px] h-[750px]">
+      <div className="w-[424px]">
         <div className="flex items-center gap-5">
-          <h1 className="py-6 text-title-2xl font-bold text-static-default">{name} 님</h1>
+          <h1 className="py-4 text-title-2xl font-bold text-static-default">{name} 님</h1>
           <LabelCustomerRating size="m" keyword={tier}>
             {tier}등급
           </LabelCustomerRating>
@@ -91,30 +90,37 @@ export default function CustomerCompleted({
             <span className="text-body-lg font-normal text-assistive-detail">{createdAt}</span>
             <span className="text-body-lg font-bold text-primary-default">{completedAt}</span>
           </div>
-          <PencilSimpleLine
-            size={48}
-            weight="light"
-            className="text-assistive-default absolute right-0 self-end cursor-pointer"
-            onClick={handleEditClick}
-          />
+          {!isEditing && (
+            <PencilSimpleLine
+              size={48}
+              weight="light"
+              className="text-assistive-default absolute right-0 self-end cursor-pointer"
+              onClick={handleEditClick}
+            />
+          )}
         </article>
-        <div className="h-[1px] bg-assistive-divider w-full my-6"></div>
+        <div className="h-[1px] bg-assistive-divider w-full my-4"></div>
 
         <p className="py-4 text-title-base font-bold text-static-default">고객 문의 사항</p>
         <textarea
           disabled
           className="w-[424px] h-[140px] text-label-lg text-assistive-strong bg-assistive-base overflow-y-auto p-6 border rounded-6 ">
-          {/* {customerMessage} */}
+          {memberMessage}
         </textarea>
 
-        <p className="mt-6 py-4 text-title-base font-bold text-static-default">상담원 상담 메모</p>
+        <p className="py-4 text-title-base font-bold text-static-default">상담원 상담 메모</p>
         <textarea
-          className="w-[424px] h-[214px] text-label-lg text-static-default p-6 border rounded-6 mb-6"
+          className="w-[424px] h-[214px] text-label-lg text-static-default p-6 border rounded-6"
           onChange={(e) => setMessage(e.target.value)}
           disabled={!isEditing}>
-          {message}
+          {consultMessage}
         </textarea>
-      </form>
+        {isEditing && (
+          <Button variant="primary" size="xl" className="flex mx-auto my-4" onClick={handleSubmit}>
+            수정하기
+          </Button>
+        )}
+      </div>
     </main>
   );
 }

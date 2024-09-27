@@ -79,12 +79,9 @@ const PropertyDetail = () => {
     return res.data;
   };
 
-  const { data } = useQuery<SalesInformation>({
+  const { data, refetch } = useQuery<SalesInformation>({
     queryKey: ['salesInformation', id],
     queryFn: fetchSalesInformation,
-    staleTime: 600000,
-    gcTime: 900000,
-    refetchOnWindowFocus: false,
     enabled: loginData.isLoggedIn !== null,
   });
 
@@ -199,6 +196,10 @@ const PropertyDetail = () => {
   const showToast = () => {
     setIsToast(!isToast);
   };
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <div className={`w-[1200px] tablet:w-[720px] mobile:w-[328px] h-full m-auto text-static-default`}>

@@ -5,30 +5,32 @@ import { ConsultingCompleted } from '@/components/CustomerService/ConsultingComp
 import { columnsPending } from '@/components/ui/columnsPending';
 import { columnsCompleted } from '@/components/ui/columnsCompleted';
 import CustomerInquiry from '@/components/CustomerService/CustomerInquiry';
-import CustomerConsulting from '@/components/CustomerService/CustomerConsulting';
-import CustomerCompleted from '@/components/CustomerService/CustomerCompleted';
-import ReactDOM from 'react-dom/client';
+import CustomerConsulting, { CustomerConsultingProps } from '@/components/CustomerService/CustomerConsulting';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CustomerInquiryProps } from '@/components/CustomerService/CustomerInquiry';
-import { CustomerCompletedProps } from '@/components/CustomerService/CustomerCompleted';
-import { ListDashes, Plus } from '@phosphor-icons/react';
+import CustomerCompleted from '@/components/CustomerService/CustomerCompleted';
+import { ListDashes, Plus, X } from '@phosphor-icons/react';
 import AccordionMenu from '@/components/CustomerService/AccordionMenu';
 import { propertyTypeMapping } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import NewCustomer from '@/components/CustomerService/NewCustomer';
 import { keepPreviousData, QueryClientProvider, useQuery } from '@tanstack/react-query';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger, DialogDescription } from '@/components/ui/dialogNewCustomer';
 import NoProperty from '../../components/CustomerService/NoProperty';
 import { useQueryClient } from '@tanstack/react-query';
 import { fetchSidebarData, fetchSidebarDetailData } from '@/api/consulting';
+import Draggable from 'react-draggable';
+import { getAuthHeaders } from '@/utils/auth';
+import axios from 'axios';
+import { BASE_URL } from '@/lib/constants';
 
 function CustomerService() {
   const [isOpen, setIsOpen] = useState(false);
   const [customers, setCustomers] = useState<CustomerData[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<number>();
-  const popupWindowRef = useRef<Window | null>(null);
-
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showConsulting, setShowConsulting] = useState(false);
   const queryClient = useQueryClient();
 
   // TODO:customers 사용안해서 임시로 넣어둔 것.
@@ -55,6 +57,8 @@ function CustomerService() {
   }, [sidebarData, selectedProperty]);
 
   const handleAddNewCustomer = (newCustomer: CustomerData) => {
+    console.log('new:', newCustomer);
+
     setCustomers((prevCustomers) => [...prevCustomers, newCustomer]);
     setIsOpen(false);
   };
@@ -97,108 +101,122 @@ function CustomerService() {
     !sidebarData ||
     (!sidebarData.sideBarPendingResponseList?.length && !sidebarData.sideBarCompletedResponseList?.length);
 
-  // popup 윈도우
-  const openPopupWindow = <P extends {}>(
-    Component: ComponentType<P>,
-    props: P,
-    title: string = 'Popup',
-    width: number = 420,
-    height: number = 665,
-  ) => {
-    const left = window.screenX + (window.outerWidth - width) / 2;
-    const top = window.screenY + (window.outerHeight - height) / 2;
-
-    popupWindowRef.current = window.open(
-      '',
-      '_blank',
-      `width=${width},height=${height},left=${left},top=${top}`,
+  const openModal = (Component: ComponentType<CustomerConsultingProps>, props: CustomerConsultingProps) => {
+    setModalContent(
+      <QueryClientProvider client={queryClient}>
+        {showConsulting ? (
+          <CustomerConsulting
+            addConsultation={props.addConsultation}
+            memberConsultationId={props.memberConsultationId}
+            name={props.name}
+            phoneNumber={props.phoneNumber}
+            consultant={props.consultant}
+            createdAt={props.createdAt}
+            preferredAt={props.preferredAt}
+            memberMessage={props.memberMessage}
+            consultingMessage={props.consultingMessage}
+            onAddCustomer={handleAddNewCustomer}
+            closePopup={handleCloseModal}
+          />
+        ) : (
+          <Component {...props} closePopup={handleCloseModal} />
+        )}
+      </QueryClientProvider>,
     );
-
-    if (popupWindowRef.current) {
-      popupWindowRef.current.document.write(`
-		<html>
-			<head>
-				<title>${title}</title>
-				<link href="/src/index.css" rel="stylesheet">
-            <style>
-            #popup-root {
-             width: 125%;
-              height: 125%;
-              transform: scale(0.8);
-              transform-origin: center;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%) scale(0.8);
-            }
-          </style>
-			</head>
-			<body>
-				<div id="popup-root"></div>
-        <script src="/index.js"></script>
-			</body>
-		</html>
-	`);
-      popupWindowRef.current.document.close();
-
-      popupWindowRef.current.onload = () => {
-        const popupRoot = popupWindowRef.current?.document.getElementById('popup-root');
-        if (popupRoot) {
-          const root = ReactDOM.createRoot(popupRoot);
-
-          // 팝업 내용의 상태를 관리하기 위한 wrapper
-          function PopupWrapper() {
-            const [showConsulting, setShowConsulting] = useState(false);
-
-            // 컴포넌트간 이동 로직
-            const handleConsultingClick = () => {
-              setShowConsulting(true);
-            };
-            const handleBackToInquiry = () => {
-              setShowConsulting(false);
-            };
-
-            return (
-              <QueryClientProvider client={queryClient}>
-                {showConsulting ? (
-                  <CustomerConsulting
-                    {...props}
-                    onBackClick={handleBackToInquiry}
-                    closePopup={handleClosePopup}
-                    // @ts-ignore: Unreachable code error
-                    onAddCustomer={handleAddNewCustomer}
-                  />
-                ) : (
-                  <Component
-                    {...props}
-                    onConsultingClick={handleConsultingClick}
-                    closePopup={handleClosePopup}
-                  />
-                )}
-              </QueryClientProvider>
-            );
-          }
-
-          root.render(<PopupWrapper />);
-        } else {
-          console.error('Error occurred: Unable to find popup root.');
-        }
-      };
-    }
+    setIsModalOpen(true);
   };
 
-  const handleClosePopup = () => {
-    if (popupWindowRef.current) {
-      popupWindowRef.current.close(); // Close the popup window
-      popupWindowRef.current = null; // Reset the reference
-    }
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // 모달을 닫음
+    setShowConsulting(false); // 상담 상태를 초기화
+    setModalContent(null); // 모달 내용을 초기화
   };
 
-  const handleInquiryClick = (props: CustomerInquiryProps) => {
-    openPopupWindow(CustomerInquiry, props, 'Inquiry');
+  const handleInquiryClick = (memberConsultationId: number) => {
+    const fetchInquiryData = async () => {
+      const res = await axios.get(`${BASE_URL}/api/admin/consultations/${memberConsultationId}/pending`, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+      });
+
+      return res.data;
+    };
+
+    const InquiryModal = () => {
+      const { data, isLoading } = useQuery({
+        queryKey: ['inquiryData', memberConsultationId],
+        queryFn: fetchInquiryData,
+      });
+      if (isLoading) return;
+
+      return (
+        <CustomerInquiry
+          addConsultation={data?.addConsultation}
+          memberConsultationId={data?.memberConsultationId}
+          name={data?.memberName || ''}
+          phoneNumber={data?.phoneNumber || ''}
+          createdAt={data?.createdAt || ''}
+          preferredAt={data?.preferredAt}
+          memberMessage={data?.memberMessage || ''}
+          consultingMessage={data?.consultantMessage || ''}
+          onConsultingClick={() => {
+            setShowConsulting(true);
+            openModal(CustomerConsulting, {
+              addConsultation: data?.addConsultation,
+              memberConsultationId: data?.memberConsultationId,
+              name: data?.memberName || '',
+              phoneNumber: data?.phoneNumber || '',
+              consultant: data.consultant,
+              createdAt: data?.createdAt || '',
+              memberMessage: data?.memberMessage || '',
+              consultingMessage: data?.consultingMessage || '',
+              preferredAt: data?.preferredAt,
+              onAddCustomer: handleAddNewCustomer,
+              closePopup: handleCloseModal,
+            });
+          }}
+        />
+      );
+    };
+
+    openModal(InquiryModal, {} as any);
   };
-  const handleCompletedClick = (props: CustomerCompletedProps) => {
-    openPopupWindow(CustomerCompleted, props, 'Completed');
+
+  const handleCompletedClick = (adminConsultationId: number) => {
+    const fetchCompletedData = async () => {
+      const res = await axios.get(`${BASE_URL}/api/admin/consultations/${adminConsultationId}/completed`, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
+      });
+
+      return res.data;
+    };
+
+    const completedModal = () => {
+      const { data, isLoading } = useQuery({
+        queryKey: ['completedData', adminConsultationId],
+        queryFn: fetchCompletedData,
+      });
+      if (isLoading) return;
+      return (
+        <CustomerCompleted
+          adminConsultationId={data?.adminConsultationId}
+          name={data?.name || ''}
+          phoneNumber={data?.phoneNumber || ''}
+          createdAt={data?.createdAt || ''}
+          completedAt={data?.completedAt}
+          memberMessage={data?.memberMessage || ''}
+          consultMessage={data?.consultMessage || ''}
+          tier={data?.tier || ''}
+          closePopup={handleCloseModal}
+        />
+      );
+    };
+    openModal(completedModal, {} as any);
   };
 
   return (
@@ -273,7 +291,7 @@ function CustomerService() {
             </TabsList>
             <TabsContent value="pending">
               <ConsultingPending
-                columns={columnsPending(handleInquiryClick, selectedProperty)}
+                columns={columnsPending(handleInquiryClick, selectedProperty || 1)}
                 propertyId={selectedProperty}
               />
             </TabsContent>
@@ -285,6 +303,26 @@ function CustomerService() {
             </TabsContent>
           </Tabs>
         </section>
+      )}
+
+      {isModalOpen && (
+        <Draggable handle=".modal-header">
+          <div className="fixed inset-0 flex justify-center items-center z-50 pointer-events-none">
+            <div className="bg-white w-[500px] h-[826px] rounded-9 shadow-xl relative pointer-events-auto">
+              <div className="modal-header cursor-move">
+                <div className="flex w-full justify-end px-8 pt-9 pb-2">
+                  <X
+                    size={32}
+                    weight="light"
+                    className="text-assistive-strong cursor-pointer"
+                    onClick={handleCloseModal}
+                  />
+                </div>
+              </div>
+              <div>{modalContent}</div>
+            </div>
+          </div>
+        </Draggable>
       )}
     </main>
   );

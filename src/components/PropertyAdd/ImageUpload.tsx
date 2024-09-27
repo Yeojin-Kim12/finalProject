@@ -34,7 +34,6 @@ export const ImageUpload = () => {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
 
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();

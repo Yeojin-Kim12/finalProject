@@ -28,6 +28,7 @@ export const useFileUpload = () => {
         axios.put(presignedUrls[index], file, {
           headers: {
             'Content-Type': file.type,
+            ...getAuthHeaders(),
           },
         }),
       );

@@ -43,9 +43,10 @@ const Search = () => {
     return res.data;
   };
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['search', currentPage, size, searchQuery],
     queryFn: () => fetchSearch(currentPage - 1, size, searchQuery),
+    refetchOnWindowFocus: false,
   });
   const totalPages = data?.totalPages || 1;
 
@@ -53,6 +54,10 @@ const Search = () => {
     setSearchQuery(inputValue);
     setSearchParams({ search: inputValue });
     setCurrentPage(1);
+  };
+
+  const handleLikeToggle = async () => {
+    await refetch();
   };
 
   return (
@@ -126,7 +131,7 @@ const Search = () => {
                     price={property.price}
                     discountPrice={property.discountPrice}
                     like={property.like}
-                    onLikeToggle={() => property.id}
+                    onLikeToggle={handleLikeToggle}
                   />
                 </div>
               ))}
